@@ -1,0 +1,154 @@
+import '../../utils/extension.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../../constants/color_const.dart';
+import '../../constants/dimensions.dart';
+import '../../utils/style.dart';
+
+class CommonTextField extends StatelessWidget {
+  final List<TextInputFormatter>? inputFormatters;
+  final TextCapitalization textCapitalization;
+  final double? height;
+  final Widget? suffixIcon;
+  final String? title;
+  final TextStyle? titleTextStyle;
+  final TextEditingController? textController;
+  final Color? hintTextColor;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final int? maxLine, maxLength, minLine;
+  final TextInputType? keyBoardType;
+  final bool? obscureText;
+  final bool? autoFocus;
+  final bool readOnly;
+  final Color? fillColor;
+  final ValueChanged? onChanged;
+  final Function? onTap;
+  final ValueChanged? onFieldSubmit;
+  final VoidCallback? onEditingComplete;
+  final String? Function(String?)? validator;
+  final String? hintText;
+  final Widget? prefixIcon;
+  final TextStyle? textStyle;
+  final TextStyle? hintTextStyle;
+  final EdgeInsetsGeometry? contentPadding;
+
+  const CommonTextField({
+    super.key,
+    this.readOnly = false,
+    this.textCapitalization = TextCapitalization.sentences,
+    this.inputFormatters,
+    this.height,
+    this.focusNode,
+    this.maxLine,
+    this.maxLength,
+    this.keyBoardType,
+    this.title,
+    this.titleTextStyle,
+    this.validator,
+    this.obscureText = false,
+    this.textController,
+    this.onFieldSubmit,
+    this.fillColor,
+    this.onEditingComplete,
+    this.hintTextColor,
+    this.suffixIcon,
+    this.onChanged,
+    this.onTap,
+    this.contentPadding,
+    this.textInputAction,
+    this.textStyle,
+    this.hintTextStyle,
+    this.hintText,
+    this.autoFocus,
+    this.prefixIcon,
+    this.minLine,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title.isNotNullAndEmpty())
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: Dimensions.h8,
+              top: Dimensions.h14,
+            ),
+            child: Text(title!, style: titleTextStyle ?? fontStyleSemiBold13),
+          ),
+        TextFormField(
+          key: key,
+          textInputAction: textInputAction,
+          validator: validator,
+          textCapitalization: textCapitalization,
+          readOnly: readOnly,
+          focusNode: focusNode,
+          obscureText: obscureText ?? false,
+          autofocus: autoFocus ?? false,
+          maxLines: maxLine ?? 1,
+          minLines: minLine,
+          maxLength: maxLength,
+          controller: textController,
+          inputFormatters: inputFormatters,
+          onFieldSubmitted: onFieldSubmit,
+          onEditingComplete: onEditingComplete,
+          onChanged: (val) => onChanged?.call(val),
+          onTap: () => onTap?.call(),
+          keyboardType: keyBoardType,
+          style:
+              textStyle ??
+              (readOnly
+                  ? fontStyleMedium13.apply(
+                    color: ColorConst.textColor.withOpacity(0.5),
+                  )
+                  : fontStyleSemiBold14),
+          decoration: InputDecoration(
+            counterText: '',
+            isDense: true,
+            filled: true,
+            fillColor: fillColor ?? ColorConst.textFieldColor,
+            hintText: hintText ?? '',
+            hintStyle:
+                hintTextStyle ??
+                fontStyleSemiBold13.apply(color: ColorConst.hintColor),
+            prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
+            contentPadding:
+                contentPadding ??
+                EdgeInsets.symmetric(
+                  vertical: Dimensions.h15,
+                  horizontal: Dimensions.w16,
+                ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderSide: BorderSide(color: ColorConst.dividerColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderSide: BorderSide(color: ColorConst.dividerColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderSide: BorderSide(
+                color: ColorConst.primaryColor,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderSide: BorderSide(color: Colors.red),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderSide: BorderSide(color: Colors.red, width: 1.5),
+            ),
+            errorStyle: TextStyle(color: Colors.red, fontSize: 12),
+          ),
+        ),
+      ],
+    );
+  }
+}
