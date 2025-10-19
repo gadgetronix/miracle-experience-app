@@ -1,0 +1,25 @@
+flutter_native_splash:
+  # Background color
+  color: "#FFFFFF"
+  
+  # Your splash image (635x1024 px)
+  image: assets/images/splash.png
+  
+  # For dark mode (optional)
+  color_dark: "#FFFFFF"
+  image_dark: assets/images/splash.png
+  
+  # Android settings
+  android: true
+  android_gravity: center
+  fullscreen: true
+  
+  # Android 12+ specific settings
+  android_12:
+    image: null
+    color: "#FFFFFF"
+    icon_background_color: "#FFFFFF"
+    
+  # iOS settings (if needed)
+  ios: true
+  ios_content_mode: center
