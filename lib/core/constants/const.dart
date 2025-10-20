@@ -11,19 +11,19 @@ import '../custom/flush_bar.dart';
 class AppInfo {
   AppInfo._();
   static final instance = AppInfo._();
+  PackageInfo? packageInfo;
 
   checkUpdates() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    packageInfo = await PackageInfo.fromPlatform();
 
-    String? appVersions = packageInfo.version;
-    await SharedPrefUtils.setVersionCode(appVersions);
+    String? appVersions = packageInfo?.version;
+    await SharedPrefUtils.setVersionCode(appVersions ?? '');
     logger.d("appVersion===> $appVersions");
     logger.d("appVersion===> ${SharedPrefUtils.getVersionCode()}");
   }
 }
 
 class Const {
-
   static DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   static AndroidDeviceInfo? androidInfo;
   static IosDeviceInfo? iosInfo;
@@ -141,23 +141,21 @@ class Const {
 
     if (backButton) {
       backButtonPressedTime = currentTime;
-      showSnackBar(context,'Press again to exit');
+      showErrorSnackBar(context, 'Press again to exit');
       return false;
     } else {
       SystemNavigator.pop();
       return true;
     }
   }
-
-  }
-
+}
 
 class FontAsset {
   static const String fontHeightSmall = "fontHeightSmall";
   static const String fontHeightNormal = "fontHeightNormal";
   static const String fontHeightLarge = "fontHeightLarge";
 
-  static const String manrope = "Manrope";
+  static const String montserrat = "Montserrat";
   static const String sfPro = "SFProText";
 
   static const FontWeight extraLight = FontWeight.w200;

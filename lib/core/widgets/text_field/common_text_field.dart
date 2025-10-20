@@ -102,9 +102,9 @@ class CommonTextField extends StatelessWidget {
               textStyle ??
               (readOnly
                   ? fontStyleMedium13.apply(
-                    color: ColorConst.textColor.withOpacity(0.5),
-                  )
-                  : fontStyleSemiBold14),
+                      color: ColorConst.textColor.withOpacity(0.5),
+                    )
+                  : fontStyleMedium16),
           decoration: InputDecoration(
             counterText: '',
             isDense: true,
@@ -124,11 +124,11 @@ class CommonTextField extends StatelessWidget {
                 ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Dimensions.r8),
-              borderSide: BorderSide(color: ColorConst.dividerColor),
+              borderSide: BorderSide(color: ColorConst.transparent),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Dimensions.r8),
-              borderSide: BorderSide(color: ColorConst.dividerColor),
+              borderSide: BorderSide(color: ColorConst.transparent),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Dimensions.r8),

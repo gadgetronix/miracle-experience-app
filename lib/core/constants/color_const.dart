@@ -4,7 +4,7 @@ class ColorConst {
   static Color shimmerBaseColor = Colors.grey.shade200;
   static Color shimmerHighLightColor = Colors.grey.shade400;
 
-  static const Color primaryColor = Color(0xFF00796B);
+  static const Color primaryColor = Color(0xFFE17427);
   static const Color secondaryColor = Color(0xFF00796B);
 
   //primary
@@ -32,7 +32,7 @@ class ColorConst {
   static const Color buttonGreyColor = Color(0xffDBDBDB);
 
   static const Color greyColor = Color(0xffCBCBCB);
-  static const Color scaffoldBackgroundColor= Color(0xfff5f6fc);
+  static const Color scaffoldBackgroundColor = Color(0xfff5f6fc);
   static const Color lightGreyColor = Color(0x80CBCBCB);
   static const Color blackColor = Color(0xff000000);
   static const Color whiteColor = Color(0xffffffff);
@@ -45,16 +45,20 @@ class ColorConst {
   static Color dialogRedColor = const Color(0xffe43b44);
   static Color blueColor = const Color(0xff0094ff);
   static Color hintColor = const Color(0xff7c7c7c);
+  static Color transparent = Colors.transparent;
 
-  static const Color textColor = Color(0xff222222);
+  static const Color textColor = Color(0xff1A1A1A);
   // static const Color textTitleColor = Color(0xff1A1A1A);
   static const Color textGreyColor = Color(0xff7c7c7c);
   // static const Color lightPurpleColor = Color(0xffb6becf);
   static const Color textRedColor = Color(0xffe55451);
+  static const Color suffixColor = Color(0xffD1D1D1);
 
   static const Color dashGreyDark = Color(0xff393939);
   static const Color dashGreyLight = Color(0xffe4e4e4);
 
   static const Color flushbarBackgroundColor = Color(0xFFEFF1F7);
   static const Color redButtonColor = Color(0xFFeca0b5);
+  static const Color errorSnackbarColor = Color(0xFFCE5A52);
+  static const Color successSnackbarColor = Color(0xFF00796B);
 }

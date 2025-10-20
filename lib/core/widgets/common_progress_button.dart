@@ -59,65 +59,62 @@ class BlocConsumerRoundedButtonWithProgress<
             if (onNoInternet != null) Function.apply(onNoInternet!, []);
           } else if (value.resultType == APIResultType.failure) {
             if (needToShowDefaultErrorSnackBar) {
-              showSnackBar(context, value.message ?? '');
+              showErrorSnackBar(context, value.message ?? '');
             }
             if (onError != null) Function.apply(onError!, [value.message]);
           } else if (value.resultType == APIResultType.unauthorised) {
             if (needToShowDefaultErrorSnackBar) {
-              showSnackBar(context, value.message ?? '');
+              showErrorSnackBar(context, value.message ?? '');
             }
             if (onError != null) Function.apply(onError!, [value.message]);
           } else if (value.resultType == APIResultType.success) {
             if (needToShowDefaultSuccessSnackBar) {
-              showSnackBar(context, value.message ?? '');
+              showSuccessSnackBar(context, value.message ?? '');
             }
             Function.apply(onSuccess, [value.result, value.message]);
           }
         }
       },
       builder: (BuildContext context, APIResultState<T>? value) {
-        return Container(
-          height: height ?? Dimensions.h54,
-          width: width ?? double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: borderColor, width: borderWidth!),
-            color: backGroundColor,
-            borderRadius: BorderRadius.circular(Dimensions.r10),
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: backGroundColor,
+            padding: EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: borderColor, width: borderWidth!),
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
-          child: MaterialButton(
-            onPressed:
-                isEnabled
-                    ? () {
-                      if ((value == null ||
-                          value.resultType != APIResultType.loading)) {
-                        Function.apply(onTap, []);
-                      }
-                    }
-                    : null,
-            child:
-                APIResult.isLoading(value)
-                    ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: Dimensions.h25,
-                          height: Dimensions.h25,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              progressColor,
-                            ),
-                          ),
+          onPressed: isEnabled
+              ? () {
+                  if ((value == null ||
+                      value.resultType != APIResultType.loading)) {
+                    Function.apply(onTap, []);
+                  }
+                }
+              : null,
+          child: APIResult.isLoading(value)
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: Dimensions.h25,
+                      height: Dimensions.h25,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          progressColor,
                         ),
-                      ],
-                    )
-                    : Text(
-                      buttonLabel,
-                      style:
-                          textStyle ??
-                          fontStyleSemiBold17.apply(color: Colors.white),
+                      ),
                     ),
-          ),
+                  ],
+                )
+              : Text(
+                  buttonLabel,
+                  style:
+                      textStyle ??
+                      fontStyleSemiBold16.apply(color: Colors.white),
+                ),
         );
       },
     );
