@@ -4,20 +4,6 @@ import '../constants/color_const.dart';
 import '../constants/const.dart';
 import '../constants/dimensions.dart';
 
-TextStyle fontStyleLight15 = TextStyle(
-  fontSize: Dimensions.sp15,
-  fontFamily: FontAsset.montserrat,
-  color: ColorConst.textColor,
-  fontWeight: FontAsset.light,
-);
-
-TextStyle fontStyleLight16 = TextStyle(
-  fontSize: Dimensions.sp16,
-  fontFamily: FontAsset.montserrat,
-  color: ColorConst.textColor,
-  fontWeight: FontAsset.light,
-);
-
 //REGULAR
 
 TextStyle fontStyleRegular11 = TextStyle(
