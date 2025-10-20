@@ -5,7 +5,7 @@ class AppString {
 
   //Signin screen strings
   static const welcomeToMiracleExperienceSigninToContinue =
-      "Welcome to Miracle Experience\nSign in to continue!";
+      "Welcome to Miracle Experience\nSign in to continue";
   static const enterYourEmail = "Enter your email";
   static const enterYourPassword = "Enter your password";
   static const signIn = "Sign In";

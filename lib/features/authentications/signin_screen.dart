@@ -27,87 +27,85 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: Dimensions.getSafeAreaTopHeight() + Dimensions.h20,
-            bottom: Dimensions.commonPaddingForScreen,
-            left: Dimensions.commonPaddingForScreen,
-            right: Dimensions.commonPaddingForScreen,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Sample image header or illustration
-              SizedBox(
-                height: Dimensions.screenHeight() * 0.2,
-                width: Dimensions.screenWidth() * 0.4,
-                child: Image.asset(ImageAsset.icScreenLogo),
-              ),
-              SizedBox(height: Dimensions.h30),
-              // Headline or main title
-              Text(
-                AppString.welcomeToMiracleExperienceSigninToContinue,
-                style: fontStyleSemiBold18,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: Dimensions.h20),
+      resizeToAvoidBottomInset: false,
+      body: Padding(
+        padding: EdgeInsets.only(
+          top: Dimensions.getSafeAreaTopHeight() + Dimensions.h20,
+          bottom: Dimensions.commonPaddingForScreen,
+          left: Dimensions.commonPaddingForScreen,
+          right: Dimensions.commonPaddingForScreen,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Sample image header or illustration
+            SizedBox(
+              height: Dimensions.screenHeight() * 0.1,
+              width: Dimensions.screenWidth() * 0.4,
+              child: Image.asset(ImageAsset.icScreenLogo),
+            ),
+            SizedBox(height: Dimensions.h30),
+            // Headline or main title
+            Text(
+              AppString.welcomeToMiracleExperienceSigninToContinue,
+              style: fontStyleSemiBold18,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: Dimensions.h20),
 
-              CommonTextField(
-                hintText: AppString.enterYourEmail,
-                keyBoardType: TextInputType.emailAddress,
-                textController: emailController,
-                textInputAction: TextInputAction.next,
-              ),
-              SizedBox(height: Dimensions.h5),
-              ValueListenableBuilder<bool>(
-                valueListenable: isPasswordVisible,
-                builder: (context, visible, child) {
-                  return CommonTextField(
-                    hintText: AppString.enterYourPassword,
-                    keyBoardType: TextInputType.visiblePassword,
-                    textController: passwordController,
-                    obscureText: !visible,
-                    textInputAction: TextInputAction.done,
-                    suffixIcon: InkWell(
-                      onTap: () {
-                        isPasswordVisible.value = !isPasswordVisible.value;
-                      },
-                      child: Icon(
-                        Icons.visibility_rounded,
-                        color: visible
-                            ? ColorConst.primaryColor
-                            : ColorConst.suffixColor,
-                        size: Dimensions.h22,
-                      ),
+            CommonTextField(
+              hintText: AppString.enterYourEmail,
+              keyBoardType: TextInputType.emailAddress,
+              textController: emailController,
+              textInputAction: TextInputAction.next,
+            ),
+            SizedBox(height: Dimensions.h5),
+            ValueListenableBuilder<bool>(
+              valueListenable: isPasswordVisible,
+              builder: (context, visible, child) {
+                return CommonTextField(
+                  hintText: AppString.enterYourPassword,
+                  keyBoardType: TextInputType.visiblePassword,
+                  textController: passwordController,
+                  obscureText: !visible,
+                  textInputAction: TextInputAction.done,
+                  suffixIcon: InkWell(
+                    onTap: () {
+                      isPasswordVisible.value = !isPasswordVisible.value;
+                    },
+                    child: Icon(
+                      Icons.visibility_rounded,
+                      color: visible
+                          ? ColorConst.primaryColor
+                          : ColorConst.suffixColor,
+                      size: Dimensions.h22,
                     ),
-                  );
-                },
-              ),
-              SizedBox(height: Dimensions.h15),
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: Dimensions.h15),
 
-              // Example sign-in button
-              BlocProvider.value(
-                value: signinCubit,
-                child:
-                    BlocConsumerRoundedButtonWithProgress<
-                      SigninCubit,
-                      ModelResponseSigninEntity
-                    >(
-                      buttonLabel: AppString.signIn,
-                      onTap: validate,
-                      onSuccess: (modelResponse, msg) =>
-                          onSuccess(modelResponse, msg),
-                      onError: (message) =>
-                          showErrorSnackBar(context, message ?? ''),
-                      isEnabled: true,
-                      onNoInternet: () {
-                        // navigateToPage(NoInternet(onPressed: validate));
-                      },
-                    ),
-              ),
-            ],
-          ),
+            BlocProvider.value(
+              value: signinCubit,
+              child:
+                  BlocConsumerRoundedButtonWithProgress<
+                    SigninCubit,
+                    ModelResponseSigninEntity
+                  >(
+                    buttonLabel: AppString.signIn,
+                    onTap: validate,
+                    onSuccess: (modelResponse, msg) =>
+                        onSuccess(modelResponse, msg),
+                    onError: (message) =>
+                        showErrorSnackBar(context, message ?? ''),
+                    isEnabled: true,
+                    onNoInternet: () {
+                      // navigateToPage(NoInternet(onPressed: validate));
+                    },
+                  ),
+            ),
+          ],
         ),
       ),
     );

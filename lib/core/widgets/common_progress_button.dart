@@ -94,20 +94,13 @@ class BlocConsumerRoundedButtonWithProgress<
                 }
               : null,
           child: APIResult.isLoading(value)
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: Dimensions.h25,
-                      height: Dimensions.h25,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          progressColor,
-                        ),
-                      ),
-                    ),
-                  ],
+              ? SizedBox(
+                  width: Dimensions.h20,
+                  height: Dimensions.h20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                  ),
                 )
               : Text(
                   buttonLabel,
