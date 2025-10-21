@@ -1,13 +1,14 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:miracle_experience_mobile_app/features/authentications/signin_screen.dart';
+import 'package:miracle_experience_mobile_app/features/balloon_manifest/balloon_manifest_screen.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:upgrader/upgrader.dart';
 
 import 'core/basic_features.dart';
-import 'core/firebase/notification_manager.dart';
 import 'core/utils/app_loader.dart';
+import 'core/utils/secure_time_helper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,12 +19,28 @@ Future<void> main() async {
   // await Firebase.initializeApp();
   // await NotificationManager().init();
   await ScreenUtil.ensureScreenSize();
+  _initializeKronos();
   orientations();
   runApp(const MainApp());
 }
 
 void orientations() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+}
+
+Future<void> _initializeKronos() async {
+   tz.initializeTimeZones();
+  try {
+    // timber('🚀 App starting - attempting time sync...');
+    final success = await SecureTimeHelper.syncAndPersist();
+    if (success) {
+      // timber('✅ Initial time sync successful');
+    } else {
+      // timber('⚠️  Initial time sync failed - app opened offline');
+    }
+  } catch (e) {
+    timber('❌ Initial sync error: $e');
+  }
 }
 
 class MainApp extends StatelessWidget {
@@ -72,7 +89,9 @@ class MainApp extends StatelessWidget {
             upgrader: Upgrader(
               durationUntilAlertAgain: const Duration(days: 1),
             ),
-            child: SigninScreen(),
+            child: SharedPrefUtils.getIsUserLoggedIn()
+                ? BalloonManifestScreen()
+                : SigninScreen(),
           ),
         ),
       ),

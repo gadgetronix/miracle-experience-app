@@ -8,6 +8,7 @@ import 'package:miracle_experience_mobile_app/features/network_helper/models/req
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_signin_entity.dart';
 
 import '../../core/widgets/common_progress_button.dart';
+import '../balloon_manifest/balloon_manifest_screen.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -157,6 +158,7 @@ class _SigninScreenState extends State<SigninScreen> {
     showSuccessSnackBar(context, message);
     await SharedPrefUtils.setIsUserLoggedIn(true);
     await SharedPrefUtils.setToken(result?.accessToken?.token ?? "");
+    navigateToPageAndRemoveAllPage(const BalloonManifestScreen());
     // await SharedPrefUtils.setUser(result);
   }
 }

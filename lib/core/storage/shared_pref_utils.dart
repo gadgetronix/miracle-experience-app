@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 import '../basic_features.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -72,6 +75,23 @@ class SharedPrefUtils {
   //   }
   //   return prefs.setString("User", value.toString());
   // }
+  
+  
+  static ModelResponseBalloonManifestEntity? getBalloonManifest() {
+    String? stringModel = _prefsInstance?.getString("BalloonManifest");
+    ModelResponseBalloonManifestEntity? modelResponseBalloonManifestEntity =
+        stringModel.isNotNullAndEmpty()
+            ? ModelResponseBalloonManifestEntity.fromJson(jsonDecode(stringModel!))
+            : null;
+    return modelResponseBalloonManifestEntity;
+  }
+
+  static Future<bool> setBalloonManifest(String value) async {
+    var prefs = await _instance;
+    return prefs.setString("BalloonManifest", value);
+  }
+
+
 
   static Future<void> remove() async {
     SharedPreferences.getInstance().then((SharedPreferences pref) {

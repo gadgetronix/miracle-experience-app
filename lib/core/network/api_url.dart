@@ -4,4 +4,5 @@ class NetworkConstant {
   static const String authorization = "Authorization";
   static const String bearer = "Bearer ";
   static const String signin = "Account/SignIn";
+  static const String balloonManifest = "BalloonManifest/signed";
 }

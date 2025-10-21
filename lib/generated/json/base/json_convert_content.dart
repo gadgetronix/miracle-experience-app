@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:miracle_experience_mobile_app/core/network/base_response_model_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/request_model/model_request_signin_entity.dart';
+import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_signin_entity.dart';
 
 JsonConvert jsonConvert = JsonConvert();
@@ -153,6 +154,23 @@ class JsonConvert {
       return data.map<ModelRequestSigninEntity>((Map<String, dynamic> e) =>
           ModelRequestSigninEntity.fromJson(e)).toList() as M;
     }
+    if (<ModelResponseBalloonManifestEntity>[] is M) {
+      return data.map<ModelResponseBalloonManifestEntity>((
+          Map<String, dynamic> e) =>
+          ModelResponseBalloonManifestEntity.fromJson(e)).toList() as M;
+    }
+    if (<ModelResponseBalloonManifestAssignments>[] is M) {
+      return data.map<ModelResponseBalloonManifestAssignments>((
+          Map<String, dynamic> e) =>
+          ModelResponseBalloonManifestAssignments.fromJson(e)).toList() as M;
+    }
+    if (<ModelResponseBalloonManifestAssignmentsPaxes>[] is M) {
+      return data
+          .map<ModelResponseBalloonManifestAssignmentsPaxes>((
+          Map<String, dynamic> e) =>
+          ModelResponseBalloonManifestAssignmentsPaxes.fromJson(e))
+          .toList() as M;
+    }
     if (<ModelResponseSigninEntity>[] is M) {
       return data.map<ModelResponseSigninEntity>((Map<String, dynamic> e) =>
           ModelResponseSigninEntity.fromJson(e)).toList() as M;
@@ -186,6 +204,12 @@ class JsonConvertClassCollection {
   Map<String, JsonConvertFunction> convertFuncMap = {
     (BaseResponseModelEntity).toString(): BaseResponseModelEntity.fromJson,
     (ModelRequestSigninEntity).toString(): ModelRequestSigninEntity.fromJson,
+    (ModelResponseBalloonManifestEntity)
+        .toString(): ModelResponseBalloonManifestEntity.fromJson,
+    (ModelResponseBalloonManifestAssignments)
+        .toString(): ModelResponseBalloonManifestAssignments.fromJson,
+    (ModelResponseBalloonManifestAssignmentsPaxes)
+        .toString(): ModelResponseBalloonManifestAssignmentsPaxes.fromJson,
     (ModelResponseSigninEntity).toString(): ModelResponseSigninEntity.fromJson,
     (ModelResponseSigninAccessToken).toString(): ModelResponseSigninAccessToken
         .fromJson,
