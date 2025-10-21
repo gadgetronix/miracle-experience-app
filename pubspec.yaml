@@ -29,6 +29,7 @@ dependencies:
   package_info_plus: ^9.0.0
   shared_preferences: ^2.5.3
   shimmer: ^3.0.0
+  signature: ^6.3.0
   upgrader: ^12.1.0
 
 dev_dependencies:
