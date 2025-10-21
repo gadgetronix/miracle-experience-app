@@ -20,7 +20,7 @@ Future<void> main() async {
   // await NotificationManager().init();
   await ScreenUtil.ensureScreenSize();
   _initializeKronos();
-  orientations();
+  // orientations();
   runApp(const MainApp());
 }
 
