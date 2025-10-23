@@ -31,10 +31,10 @@ class _SigninScreenState extends State<SigninScreen> {
       resizeToAvoidBottomInset: false,
       body: Padding(
         padding: EdgeInsets.only(
-          top: Dimensions.getSafeAreaTopHeight() + Dimensions.h20,
-          bottom: Dimensions.commonPaddingForScreen,
-          left: Dimensions.commonPaddingForScreen,
-          right: Dimensions.commonPaddingForScreen,
+          top: Dimensions.getSafeAreaTopHeight() + 20,
+          bottom: 20,
+          left: 20,
+          right: 20,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -45,14 +45,14 @@ class _SigninScreenState extends State<SigninScreen> {
               width: Dimensions.screenWidth() * 0.4,
               child: Image.asset(ImageAsset.icScreenLogo),
             ),
-            SizedBox(height: Dimensions.h30),
+            SizedBox(height: 30),
             // Headline or main title
             Text(
               AppString.welcomeToMiracleExperienceSigninToContinue,
               style: fontStyleSemiBold18,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: Dimensions.h20),
+            SizedBox(height: 20),
 
             CommonTextField(
               hintText: AppString.enterYourEmail,
@@ -60,7 +60,7 @@ class _SigninScreenState extends State<SigninScreen> {
               textController: emailController,
               textInputAction: TextInputAction.next,
             ),
-            SizedBox(height: Dimensions.h5),
+            SizedBox(height: 5),
             ValueListenableBuilder<bool>(
               valueListenable: isPasswordVisible,
               builder: (context, visible, child) {
@@ -79,13 +79,13 @@ class _SigninScreenState extends State<SigninScreen> {
                       color: visible
                           ? ColorConst.primaryColor
                           : ColorConst.suffixColor,
-                      size: Dimensions.h22,
+                      size: 22,
                     ),
                   ),
                 );
               },
             ),
-            SizedBox(height: Dimensions.h15),
+            SizedBox(height: 15),
 
             BlocProvider.value(
               value: signinCubit,
