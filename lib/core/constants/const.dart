@@ -155,7 +155,8 @@ class FontAsset {
   static const String fontHeightNormal = "fontHeightNormal";
   static const String fontHeightLarge = "fontHeightLarge";
 
-  static const String montserrat = "Montserrat";
+  static const String helvetica = "Helvetica";
+  // static const String montserrat = "Montserrat";
   static const String sfPro = "SFProText";
 
   static const FontWeight regular = FontWeight.w400;

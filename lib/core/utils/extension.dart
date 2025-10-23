@@ -24,6 +24,24 @@ extension BoolExtention on bool? {
   }
 }
 
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
+  }
+
+  String capitalizeByWord() {
+    if (trim().isEmpty) {
+      return '';
+    }
+    return split(' ')
+        .map(
+          (element) =>
+              "${element[0].toUpperCase()}${element.substring(1).toLowerCase()}",
+        )
+        .join(" ");
+  }
+}
+
 extension IntExtention on int? {
   bool toBool() {
     if (this == null) return false;
@@ -73,8 +91,8 @@ extension ListFilter<T> on List<T>? {
 extension EmailValidator on String? {
   bool isValidEmail() {
     return RegExp(
-            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(this!);
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
+    ).hasMatch(this!);
   }
 }
 
@@ -115,7 +133,6 @@ extension StringNullablity on String? {
   bool isNotNullAndEmpty() {
     return this != null && this!.isNotEmpty;
   }
-
 }
 
 bool notNull(String? data) {

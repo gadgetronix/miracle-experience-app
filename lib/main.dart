@@ -29,7 +29,7 @@ void orientations() {
 }
 
 Future<void> _initializeKronos() async {
-   tz.initializeTimeZones();
+  tz.initializeTimeZones();
   try {
     // timber('🚀 App starting - attempting time sync...');
     final success = await SecureTimeHelper.syncAndPersist();

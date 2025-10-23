@@ -10,7 +10,6 @@ import 'package:miracle_experience_mobile_app/features/network_helper/cubit/ball
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/manifest_content_widget.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/time_sync_required_widget.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/no_data_available_widget.dart';
-import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/sync_status_indicator.dart';
 
 import '../../core/utils/secure_time_helper.dart';
 
@@ -244,7 +243,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(title: const Text('Balloon Manifest'), elevation: 2);
+    return AppBar(title: const Text('Balloon Manifest', style: TextStyle(fontWeight: FontWeight.bold),), elevation: 2, backgroundColor: ColorConst.whiteColor, centerTitle: true,);
   }
 
   Widget _buildBody() {
