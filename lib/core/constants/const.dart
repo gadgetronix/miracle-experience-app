@@ -29,6 +29,21 @@ class Const {
   static IosDeviceInfo? iosInfo;
   static String packageName = "com.miracleexperience.app";
   static String platform = Platform.isAndroid ? "Android" : "iOS";
+  static bool? _isTablet;
+
+   static void init(BuildContext context) {
+    final data = MediaQuery.of(context);
+    final shortestSide = data.size.shortestSide;
+    _isTablet = shortestSide >= 600; // common threshold
+  }
+
+  /// Access anywhere
+  static bool get isTablet {
+    if (_isTablet == null) {
+      throw Exception('Const.init(context) must be called before using isTablet');
+    }
+    return _isTablet!;
+  }
 
   static Future<void> config() async {
     if (Platform.isAndroid) {
