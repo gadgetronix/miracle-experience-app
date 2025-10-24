@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../constants/color_const.dart';
-import '../../constants/dimensions.dart';
+// import '../../constants/dimensions.dart';
 import '../../utils/style.dart';
 
 class CommonTextField extends StatelessWidget {
@@ -74,8 +74,8 @@ class CommonTextField extends StatelessWidget {
         if (title.isNotNullAndEmpty())
           Padding(
             padding: EdgeInsets.only(
-              bottom: Dimensions.h8,
-              top: Dimensions.h14,
+              bottom: 8,
+              top: 14,
             ),
             child: Text(title!, style: titleTextStyle ?? fontStyleSemiBold13),
           ),
@@ -119,30 +119,30 @@ class CommonTextField extends StatelessWidget {
             contentPadding:
                 contentPadding ??
                 EdgeInsets.symmetric(
-                  vertical: Dimensions.h15,
-                  horizontal: Dimensions.w16,
+                  vertical: 15,
+                  horizontal: 16,
                 ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: ColorConst.transparent),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: ColorConst.transparent),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
                 color: ColorConst.primaryColor,
                 width: 1.5,
               ),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.red),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Dimensions.r8),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.red, width: 1.5),
             ),
             errorStyle: TextStyle(color: Colors.red, fontSize: 12),

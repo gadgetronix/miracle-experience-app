@@ -33,8 +33,8 @@ class _SigninScreenState extends State<SigninScreen> {
         padding: EdgeInsets.only(
           top: Dimensions.getSafeAreaTopHeight() + 20,
           bottom: 20,
-          left: Const.isTablet ? Dimensions.screenWidth() * 0.2 : 20,
-          right: Const.isTablet ? Dimensions.screenWidth() * 0.2 : 20,
+          left: Const.isTablet ? Dimensions.screenWidth() * 0.25 : 20,
+          right: Const.isTablet ? Dimensions.screenWidth() * 0.25 : 20,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -157,7 +157,6 @@ class _SigninScreenState extends State<SigninScreen> {
     ModelResponseSigninEntity? result,
     String message,
   ) async {
-    showSuccessSnackBar(context, message);
     await SharedPrefUtils.setIsUserLoggedIn(true);
     await SharedPrefUtils.setToken(result?.accessToken?.token ?? "");
     navigateToPageAndRemoveAllPage(const BalloonManifestScreen());

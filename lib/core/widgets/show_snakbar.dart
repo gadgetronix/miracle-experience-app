@@ -28,7 +28,7 @@ void showSuccessSnackBar(
   hideSnackBar(context);
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      backgroundColor: ColorConst.successSnackbarColor,
+      backgroundColor: ColorConst.successColor,
       behavior: SnackBarBehavior.fixed,
       duration: const Duration(seconds: 3),
       content: Text(

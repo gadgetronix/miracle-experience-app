@@ -60,5 +60,5 @@ class ColorConst {
   static const Color flushbarBackgroundColor = Color(0xFFEFF1F7);
   static const Color redButtonColor = Color(0xFFeca0b5);
   static const Color errorSnackbarColor = Color(0xFFCE5A52);
-  static const Color successSnackbarColor = Color(0xFF00796B);
+  static const Color successColor = Color(0xFF13AF13);
 }

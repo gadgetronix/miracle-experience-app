@@ -95,8 +95,8 @@ class BlocConsumerRoundedButtonWithProgress<
               : null,
           child: APIResult.isLoading(value)
               ? SizedBox(
-                  width: Dimensions.h20,
-                  height: Dimensions.h20,
+                  width: 20,
+                  height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
                     valueColor: AlwaysStoppedAnimation<Color>(progressColor),

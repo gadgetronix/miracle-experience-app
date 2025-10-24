@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 
 import '../constants/color_const.dart';
 import '../constants/const.dart';
-import '../constants/dimensions.dart';
 
 TextStyle passengerInfoTextStyle = TextStyle(
   fontSize: 10,
   fontFamily: FontAsset.helvetica,
+  fontWeight: FontAsset.medium,
   color: ColorConst.textColor,
 );
 
