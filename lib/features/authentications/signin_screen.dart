@@ -59,6 +59,7 @@ class _SigninScreenState extends State<SigninScreen> {
               keyBoardType: TextInputType.emailAddress,
               textController: emailController,
               textInputAction: TextInputAction.next,
+              textCapitalization: TextCapitalization.none,
             ),
             SizedBox(height: 5),
             ValueListenableBuilder<bool>(
