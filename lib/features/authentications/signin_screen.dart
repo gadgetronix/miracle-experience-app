@@ -33,8 +33,8 @@ class _SigninScreenState extends State<SigninScreen> {
         padding: EdgeInsets.only(
           top: Dimensions.getSafeAreaTopHeight() + 20,
           bottom: 20,
-          left: 20,
-          right: 20,
+          left: Const.isTablet ? Dimensions.screenWidth() * 0.2 : 20,
+          right: Const.isTablet ? Dimensions.screenWidth() * 0.2 : 20,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

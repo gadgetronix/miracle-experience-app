@@ -323,9 +323,9 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
                       callSignOutAPI();
                     },
                   ),
-                  child: Icon(
-                    Icons.logout_outlined,
-                    color: ColorConst.textColor,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 25),
+                    child: Text(AppString.logout, style: fontStyleMedium16),
                   ),
                 ),
               ),

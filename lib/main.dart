@@ -67,6 +67,7 @@ class MainApp extends StatelessWidget {
           ),
           builder: EasyLoading.init(
             builder: (context, child) {
+              Const.init(context);
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
                   textScaler: TextScaler.linear(
