@@ -311,10 +311,10 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
                 },
                 child: GestureDetector(
                   onTap: () => showLogoutDialog(
-                    title: 'Logout',
-                    content: "Are you sure you want to logout?",
-                    cancelText: 'Cancel',
-                    yesText: 'Logout',
+                    title: AppString.logout,
+                    content: AppString.logoutDesc,
+                    cancelText: AppString.cancel,
+                    yesText: AppString.logout,
                     noFunction: () {
                       Navigator.pop(context);
                     },

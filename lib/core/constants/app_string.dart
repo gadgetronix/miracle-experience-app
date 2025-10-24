@@ -10,6 +10,7 @@ class AppString {
   static const enterYourPassword = "Enter your password";
   static const signIn = "Sign In";
   static const logout = "Logout";
+  static const logoutDesc = "Are you sure you want to logout?";
   static const pleaseEnterValidEmail = "Please enter a valid email address.";
   static const pleaseEnterPassword = "Please enter your password";
 
