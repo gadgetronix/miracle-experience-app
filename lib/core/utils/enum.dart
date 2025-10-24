@@ -46,6 +46,16 @@ enum PlatformType {
   const PlatformType(this.value);
 }
 
+enum SignatureStatus {
+  pending, // Not yet uploaded
+  success, // Uploaded successfully
+  offlinePending, // Failed (no internet)
+}
+
+enum OfflineSyncState { idle, syncing, completed }
+
+
+
 // enum Language {
 //   english(Locale('en', 'US'), 'English'),
 //   urdu(Locale('ur', 'UR'), 'Urdu');

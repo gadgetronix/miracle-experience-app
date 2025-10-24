@@ -23,7 +23,7 @@ class PassengersListWidget extends StatelessWidget {
   final String date;
   final double otherWeights;
 
-  const PassengersListWidget({
+  PassengersListWidget({
     super.key,
     required this.passengers,
     required this.pilotName,
@@ -35,6 +35,10 @@ class PassengersListWidget extends StatelessWidget {
     required this.manifestId,
     required this.assignmentId,
   });
+
+  final ValueNotifier<SignatureStatus> signatureStatus =
+      ValueNotifier<SignatureStatus>(SignatureStatus.pending);
+  final ValueNotifier<String> signatureTime = ValueNotifier<String>('');
 
   @override
   Widget build(BuildContext context) {
@@ -59,46 +63,41 @@ class PassengersListWidget extends StatelessWidget {
             _buildFooter(),
           ],
         );
-        // return Card(
-        //   color: ColorConst.whiteColor,
-        //   elevation: 2,
-        //   margin: const EdgeInsets.symmetric(vertical: 12),
-        //   shape: RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.circular(12),
-        //   ),
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       _buildHeader(isTablet),
-        //       const Divider(height: 1, thickness: 1),
-        //       if (isTablet) ...[
-        //         _buildColumnHeaders(),
-        //         _buildTabletPassengersList(),
-        //       ] else ...[
-        //         _buildMobilePassengersList(),
-        //       ],
-        //       Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
-
-        //       _buildFooter(),
-        //     ],
-        //   ),
-        // );
       },
     );
   }
 
   Widget _buildHeader(bool isTablet) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 25 : 16,
-        vertical: 15,
+    return BlocListener<OfflineSyncCubit, OfflineSyncState>(
+      listener: (context, state) {
+        if (state == OfflineSyncState.completed) {
+          signatureStatus.value = SignatureStatus.success;
+          signatureTime.value = Const.convertDateTimeToDMYHM(DateTime.now());
+        }
+      },
+      child: ValueListenableBuilder<SignatureStatus>(
+        valueListenable: signatureStatus,
+        builder: (context, value, child) {
+          return Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: isTablet ? 25 : 16,
+              vertical: 15,
+            ),
+            decoration: BoxDecoration(
+              color: value == SignatureStatus.success
+                  ? ColorConst.successColor
+                  : ColorConst.primaryColor,
+            ),
+            child: isTablet
+                ? _buildTabletHeader(status: value)
+                : _buildMobileHeader(),
+          );
+        },
       ),
-      decoration: BoxDecoration(color: ColorConst.primaryColor),
-      child: isTablet ? _buildTabletHeader() : _buildMobileHeader(),
     );
   }
 
-  Widget _buildTabletHeader() {
+  Widget _buildTabletHeader({SignatureStatus? status}) {
     return Row(
       children: [
         Expanded(
@@ -135,22 +134,62 @@ class PassengersListWidget extends StatelessWidget {
             ],
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            _buildSignatureSheet(
-              manifestId: manifestId,
-              assignmentId: assignmentId,
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            decoration: BoxDecoration(
-              color: ColorConst.whiteColor,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(AppString.sign, style: fontStyleBold14),
-          ),
-        ),
+        status == SignatureStatus.pending
+            ? GestureDetector(
+                onTap: () {
+                  _buildSignatureSheet(
+                    manifestId: manifestId,
+                    assignmentId: assignmentId,
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ColorConst.whiteColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    AppString.sign,
+                    style: fontStyleBold14.copyWith(
+                      color: ColorConst.primaryColor,
+                    ),
+                  ),
+                ),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+
+                    children: [
+                      Text(
+                        AppString.signed,
+                        style: fontStyleBold14.copyWith(
+                          color: ColorConst.whiteColor,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Icon(Icons.done, color: ColorConst.whiteColor),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  ValueListenableBuilder<String>(
+                    valueListenable: signatureTime,
+                    builder: (context, value, child) {
+                      return Text(
+                        value,
+                        style: fontStyleRegular12.copyWith(
+                          color: ColorConst.whiteColor,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
       ],
     );
   }
@@ -207,7 +246,10 @@ class PassengersListWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: fontStyleRegular10.copyWith(color: Colors.white70)),
+        Text(
+          label,
+          style: fontStyleRegular10.copyWith(color: ColorConst.whiteColor),
+        ),
         const SizedBox(height: 2),
         Text(
           value,
@@ -805,10 +847,18 @@ class PassengersListWidget extends StatelessWidget {
                 if (state?.resultType == APIResultType.loading) {
                   EasyLoading.show();
                 } else if (state?.resultType == APIResultType.success) {
+                  signatureTime.value = Const.convertDateTimeToDMYHM(
+                    DateTime.now(),
+                  );
+                  signatureStatus.value = SignatureStatus.success;
                   EasyLoading.dismiss();
                   Navigator.pop(context); // Close bottom sheet
                 } else if (state?.resultType == APIResultType.noInternet) {
-                  // Handle no internet
+                  signatureTime.value = Const.convertDateTimeToDMYHM(
+                    DateTime.now(),
+                  );
+                  signatureStatus.value = SignatureStatus.offlinePending;
+                  Navigator.pop(context); // Close bottom sheet
                   EasyLoading.dismiss();
                 } else if (state?.resultType == APIResultType.failure) {
                   EasyLoading.dismiss();

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:miracle_experience_mobile_app/features/authentications/signin_screen.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/balloon_manifest_screen.dart';
+import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:upgrader/upgrader.dart';
 
@@ -21,7 +22,9 @@ Future<void> main() async {
   await ScreenUtil.ensureScreenSize();
   _initializeKronos();
   // orientations();
-  runApp(const MainApp());
+  runApp(
+    BlocProvider(create: (_) => OfflineSyncCubit(), child: const MainApp()),
+  );
 }
 
 void orientations() {
