@@ -18,6 +18,7 @@ class CustomBottomSheet {
     // FocusManager.instance.primaryFocus?.unfocus();
     return showModalBottomSheet(
         backgroundColor: Colors.transparent,
+        constraints: BoxConstraints.tightFor(width: Dimensions.screenWidth()),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(Dimensions.r10),
@@ -45,7 +46,7 @@ class CustomBottomSheet {
                       radius: Dimensions.r16,
                       child: const Icon(
                         Icons.close_rounded,
-                        // color: ColorConst.blackColor,
+                        color: ColorConst.blackColor,
                         size: 22,
                       ),
                     )),
@@ -53,7 +54,7 @@ class CustomBottomSheet {
               Wrap(
                 children: [
                   Container(
-                    width: Dimensions.screenWidth(),
+                    width: double.infinity,
                     decoration: BoxDecoration(
                         color: ColorConst.whiteColor,
                         borderRadius: BorderRadius.only(
