@@ -12,6 +12,7 @@ import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/no_data_available_widget.dart';
 
 import '../../core/utils/secure_time_helper.dart';
+import '../authentications/signin_screen.dart';
 
 /// Balloon Manifest Screen with offline support and secure time validation
 ///
@@ -243,7 +244,39 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(title: const Text('Balloon Manifest', style: TextStyle(fontWeight: FontWeight.bold),), elevation: 2, backgroundColor: ColorConst.whiteColor, centerTitle: true,);
+    return AppBar(
+      title: const Text(
+        AppString.balloonManifest,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontFamily: FontAsset.helvetica,
+        ),
+      ),
+      elevation: 2,
+      backgroundColor: ColorConst.whiteColor,
+      actions: [
+        GestureDetector(
+          onTap: () => showLogoutDialog(
+            title: 'Logout',
+            content: "Are you sure you want to logout?",
+            cancelText: 'Cancel',
+            yesText: 'Logout',
+            noFunction: () {
+              Navigator.pop(context);
+            },
+            yesFunction: () {
+              SharedPrefUtils.remove();
+              SharedPrefUtils.setIsUserLoggedIn(false);
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const SigninScreen()),
+                (route) => false,
+              );
+            },
+          ),
+          child: Icon(Icons.logout_outlined, color: ColorConst.textColor),
+        ),
+      ],
+    );
   }
 
   Widget _buildBody() {

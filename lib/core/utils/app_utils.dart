@@ -54,6 +54,7 @@ Future showLogoutDialog({
         context: GlobalVariable.appContext,
         builder: (context) {
           return AlertDialog(
+            backgroundColor: ColorConst.whiteColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Dimensions.r12),
             ),

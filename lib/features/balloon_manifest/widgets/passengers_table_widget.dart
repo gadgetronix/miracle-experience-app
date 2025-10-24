@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 
-/// Responsive passenger list view
-/// - Tablet: Wide table-like layout (no horizontal scroll)
-/// - Mobile: Card-based vertical layout
 class PassengersListWidget extends StatelessWidget {
   final List<ModelResponseBalloonManifestAssignmentsPaxes> passengers;
   final String pilotName;
@@ -82,13 +79,7 @@ class PassengersListWidget extends StatelessWidget {
         horizontal: isTablet ? 25 : 16,
         vertical: 15,
       ),
-      decoration: BoxDecoration(
-        color: ColorConst.primaryColor,
-        // borderRadius: const BorderRadius.only(
-        //   topLeft: Radius.circular(12),
-        //   topRight: Radius.circular(12),
-        // ),
-      ),
+      decoration: BoxDecoration(color: ColorConst.primaryColor),
       child: isTablet ? _buildTabletHeader() : _buildMobileHeader(),
     );
   }
@@ -101,56 +92,42 @@ class PassengersListWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'PILOT: ${pilotName.toUpperCase()}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 0.5,
-                ),
+                '${AppString.pilot.toUpperCase().endWithColon()} ${pilotName.toUpperCase()}',
+                style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  _buildHeaderInfo('Date', date),
+                  _buildHeaderInfo(AppString.date.toUpperCase(), date),
                   const SizedBox(width: 24),
-                  _buildHeaderInfo('LOCATION', location),
+                  _buildHeaderInfo(AppString.location.toUpperCase(), location),
                   const SizedBox(width: 24),
-                  _buildHeaderInfo('BALLOON', balloonCode),
+                  _buildHeaderInfo(
+                    AppString.balloon.toUpperCase(),
+                    balloonCode,
+                  ),
                   const SizedBox(width: 24),
-                  _buildHeaderInfo('TABLE', tableNumber.toString()),
+                  _buildHeaderInfo(
+                    AppString.table.toUpperCase(),
+                    tableNumber.toString(),
+                  ),
+                  const SizedBox(width: 24),
+                  _buildHeaderInfo(
+                    AppString.passengers.toUpperCase(),
+                    passengers.length.toString(),
+                  ),
                 ],
               ),
             ],
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
+            color: ColorConst.whiteColor,
+            borderRadius: BorderRadius.circular(20),
           ),
-          child: Column(
-            children: [
-              Text(
-                '${passengers.length}',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: ColorConst.primaryColor,
-                ),
-              ),
-              Text(
-                'PASSENGERS',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
-                  color: ColorConst.primaryColor,
-                ),
-              ),
-            ],
-          ),
+          child: Text(AppString.sign, style: fontStyleBold14),
         ),
       ],
     );
@@ -208,22 +185,11 @@ class PassengersListWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 10,
-            color: Colors.white.withOpacity(0.8),
-            letterSpacing: 0.5,
-          ),
-        ),
+        Text(label, style: fontStyleRegular10.copyWith(color: Colors.white70)),
         const SizedBox(height: 2),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: fontStyleBold14.copyWith(color: ColorConst.whiteColor),
         ),
       ],
     );
@@ -234,25 +200,24 @@ class PassengersListWidget extends StatelessWidget {
   Widget _buildColumnHeaders() {
     return Container(
       padding: const EdgeInsets.only(right: 10, left: 25, top: 12, bottom: 12),
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: BoxDecoration(color: ColorConst.whiteColor),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildColumnHeader('#', flex: 1),
           const SizedBox(width: 5),
-
-          _buildColumnHeader('Driver Name', flex: 4),
+          _buildColumnHeader(AppString.driverName, flex: 4),
           const SizedBox(width: 5),
-          _buildColumnHeader('Full Name', flex: 4),
+          _buildColumnHeader(AppString.fullName, flex: 4),
           const SizedBox(width: 5),
-          _buildColumnHeader('Nationality', flex: 3),
-          _buildColumnHeader('M/F', flex: 1),
-          _buildColumnHeader('Tour Operator', flex: 4),
+          _buildColumnHeader(AppString.nationality, flex: 3),
+          _buildColumnHeader(AppString.mf, flex: 1),
+          _buildColumnHeader(AppString.tourOperator, flex: 4),
           const SizedBox(width: 5),
-          _buildColumnHeader('Permit', flex: 2),
-          _buildColumnHeader('Pickup Location', flex: 4),
+          _buildColumnHeader(AppString.permit, flex: 2),
+          _buildColumnHeader(AppString.pickupLocation, flex: 4),
           const SizedBox(width: 5),
-          _buildColumnHeader('KG', flex: 1),
+          _buildColumnHeader(AppString.kg, flex: 1),
         ],
       ),
     );
@@ -261,10 +226,7 @@ class PassengersListWidget extends StatelessWidget {
   Widget _buildColumnHeader(String title, {required int flex}) {
     return Expanded(
       flex: flex,
-      child: Text(
-        title,
-        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-      ),
+      child: Text(title, style: fontStyleBold10),
     );
   }
 
@@ -289,7 +251,7 @@ class PassengersListWidget extends StatelessWidget {
   ) {
     return Container(
       padding: const EdgeInsets.only(right: 10, left: 25, top: 12, bottom: 12),
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: BoxDecoration(color: ColorConst.whiteColor),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -299,12 +261,13 @@ class PassengersListWidget extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('$number', style: passengerInfoTextStyle),
+                Text(number.toString(), style: passengerInfoTextStyle),
                 if (passenger.quadrantPosition != null) ...[
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 5),
                   Text(
-                    'A',
-                    // passenger.specialRequest ?? '',
+                    passenger.specialRequest.isNotNullAndEmpty()
+                        ? passenger.specialRequest![0]
+                        : '',
                     style: passengerInfoTextStyle,
                   ),
                 ],
@@ -505,7 +468,9 @@ class PassengersListWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      _getQuadrantLabel(passenger.quadrantPosition!),
+                      passenger.specialRequest.isNotNullAndEmpty()
+                          ? passenger.specialRequest![0]
+                          : '',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -732,21 +697,6 @@ class PassengersListWidget extends StatelessWidget {
     return Text(gender.toUpperCase(), style: passengerInfoTextStyle);
   }
 
-  String _getQuadrantLabel(int position) {
-    switch (position) {
-      case 1:
-        return 'A';
-      case 2:
-        return 'B';
-      case 3:
-        return 'C';
-      case 4:
-        return 'D';
-      default:
-        return 'Q$position';
-    }
-  }
-
   Widget _buildFooter() {
     final totalWeight = passengers.fold<double>(
       0.0,
@@ -764,23 +714,23 @@ class PassengersListWidget extends StatelessWidget {
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Take Off Weight: ${(otherWeights + totalWeight).toStringAsFixed(0)}',
-                  style: passengerInfoTextStyle.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${AppString.takeOffWeight.endWithColon()} ${(otherWeights + totalWeight).toStringAsFixed(0)}',
+                style: passengerInfoTextStyle.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  'Total: ${totalWeight.toStringAsFixed(0)} KG',
-                  style: passengerInfoTextStyle.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              Text(
+                '${AppString.total.endWithColon()}: ${totalWeight.toStringAsFixed(0)} KG',
+                style: passengerInfoTextStyle.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            );
+              ),
+            ],
+          );
         },
       ),
     );

@@ -40,6 +40,14 @@ extension StringExtension on String {
         )
         .join(" ");
   }
+
+  String endWithColon() {
+    if (endsWith(':')) {
+      return this;
+    } else {
+      return '$this:';
+    }
+  }
 }
 
 extension IntExtention on int? {
