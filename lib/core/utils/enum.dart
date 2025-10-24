@@ -36,6 +36,16 @@ enum FontSizeType {
 
 enum FontStyleType { manrope }
 
+enum PlatformType {
+  android(0),
+  ios(1),
+  admin(2);
+
+  final int value;
+
+  const PlatformType(this.value);
+}
+
 // enum Language {
 //   english(Locale('en', 'US'), 'English'),
 //   urdu(Locale('ur', 'UR'), 'Urdu');

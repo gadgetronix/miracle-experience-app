@@ -130,7 +130,7 @@ class _SigninScreenState extends State<SigninScreen> {
           ..deviceToken = Platform.isAndroid
               ? Const.androidInfo?.id
               : Const.iosInfo?.identifierForVendor
-          ..isSignout = true
+          ..isSignout = false
           ..appVersion = AppInfo.instance.packageInfo?.version ?? ''
           ..osVersion = Platform.isAndroid
               ? Const.androidInfo?.version.release
@@ -145,7 +145,9 @@ class _SigninScreenState extends State<SigninScreen> {
               ? Const.androidInfo?.id
               : Const.iosInfo?.identifierForVendor
           ..userRole = 1
-          ..platform = 0
+          ..platform = Platform.isAndroid
+              ? PlatformType.android.value
+              : PlatformType.ios.value
           ..email = emailController.text.trim()
           ..password = passwordController.text.trim();
     signinCubit.callSigninAPI(modelRequestSigninEntity);

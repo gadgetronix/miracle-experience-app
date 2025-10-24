@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:miracle_experience_mobile_app/core/network/base_response_model_entity.dart';
+import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
+import 'package:miracle_experience_mobile_app/features/network_helper/cubit/auth_cubit.dart';
+import 'package:miracle_experience_mobile_app/features/network_helper/models/request_model/model_request_signin_entity.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -32,6 +37,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
     with WidgetsBindingObserver {
   // ========== Dependencies ==========
   late final BalloonManifestCubit _balloonManifestCubit;
+  late final SignOutCubit _signOutCubit;
 
   // ========== State Variables ==========
   bool _hasCachedTime = false;
@@ -63,10 +69,37 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
     }
   }
 
+  callSignOutAPI() {
+    final modelRequestSigninEntity = ModelRequestSigninEntity()
+      ..deviceToken = Platform.isAndroid
+          ? Const.androidInfo?.id
+          : Const.iosInfo?.identifierForVendor
+      ..isSignout = true
+      ..appVersion = AppInfo.instance.packageInfo?.version ?? ''
+      ..osVersion = Platform.isAndroid
+          ? Const.androidInfo?.version.release
+          : Const.iosInfo?.systemVersion
+      ..deviceMf = Platform.isAndroid
+          ? Const.androidInfo?.manufacturer
+          : Const.iosInfo?.name
+      ..deviceModel = Platform.isAndroid
+          ? Const.androidInfo?.model
+          : Const.iosInfo?.model
+      ..uId = Platform.isAndroid
+          ? Const.androidInfo?.id
+          : Const.iosInfo?.identifierForVendor
+      ..userRole = 1
+      ..platform = Platform.isAndroid
+          ? PlatformType.android.value
+          : PlatformType.ios.value;
+    _signOutCubit.callSignOutAPI(modelRequestSigninEntity);
+  }
+
   // ========== Initialization Methods ==========
 
   void _initializeDependencies() {
     _balloonManifestCubit = BalloonManifestCubit();
+    _signOutCubit = SignOutCubit();
   }
 
   void _initializeTimezone() {
@@ -255,25 +288,47 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
       elevation: 2,
       backgroundColor: ColorConst.whiteColor,
       actions: [
-        GestureDetector(
-          onTap: () => showLogoutDialog(
-            title: 'Logout',
-            content: "Are you sure you want to logout?",
-            cancelText: 'Cancel',
-            yesText: 'Logout',
-            noFunction: () {
-              Navigator.pop(context);
-            },
-            yesFunction: () {
-              SharedPrefUtils.remove();
-              SharedPrefUtils.setIsUserLoggedIn(false);
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const SigninScreen()),
-                (route) => false,
-              );
-            },
-          ),
-          child: Icon(Icons.logout_outlined, color: ColorConst.textColor),
+        BlocProvider.value(
+          value: _signOutCubit,
+          child:
+              BlocListener<
+                SignOutCubit,
+                APIResultState<BaseResponseModelEntity>?
+              >(
+                listener: (context, state) {
+                  EasyLoading.dismiss();
+                  if (state?.resultType == APIResultType.loading) {
+                  } else if (state?.resultType == APIResultType.success) {
+                    SharedPrefUtils.remove();
+                    navigateToPageAndRemoveAllPage(SigninScreen());
+                  } else {
+                    showErrorSnackBar(
+                      context,
+                      state?.message ?? 'Logout failed',
+                    );
+                  }
+                },
+                child: GestureDetector(
+                  onTap: () => showLogoutDialog(
+                    title: 'Logout',
+                    content: "Are you sure you want to logout?",
+                    cancelText: 'Cancel',
+                    yesText: 'Logout',
+                    noFunction: () {
+                      Navigator.pop(context);
+                    },
+                    yesFunction: () {
+                      EasyLoading.show();
+                      Navigator.pop(context);
+                      callSignOutAPI();
+                    },
+                  ),
+                  child: Icon(
+                    Icons.logout_outlined,
+                    color: ColorConst.textColor,
+                  ),
+                ),
+              ),
         ),
       ],
     );
