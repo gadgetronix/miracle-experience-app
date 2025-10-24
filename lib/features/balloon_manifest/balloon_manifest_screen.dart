@@ -298,6 +298,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
                 listener: (context, state) {
                   EasyLoading.dismiss();
                   if (state?.resultType == APIResultType.loading) {
+                    EasyLoading.show();
                   } else if (state?.resultType == APIResultType.success) {
                     SharedPrefUtils.remove();
                     navigateToPageAndRemoveAllPage(SigninScreen());
@@ -318,7 +319,6 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
                       Navigator.pop(context);
                     },
                     yesFunction: () {
-                      EasyLoading.show();
                       Navigator.pop(context);
                       callSignOutAPI();
                     },
