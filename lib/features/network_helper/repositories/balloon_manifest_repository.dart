@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:miracle_experience_mobile_app/core/network/base_response_model_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 
 import '../../../core/basic_features_network.dart';
@@ -15,6 +19,37 @@ class BalloonManifestRepository {
         getAPIResultFromNetwork<ModelResponseBalloonManifestEntity>(
           networkResult,
         );
+    return apiResultFromNetwork;
+  }
+
+  static Future<APIResultState<BaseResponseModelEntity>>
+  callUploadSignatureAPI({
+    required String manifestId,
+    required int assignmentId,
+    required String date,
+    String? signatureImageBase64,
+    required File signatureFile,
+  }) async {
+    FormData formData = FormData.fromMap({
+      "ManifestId": manifestId,
+      "AssignmentId": assignmentId,
+      "Date": date,
+      "SignatureImage": signatureImageBase64,
+      "SignatureFile": await MultipartFile.fromFile(
+        signatureFile.path,
+        filename: signatureFile.path.split("/").last,
+      ),
+    });
+
+    var networkResult = await APIHelper.instance.callPostMultiPartWithFromData(
+      NetworkConstant.uploadSignature,
+      formData,
+      false,
+    );
+
+    var apiResultFromNetwork = getAPIResultFromNetwork<BaseResponseModelEntity>(
+      networkResult,
+    );
     return apiResultFromNetwork;
   }
 }

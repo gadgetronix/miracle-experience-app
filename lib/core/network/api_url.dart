@@ -6,4 +6,5 @@ class NetworkConstant {
   static const String signin = "Account/SignIn";
   static const String signOut = "Account/SignOut";
   static const String balloonManifest = "BalloonManifest/signed";
+  static const String uploadSignature = "BalloonManifest/upload-signature";
 }

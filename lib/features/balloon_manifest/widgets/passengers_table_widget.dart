@@ -1,9 +1,21 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
+import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
+import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:signature/signature.dart';
+
+import '../../../core/network/api_result.dart';
+import '../../../core/network/base_response_model_entity.dart';
 
 class PassengersListWidget extends StatelessWidget {
   final List<ModelResponseBalloonManifestAssignmentsPaxes> passengers;
+  final String manifestId;
+  final int assignmentId;
   final String pilotName;
   final String balloonCode;
   final int tableNumber;
@@ -20,6 +32,8 @@ class PassengersListWidget extends StatelessWidget {
     required this.location,
     required this.date,
     required this.otherWeights,
+    required this.manifestId,
+    required this.assignmentId,
   });
 
   @override
@@ -121,13 +135,21 @@ class PassengersListWidget extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          decoration: BoxDecoration(
-            color: ColorConst.whiteColor,
-            borderRadius: BorderRadius.circular(20),
+        GestureDetector(
+          onTap: () {
+            _buildSignatureSheet(
+              manifestId: manifestId,
+              assignmentId: assignmentId,
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            decoration: BoxDecoration(
+              color: ColorConst.whiteColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(AppString.sign, style: fontStyleBold14),
           ),
-          child: Text(AppString.sign, style: fontStyleBold14),
         ),
       ],
     );
@@ -759,6 +781,82 @@ class PassengersListWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  _buildSignatureSheet({String? manifestId, int? assignmentId}) {
+    final UploadSignatureCubit uploadSignatureCubit = UploadSignatureCubit();
+    final SignatureController controller = SignatureController(
+      penStrokeWidth: 3,
+      penColor: Colors.black,
+      exportBackgroundColor: Colors.white,
+    );
+    return CustomBottomSheet.instance.modalBottomSheet(
+      context: GlobalVariable.appContext,
+      bottomButtonName: AppString.submit,
+      child: BlocProvider.value(
+        value: uploadSignatureCubit,
+        child:
+            BlocListener<
+              UploadSignatureCubit,
+              APIResultState<BaseResponseModelEntity>?
+            >(
+              listener: (context, state) {
+                if (state?.resultType == APIResultType.loading) {
+                  EasyLoading.show();
+                } else if (state?.resultType == APIResultType.success) {
+                  EasyLoading.dismiss();
+                  Navigator.pop(context); // Close bottom sheet
+                } else if (state?.resultType == APIResultType.noInternet) {
+                  // Handle no internet
+                  EasyLoading.dismiss();
+                } else if (state?.resultType == APIResultType.failure) {
+                  EasyLoading.dismiss();
+                  showErrorSnackBar(
+                    context,
+                    state?.message ?? 'Something went wrong. Please try again.',
+                  );
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Signature(
+                    controller: controller,
+                    height: 300,
+                    backgroundColor: Colors.grey[200]!,
+                  ),
+                ],
+              ),
+            ),
+      ),
+      onBottomPressed: () async {
+        if (controller.isNotEmpty) {
+          // Convert the signature to image bytes
+          final signatureBytes = await controller.toPngBytes();
+
+          if (signatureBytes != null) {
+            // Save the bytes temporarily as a file
+            final tempDir = await getTemporaryDirectory();
+            final filePath = '${tempDir.path}/signature.png';
+            final signatureFile = File(filePath);
+            await signatureFile.writeAsBytes(signatureBytes);
+            final signatureImageBase64 = base64Encode(signatureBytes);
+
+            // Now call the upload API
+            await uploadSignatureCubit.callUploadSignatureAPI(
+              manifestId: manifestId ?? '0',
+              assignmentId: assignmentId ?? 0,
+              date: DateTime.now().toIso8601String(),
+              signatureImageBase64: signatureImageBase64,
+              signatureFile: signatureFile,
+            );
+          }
+        } else {
+          EasyLoading.showToast("Please add your signature before submitting.");
+        }
+      },
     );
   }
 }

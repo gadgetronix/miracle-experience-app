@@ -61,6 +61,8 @@ class ManifestContentWidget extends StatelessWidget {
               if (assignment.paxes != null && assignment.paxes!.isNotEmpty)
                 PassengersListWidget(
                   passengers: assignment.paxes!,
+                  manifestId: manifest.uniqueId ?? '',
+                  assignmentId: assignment.id ?? 0,
                   pilotName: assignment.pilotName ?? 'Unknown',
                   balloonCode: assignment.shortCode ?? 'N/A',
                   tableNumber: assignment.tableNumber ?? 0,

@@ -33,4 +33,5 @@ class AppString {
   static const kg = "KG";
   static const takeOffWeight = "Take Off Weight";
   static const total = "Total";
+  static const submit = "Submit";
 }

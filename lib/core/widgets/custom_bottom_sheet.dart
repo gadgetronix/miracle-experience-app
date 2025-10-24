@@ -45,7 +45,7 @@ class CustomBottomSheet {
                       radius: Dimensions.r16,
                       child: const Icon(
                         Icons.close_rounded,
-                        color: ColorConst.blackColor,
+                        // color: ColorConst.blackColor,
                         size: 22,
                       ),
                     )),

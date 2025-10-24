@@ -29,10 +29,9 @@ class APIHelper {
     bool showLoader, {
     bool? useDefaultBaseURL,
   }) async {
-    var callingURL =
-        useDefaultBaseURL == false
-            ? path
-            : "${NetworkConstant.baseUrlAPI}/$path";
+    var callingURL = useDefaultBaseURL == false
+        ? path
+        : "${NetworkConstant.baseUrlAPI}/$path";
     await _createHeaders();
     var parameter = json.encode(params);
 
@@ -84,10 +83,9 @@ class APIHelper {
     bool showLoader, {
     bool? useDefaultBaseURL,
   }) async {
-    var callingURL =
-        useDefaultBaseURL == false
-            ? path
-            : "${NetworkConstant.baseUrlAPI}/$path";
+    var callingURL = useDefaultBaseURL == false
+        ? path
+        : "${NetworkConstant.baseUrlAPI}/$path";
     await _createHeaders();
     var parameter = json.encode(params);
 
@@ -139,10 +137,9 @@ class APIHelper {
     bool showLoader, {
     bool? useDefaultBaseURL,
   }) async {
-    var callingURL =
-        useDefaultBaseURL == false
-            ? path
-            : "${NetworkConstant.baseUrlAPI}/$path";
+    var callingURL = useDefaultBaseURL == false
+        ? path
+        : "${NetworkConstant.baseUrlAPI}/$path";
     await _createHeaders();
     var parameter = json.encode(params);
 
@@ -194,12 +191,11 @@ class APIHelper {
     bool isLoader, {
     bool? useDefaultBaseURL,
   }) async {
-    var callingURL =
-        useDefaultBaseURL == false
-            ? Uri.parse(path).replace(queryParameters: params).toString()
-            : Uri.parse(
-              "${NetworkConstant.baseUrlAPI}/$path",
-            ).replace(queryParameters: params).toString();
+    var callingURL = useDefaultBaseURL == false
+        ? Uri.parse(path).replace(queryParameters: params).toString()
+        : Uri.parse(
+            "${NetworkConstant.baseUrlAPI}/$path",
+          ).replace(queryParameters: params).toString();
     //Uri? uri;
     await _createHeaders();
     if (_isDebug) {
@@ -476,8 +472,7 @@ class APIHelper {
   }
 
   Future<void> _createHeadersForMultipart() async {
-    // String authToken = SharedPrefUtils.getToken();
-    String authToken = '';
+    String authToken = SharedPrefUtils.getToken();
     if (authToken.isNotEmpty) {
       _headers = {
         "Content-Type": "multipart/form-data",
