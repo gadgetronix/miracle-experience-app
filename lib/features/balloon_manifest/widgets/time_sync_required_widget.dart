@@ -5,15 +5,11 @@ import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 class TimeSyncRequiredWidget extends StatelessWidget {
   final bool hasCachedTime;
   final String cacheStatus;
-  final VoidCallback onSyncPressed;
-  final bool isSyncing;
 
   const TimeSyncRequiredWidget({
     super.key,
     required this.hasCachedTime,
     required this.cacheStatus,
-    required this.onSyncPressed,
-    required this.isSyncing,
   });
 
   @override

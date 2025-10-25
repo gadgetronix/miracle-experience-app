@@ -51,22 +51,18 @@ class UploadSignatureCubit
 
     if (result.resultType == APIResultType.noInternet) {
       // 🔥 Store this request locally for retry
-      await storeOfflineSignature({
-        "manifestId": manifestId,
-        "assignmentId": assignmentId,
-        "date": date,
-        "signatureFilePath": signatureFile.path,
-        "signatureImageBase64": signatureImageBase64,
-      });
+      await SharedPrefUtils.setPendingSignatures(
+        data: {
+          "manifestId": manifestId,
+          "assignmentId": assignmentId,
+          "date": date,
+          "signatureFilePath": signatureFile.path,
+          "signatureImageBase64": signatureImageBase64,
+        },
+        isList: false,
+      );
     }
     emit(apiResultFromNetwork);
-  }
-
-  Future<void> storeOfflineSignature(Map<String, dynamic> data) async {
-    final prefs = await SharedPreferences.getInstance();
-    final pendingList = prefs.getStringList("pending_signatures") ?? [];
-    pendingList.add(jsonEncode(data));
-    await prefs.setStringList("pending_signatures", pendingList);
   }
 }
 
@@ -97,8 +93,8 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
   /// Reads pending signatures from local storage and uploads them
   Future<void> _retryPendingSignatures() async {
     emit(OfflineSyncState.syncing);
-    final prefs = await SharedPreferences.getInstance();
-    final pendingList = prefs.getStringList('pending_signatures') ?? [];
+
+    final pendingList = SharedPrefUtils.getPendingSignatures() ?? [];
 
     if (pendingList.isEmpty) return;
 
@@ -129,6 +125,9 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
     }
 
     // Save back remaining failed ones
-    await prefs.setStringList('pending_signatures', pendingList);
+    await SharedPrefUtils.setPendingSignatures(
+      pendingSignatureList: pendingList,
+      isList: true,
+    );
   }
 }

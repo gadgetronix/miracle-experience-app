@@ -12,7 +12,7 @@ import 'package:signature/signature.dart';
 import '../../../core/network/api_result.dart';
 import '../../../core/network/base_response_model_entity.dart';
 
-class PassengersListWidget extends StatelessWidget {
+class PassengersListWidget extends StatefulWidget {
   final List<ModelResponseBalloonManifestAssignmentsPaxes> passengers;
   final String manifestId;
   final int assignmentId;
@@ -22,8 +22,9 @@ class PassengersListWidget extends StatelessWidget {
   final String location;
   final String date;
   final double otherWeights;
+  final String? signature;
 
-  PassengersListWidget({
+  const PassengersListWidget({
     super.key,
     required this.passengers,
     required this.pilotName,
@@ -34,27 +35,48 @@ class PassengersListWidget extends StatelessWidget {
     required this.otherWeights,
     required this.manifestId,
     required this.assignmentId,
+    this.signature,
   });
 
-  final ValueNotifier<SignatureStatus> signatureStatus =
-      ValueNotifier<SignatureStatus>(SignatureStatus.pending);
+  @override
+  State<PassengersListWidget> createState() => _PassengersListWidgetState();
+}
+
+class _PassengersListWidgetState extends State<PassengersListWidget> {
+  late ValueNotifier<SignatureStatus> signatureStatus;
+
   final ValueNotifier<String> signatureTime = ValueNotifier<String>('');
 
   @override
+  initState() {
+    super.initState();
+    signatureStatus = ValueNotifier<SignatureStatus>(
+      widget.signature.isNotNullAndEmpty()
+          ? SignatureStatus.success
+          : SharedPrefUtils.getPendingSignatures().isNotNullAndEmpty &&
+                SharedPrefUtils.getPendingSignatures()!.any((element) {
+                  final data = jsonDecode(element);
+                  return data['manifestId'] == widget.manifestId &&
+                      data['assignmentId'] == widget.assignmentId;
+                })
+          ? SignatureStatus.pending
+          : SignatureStatus.offlinePending,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (passengers.isEmpty) {
+    if (widget.passengers.isEmpty) {
       return _buildEmptyState();
     }
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Tablet view for width > 600px, Mobile view otherwise
-        final isTablet = constraints.maxWidth > 600;
         return Column(
           children: [
-            _buildHeader(isTablet),
+            _buildHeader(),
             const Divider(height: 1, thickness: 1),
-            if (isTablet) ...[
+            if (Const.isTablet) ...[
               _buildColumnHeaders(),
               _buildTabletPassengersList(),
             ],
@@ -67,7 +89,7 @@ class PassengersListWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(bool isTablet) {
+  Widget _buildHeader() {
     return BlocListener<OfflineSyncCubit, OfflineSyncState>(
       listener: (context, state) {
         if (state == OfflineSyncState.completed) {
@@ -80,7 +102,7 @@ class PassengersListWidget extends StatelessWidget {
         builder: (context, value, child) {
           return Container(
             padding: EdgeInsets.symmetric(
-              horizontal: isTablet ? 25 : 16,
+              horizontal: Const.isTablet ? 25 : 16,
               vertical: 15,
             ),
             decoration: BoxDecoration(
@@ -88,7 +110,7 @@ class PassengersListWidget extends StatelessWidget {
                   ? ColorConst.successColor
                   : ColorConst.primaryColor,
             ),
-            child: isTablet
+            child: Const.isTablet
                 ? _buildTabletHeader(status: value)
                 : _buildMobileHeader(),
           );
@@ -105,29 +127,32 @@ class PassengersListWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${AppString.pilot.toUpperCase().endWithColon()} ${pilotName.toUpperCase()}',
+                '${AppString.pilot.toUpperCase().endWithColon()} ${widget.pilotName.toUpperCase()}',
                 style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  _buildHeaderInfo(AppString.date.toUpperCase(), date),
+                  _buildHeaderInfo(AppString.date.toUpperCase(), widget.date),
                   const SizedBox(width: 24),
-                  _buildHeaderInfo(AppString.location.toUpperCase(), location),
+                  _buildHeaderInfo(
+                    AppString.location.toUpperCase(),
+                    widget.location,
+                  ),
                   const SizedBox(width: 24),
                   _buildHeaderInfo(
                     AppString.balloon.toUpperCase(),
-                    balloonCode,
+                    widget.balloonCode,
                   ),
                   const SizedBox(width: 24),
                   _buildHeaderInfo(
                     AppString.table.toUpperCase(),
-                    tableNumber.toString(),
+                    widget.tableNumber.toString(),
                   ),
                   const SizedBox(width: 24),
                   _buildHeaderInfo(
                     AppString.passengers.toUpperCase(),
-                    passengers.length.toString(),
+                    widget.passengers.length.toString(),
                   ),
                 ],
               ),
@@ -138,8 +163,8 @@ class PassengersListWidget extends StatelessWidget {
             ? GestureDetector(
                 onTap: () {
                   _buildSignatureSheet(
-                    manifestId: manifestId,
-                    assignmentId: assignmentId,
+                    manifestId: widget.manifestId,
+                    assignmentId: widget.assignmentId,
                   );
                 },
                 child: Container(
@@ -203,7 +228,7 @@ class PassengersListWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                pilotName.toUpperCase(),
+                widget.pilotName.toUpperCase(),
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -220,7 +245,7 @@ class PassengersListWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                '${passengers.length} PAX',
+                '${widget.passengers.length} PAX',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -233,9 +258,9 @@ class PassengersListWidget extends StatelessWidget {
         const SizedBox(height: 12),
         Row(
           children: [
-            _buildHeaderInfo('BALLOON', balloonCode),
+            _buildHeaderInfo('BALLOON', widget.balloonCode),
             const SizedBox(width: 20),
-            _buildHeaderInfo('TABLE', tableNumber.toString()),
+            _buildHeaderInfo('TABLE', widget.tableNumber.toString()),
           ],
         ),
       ],
@@ -260,7 +285,6 @@ class PassengersListWidget extends StatelessWidget {
   }
 
   // ========== TABLET VIEW ==========
-
   Widget _buildColumnHeaders() {
     return Container(
       padding: const EdgeInsets.only(right: 10, left: 25, top: 12, bottom: 12),
@@ -299,11 +323,11 @@ class PassengersListWidget extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
-      itemCount: passengers.length,
+      itemCount: widget.passengers.length,
       separatorBuilder: (context, index) =>
           Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
       itemBuilder: (context, index) {
-        final passenger = passengers[index];
+        final passenger = widget.passengers[index];
         return _buildTabletPassengerRow(passenger, index + 1);
       },
     );
@@ -432,15 +456,14 @@ class PassengersListWidget extends StatelessWidget {
   }
 
   // ========== MOBILE VIEW ==========
-
   Widget _buildMobilePassengersList() {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: passengers.length,
+      itemCount: widget.passengers.length,
       padding: const EdgeInsets.all(12),
       itemBuilder: (context, index) {
-        final passenger = passengers[index];
+        final passenger = widget.passengers[index];
         return _buildMobilePassengerCard(passenger, index + 1);
       },
     );
@@ -753,7 +776,6 @@ class PassengersListWidget extends StatelessWidget {
   }
 
   // ========== SHARED WIDGETS ==========
-
   Widget _buildGenderBadge(String? gender) {
     if (gender == null || gender.isEmpty) {
       return Text('-', style: passengerInfoTextStyle);
@@ -762,7 +784,7 @@ class PassengersListWidget extends StatelessWidget {
   }
 
   Widget _buildFooter() {
-    final totalWeight = passengers.fold<double>(
+    final totalWeight = widget.passengers.fold<double>(
       0.0,
       (sum, pax) => sum + ((pax.weight ?? 0).toDouble()),
     );
@@ -782,7 +804,7 @@ class PassengersListWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${AppString.takeOffWeight.endWithColon()} ${(otherWeights + totalWeight).toStringAsFixed(0)}',
+                '${AppString.takeOffWeight.endWithColon()} ${(widget.otherWeights + totalWeight).toStringAsFixed(0)}',
                 style: passengerInfoTextStyle.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

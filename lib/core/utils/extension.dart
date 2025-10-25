@@ -71,6 +71,12 @@ extension IntExtention on int? {
   }
 }
 
+extension ListExtension<T> on List<T>? {
+  bool get isNotNullAndEmpty {
+    return this != null && this!.isNotEmpty;
+  }
+}
+
 extension ListFilter<T> on List<T>? {
   T? firstOrNull(bool Function(T element) test) {
     if (this == null) return null;

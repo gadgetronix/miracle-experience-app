@@ -75,14 +75,13 @@ class SharedPrefUtils {
   //   }
   //   return prefs.setString("User", value.toString());
   // }
-  
-  
+
   static ModelResponseBalloonManifestEntity? getBalloonManifest() {
     String? stringModel = _prefsInstance?.getString("BalloonManifest");
     ModelResponseBalloonManifestEntity? modelResponseBalloonManifestEntity =
         stringModel.isNotNullAndEmpty()
-            ? ModelResponseBalloonManifestEntity.fromJson(jsonDecode(stringModel!))
-            : null;
+        ? ModelResponseBalloonManifestEntity.fromJson(jsonDecode(stringModel!))
+        : null;
     return modelResponseBalloonManifestEntity;
   }
 
@@ -91,7 +90,27 @@ class SharedPrefUtils {
     return prefs.setString("BalloonManifest", value);
   }
 
+  static List<String>? getPendingSignatures() {
+    List<String>? stringList = _prefsInstance?.getStringList(
+      "pending_signatures",
+    );
+    return stringList;
+  }
 
+  static Future<bool> setPendingSignatures({
+    Map<String, dynamic>? data,
+    List<String>? pendingSignatureList,
+    bool? isList,
+  }) async {
+    if (isList == true && pendingSignatureList != null) {
+      var prefs = await _instance;
+      return prefs.setStringList("pending_signatures", pendingSignatureList);
+    }
+    final pendingList = SharedPrefUtils.getPendingSignatures() ?? [];
+    pendingList.add(jsonEncode(data));
+    var prefs = await _instance;
+    return prefs.setStringList("pending_signatures", pendingList);
+  }
 
   static Future<void> remove() async {
     SharedPreferences.getInstance().then((SharedPreferences pref) {
@@ -104,5 +123,4 @@ class SharedPrefUtils {
     prefs.remove("User");
     SharedPrefUtils.setIsUserLoggedIn(false);
   }
-
 }
