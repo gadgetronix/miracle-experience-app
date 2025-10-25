@@ -29,6 +29,7 @@ class _SigninScreenState extends State<SigninScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      appBar: CustomAppBar.blankAppbar(),
       body: Padding(
         padding: EdgeInsets.only(
           top: Dimensions.getSafeAreaTopHeight() + 20,
