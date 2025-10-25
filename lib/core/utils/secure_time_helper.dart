@@ -21,7 +21,7 @@ class SecureTimeHelper {
       final int uptime = await platform.invokeMethod('getSystemUptime');
       return uptime;
     } on PlatformException catch (e) {
-      timber("❌ Failed to get system uptime: '${e.message}'");
+      timber("Failed to get system uptime: '${e.message}'");
       return null;
     }
   }
@@ -48,15 +48,15 @@ class SecureTimeHelper {
         await prefs.setInt(_keySystemUptime, uptime);
 
         timber(
-          '✅ System Uptime: ${uptime}ms (${Duration(milliseconds: uptime).inHours}h)',
+          'System Uptime: ${uptime}ms (${Duration(milliseconds: uptime).inHours}h)',
         );
         return true;
       }
 
-      timber('⚠️ Failed to get NTP time or system uptime');
+      timber('Failed to get NTP time or system uptime');
       return false;
     } catch (e) {
-      timber('❌ Sync failed: $e');
+      timber('Sync failed: $e');
       return false;
     }
   }
@@ -83,7 +83,7 @@ class SecureTimeHelper {
       final storedUptime = prefs.getInt(_keySystemUptime);
 
       if (storedNtpTime == null || storedUptime == null) {
-        timber('⚠️ No cached time data available - need initial sync');
+        timber('No cached time data available - need initial sync');
         return null;
       }
 
@@ -91,13 +91,13 @@ class SecureTimeHelper {
       int? currentUptime = await getSystemUptime();
 
       if (currentUptime == null) {
-        timber('⚠️ Cannot get current system uptime');
+        timber('Cannot get current system uptime');
         return null;
       }
 
       // Check if device was rebooted (current uptime < stored uptime)
       if (currentUptime < storedUptime) {
-        timber('⚠️ Device was rebooted (uptime reset) - need new sync');
+        timber('Device was rebooted (uptime reset) - need new sync');
         timber('   Stored uptime: ${storedUptime}ms');
         timber('   Current uptime: ${currentUptime}ms');
         return null;
