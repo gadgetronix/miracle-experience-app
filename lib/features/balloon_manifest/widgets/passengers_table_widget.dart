@@ -112,7 +112,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
             ),
             child: Const.isTablet
                 ? _buildTabletHeader(status: value)
-                : _buildMobileHeader(),
+                : _buildMobileHeader(status: value),
           );
         },
       ),
@@ -219,48 +219,134 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
     );
   }
 
-  Widget _buildMobileHeader() {
+  Widget _buildMobileHeader({SignatureStatus? status}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          '${AppString.pilot.toUpperCase().endWithColon()} ${widget.pilotName.toUpperCase()}',
+          style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
+        ),
+        const SizedBox(height: 8),
+
+        // First Row: Date & Location
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(
-                widget.pilotName.toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              child: _buildHeaderInfo(
+                AppString.date.toUpperCase(),
+                widget.date,
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Text(
-                '${widget.passengers.length} PAX',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.teal.shade700,
-                ),
+            Expanded(
+              child: _buildHeaderInfo(
+                AppString.location.toUpperCase(),
+                widget.location,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 4),
         Row(
           children: [
-            _buildHeaderInfo('BALLOON', widget.balloonCode),
-            const SizedBox(width: 20),
-            _buildHeaderInfo('TABLE', widget.tableNumber.toString()),
+            Expanded(
+              child: _buildHeaderInfo(
+                AppString.balloon.toUpperCase(),
+                widget.balloonCode,
+              ),
+            ),
+            Expanded(
+              child: _buildHeaderInfo(
+                AppString.table.toUpperCase(),
+                widget.tableNumber.toString(),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: _buildHeaderInfo(
+                AppString.passengers.toUpperCase(),
+                widget.passengers.length.toString(),
+              ),
+            ),
+            status == SignatureStatus.pending
+                ? GestureDetector(
+                    onTap: () {
+                      _buildSignatureSheet(
+                        manifestId: widget.manifestId,
+                        assignmentId: widget.assignmentId,
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: ColorConst.whiteColor,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        AppString.sign,
+                        style: fontStyleBold14.copyWith(
+                          color: ColorConst.primaryColor,
+                        ),
+                      ),
+                    ),
+                  )
+                : Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+
+                          children: [
+                            Text(
+                              AppString.signed,
+                              style: fontStyleBold14.copyWith(
+                                color: ColorConst.whiteColor,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            const Icon(
+                              Icons.done,
+                              color: ColorConst.whiteColor,
+                            ),
+                            const SizedBox(width: 5),
+                            ValueListenableBuilder<String>(
+                              valueListenable: signatureTime,
+                              builder: (context, value, child) {
+                                return Text(
+                                  value,
+                                  style: fontStyleRegular12.copyWith(
+                                    color: ColorConst.whiteColor,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 4),
+                        ValueListenableBuilder<String>(
+                          valueListenable: signatureTime,
+                          builder: (context, value, child) {
+                            return Text(
+                              value,
+                              style: fontStyleRegular12.copyWith(
+                                color: ColorConst.whiteColor,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
           ],
         ),
       ],
