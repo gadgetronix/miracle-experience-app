@@ -30,6 +30,7 @@ class AppString {
   static const tourOperator = "Tour Operator";
   static const permit = "Permit";
   static const pickupLocation = "Pickup Location";
+  static const pickup = "Pickup";
   static const kg = "KG";
   static const takeOffWeight = "Take Off Weight";
   static const total = "Total";

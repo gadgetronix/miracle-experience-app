@@ -71,6 +71,7 @@ class ManifestContentWidget extends StatelessWidget {
                   otherWeights:
                       (assignment.pilotWeight ?? 0) +
                       (assignment.defaultWeight ?? 0),
+                      signature: assignment.signature,
                 ),
 
               const SizedBox(height: 24),

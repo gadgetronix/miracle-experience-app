@@ -59,9 +59,10 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
                   return data['manifestId'] == widget.manifestId &&
                       data['assignmentId'] == widget.assignmentId;
                 })
-          ? SignatureStatus.pending
-          : SignatureStatus.offlinePending,
+          ? SignatureStatus.offlinePending
+          : SignatureStatus.pending,
     );
+    timber('content ${signatureStatus.value}');
   }
 
   @override
@@ -79,6 +80,8 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
             if (Const.isTablet) ...[
               _buildColumnHeaders(),
               _buildTabletPassengersList(),
+            ] else ...[
+              _buildMobilePassengersList(),
             ],
             Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
 
@@ -543,11 +546,12 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
 
   // ========== MOBILE VIEW ==========
   Widget _buildMobilePassengersList() {
-    return ListView.builder(
+    return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: widget.passengers.length,
-      padding: const EdgeInsets.all(12),
+      separatorBuilder: (context, index) =>
+          Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
       itemBuilder: (context, index) {
         final passenger = widget.passengers[index];
         return _buildMobilePassengerCard(passenger, index + 1);
@@ -559,304 +563,40 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
     ModelResponseBalloonManifestAssignmentsPaxes passenger,
     int number,
   ) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
+    return GestureDetector(
+      onTap: () {
+        
+      },
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header row with number and name
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: Colors.teal.shade600,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '$number',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
+                Text(passenger.name ?? '', style: passengerInfoMobileTextStyle),
+                Text(
+                  '${passenger.weight.toString()} KG',
+                  style: passengerInfoMobileTextStyle,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        passenger.name ?? 'Unknown',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (passenger.isFOC == true) ...[
-                        const SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.green.shade100,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            'FREE OF CHARGE',
-                            style: TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green.shade800,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                if (passenger.quadrantPosition != null)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade100,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      passenger.specialRequest.isNotNullAndEmpty()
-                          ? passenger.specialRequest![0]
-                          : '',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.indigo.shade900,
-                      ),
-                    ),
-                  ),
               ],
             ),
-
-            const SizedBox(height: 12),
-            const Divider(height: 1),
-            const SizedBox(height: 12),
-
-            // Details grid
-            _buildMobileDetailRow(
-              Icons.flag,
-              'Nationality',
-              passenger.country ?? '-',
-              Colors.blue,
-            ),
-            const SizedBox(height: 10),
-
-            _buildMobileDetailRow(
-              passenger.gender?.toUpperCase() == 'M'
-                  ? Icons.male
-                  : Icons.female,
-              'Gender',
-              passenger.gender?.toUpperCase() ?? '-',
-              passenger.gender?.toUpperCase() == 'M'
-                  ? Colors.blue
-                  : Colors.pink,
-            ),
-            const SizedBox(height: 10),
-
-            _buildMobileDetailRow(
-              Icons.business,
-              'Tour Operator',
-              passenger.bookingBy ?? '-',
-              Colors.orange,
-            ),
-            const SizedBox(height: 10),
-
-            _buildMobileDetailRow(
-              Icons.confirmation_number,
-              'Permit Code',
-              passenger.permitNumber ?? '-',
-              Colors.teal,
-            ),
-            const SizedBox(height: 10),
-
-            _buildMobileDetailRow(
-              Icons.location_on,
-              'Pickup Location',
-              passenger.location ?? '-',
-              Colors.red,
-            ),
-            const SizedBox(height: 10),
-
-            _buildMobileDetailRow(
-              Icons.monitor_weight,
-              'Weight',
-              passenger.weight != null
-                  ? '${passenger.weight!.toStringAsFixed(0)} KG'
-                  : '-',
-              Colors.grey,
-            ),
-
-            // Driver info if available
-            if (passenger.driverName != null &&
-                passenger.driverName!.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              _buildMobileDetailRow(
-                Icons.person_pin_circle,
-                'Driver',
-                passenger.driverName!,
-                Colors.purple,
-              ),
-            ],
-
-            // Special notes
-            if (_hasSpecialNotes(passenger)) ...[
-              const SizedBox(height: 12),
-              const Divider(height: 1),
-              const SizedBox(height: 12),
-              _buildSpecialNotes(passenger),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMobileDetailRow(
-    IconData icon,
-    String label,
-    String value,
-    Color color,
-  ) {
-    return Row(
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Icon(icon, size: 16, color: color),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${AppString.driverName.endWithColon()} ${passenger.driverName ?? ''}",
+                  style: passengerInfoMobileTextStyle,
                 ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                Text(
+                  "${AppString.pickup.endWithColon()} ${passenger.location ?? ''}",
+                  style: passengerInfoMobileTextStyle,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  bool _hasSpecialNotes(
-    ModelResponseBalloonManifestAssignmentsPaxes passenger,
-  ) {
-    return (passenger.dietaryRestriction != null &&
-            passenger.dietaryRestriction!.isNotEmpty) ||
-        (passenger.medicalCondition != null &&
-            passenger.medicalCondition!.isNotEmpty) ||
-        (passenger.specialRequest != null &&
-            passenger.specialRequest!.isNotEmpty);
-  }
-
-  Widget _buildSpecialNotes(
-    ModelResponseBalloonManifestAssignmentsPaxes passenger,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(Icons.info_outline, size: 16, color: Colors.orange.shade700),
-            const SizedBox(width: 6),
-            Text(
-              'Special Notes',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.orange.shade700,
-              ),
+              ],
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        if (passenger.dietaryRestriction != null &&
-            passenger.dietaryRestriction!.isNotEmpty)
-          _buildNoteBadge(
-            'Dietary',
-            passenger.dietaryRestriction!,
-            Colors.orange,
-          ),
-        if (passenger.medicalCondition != null &&
-            passenger.medicalCondition!.isNotEmpty)
-          _buildNoteBadge('Medical', passenger.medicalCondition!, Colors.red),
-        if (passenger.specialRequest != null &&
-            passenger.specialRequest!.isNotEmpty)
-          _buildNoteBadge('Request', passenger.specialRequest!, Colors.purple),
-      ],
-    );
-  }
-
-  Widget _buildNoteBadge(String label, String value, Color color) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          Text(
-            '$label:',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Text(value, style: TextStyle(fontSize: 11, color: color)),
-          ),
-        ],
       ),
     );
   }
@@ -876,7 +616,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
     );
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 25),
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: Const.isTablet ? 25 : 16),
       decoration: BoxDecoration(
         color: ColorConst.whiteColor,
         borderRadius: const BorderRadius.only(
