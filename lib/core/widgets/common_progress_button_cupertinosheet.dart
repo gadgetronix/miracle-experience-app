@@ -54,18 +54,18 @@ class BlocConsumerRoundedButtonWithBottomSheet<
       listener: (BuildContext context, APIResultState<T>? value) {
         if (value != null) {
           if (value.resultType == APIResultType.noInternet) {
-            showErrorSnackBar(context, value.message ?? '');
+            showErrorSnackBar(value.message ?? '');
             // _showToastMessage(context, value.message);
             if (onNoInternet != null) Function.apply(onNoInternet!, []);
           } else if (value.resultType == APIResultType.failure) {
             if (needToShowDefaultErrorSnackBar) {
-              showErrorSnackBar(context, value.message ?? '');
+              showErrorSnackBar(value.message ?? '');
             }
             if (onError != null) Function.apply(onError!, [value.message]);
           } else if (value.resultType == APIResultType.success) {
             if (needToShowDefaultSuccessSnackBar) {
               // Const.instance.toastSuccess("val");
-              showSuccessSnackBar(context, value.message ?? '');
+              showSuccessSnackBar(value.message ?? '');
             }
             Function.apply(onSuccess, [value.result, value.message]);
           }

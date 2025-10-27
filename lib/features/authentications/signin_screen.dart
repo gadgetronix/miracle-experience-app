@@ -100,8 +100,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     onTap: validate,
                     onSuccess: (modelResponse, msg) =>
                         onSuccess(modelResponse, msg),
-                    onError: (message) =>
-                        showErrorSnackBar(context, message ?? ''),
+                    onError: (message) => showErrorSnackBar(message ?? ''),
                     isEnabled: true,
                     onNoInternet: () {
                       // navigateToPage(NoInternet(onPressed: validate));
@@ -117,9 +116,9 @@ class _SigninScreenState extends State<SigninScreen> {
   void validate() {
     if (emailController.text.trim().isEmpty ||
         emailController.text.trim().isValidEmail() == false) {
-      showErrorSnackBar(context, AppString.pleaseEnterValidEmail);
+      showErrorSnackBar(AppString.pleaseEnterValidEmail);
     } else if (passwordController.text.trim().isEmpty) {
-      showErrorSnackBar(context, AppString.pleaseEnterPassword);
+      showErrorSnackBar(AppString.pleaseEnterPassword);
     } else {
       callSigninAPI();
     }

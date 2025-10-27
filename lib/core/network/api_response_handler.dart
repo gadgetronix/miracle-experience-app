@@ -41,7 +41,6 @@ APIResultState<T> getAPIResultFromNetwork<T>(NetworkResult networkResult) {
     case NetworkResultType.unauthorised:
       SharedPrefUtils.remove();
       showErrorSnackBar(
-        GlobalVariable.appContext,
         "Session Expired. Please login again.",
       );
       navigateToPageAndRemoveAllPage(SigninScreen());
@@ -53,7 +52,7 @@ APIResultState<T> getAPIResultFromNetwork<T>(NetworkResult networkResult) {
 
     case NetworkResultType.notFound:
       SharedPrefUtils.remove();
-
+      navigateToPageAndRemoveAllPage(SigninScreen());
       return const UserDeletedState(resultType: APIResultType.notFound);
     case NetworkResultType.success:
     default:
@@ -118,62 +117,6 @@ APIResultState<T> getAPIResultFromNetwork<T>(NetworkResult networkResult) {
         } catch (e, s) {
           logger.w("result failure catch");
           // FirebaseCrashlytics.instance.recordError(e, s);
-          return FailureState(
-            message: e.toString(),
-            resultType: APIResultType.failure,
-          );
-        }
-      }
-  }
-}
-
-APIResultState<T> getAPIResultFromNetworkWithoutBase<T>(
-  NetworkResult networkResult,
-) {
-  switch (networkResult.networkResultType) {
-    case NetworkResultType.error:
-      return const FailureState(
-        message: "Error",
-        resultType: APIResultType.failure,
-      );
-    case NetworkResultType.noInternet:
-      return const NoInternetState(resultType: APIResultType.noInternet);
-    case NetworkResultType.unauthorised:
-      return UserUnauthorisedState(
-        message: "User Unauthorised",
-        resultType: APIResultType.unauthorised,
-      );
-    case NetworkResultType.notFound:
-      return const UserDeletedState(resultType: APIResultType.notFound);
-    case NetworkResultType.success:
-    default:
-      {
-        if (networkResult.result.isNullOrEmpty()) {
-          return const FailureState(
-            message: "",
-            resultType: APIResultType.failure,
-          );
-        }
-        try {
-          if (networkResult.result != null) {
-            var baseJson = json.decode(networkResult.result!);
-
-            T? responseModel = JsonConvert.fromJsonAsT<T>(baseJson);
-
-            return SuccessState(
-              message: "",
-              resultType: APIResultType.success,
-              result: responseModel,
-            );
-          } else {
-            return const SuccessState(
-              message: "",
-              resultType: APIResultType.success,
-              result: null,
-            );
-          }
-        } catch (e) {
-          //FirebaseCrashlytics.instance.recordError(e, s);
           return FailureState(
             message: e.toString(),
             resultType: APIResultType.failure,

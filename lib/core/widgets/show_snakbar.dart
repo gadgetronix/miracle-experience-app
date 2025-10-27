@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import '../basic_features.dart';
 
 void showErrorSnackBar(
-  BuildContext context,
   String text, {
   bool needToTranslate = true,
 }) {
-  hideSnackBar(context);
-  ScaffoldMessenger.of(context).showSnackBar(
+  hideSnackBar(GlobalVariable.appContext);
+  ScaffoldMessenger.of(GlobalVariable.appContext).showSnackBar(
     SnackBar(
       backgroundColor: ColorConst.errorSnackbarColor,
       behavior: SnackBarBehavior.fixed,
@@ -21,12 +20,11 @@ void showErrorSnackBar(
 }
 
 void showSuccessSnackBar(
-  BuildContext context,
   String text, {
   bool needToTranslate = true,
 }) {
-  hideSnackBar(context);
-  ScaffoldMessenger.of(context).showSnackBar(
+  hideSnackBar(GlobalVariable.appContext);
+  ScaffoldMessenger.of(GlobalVariable.appContext).showSnackBar(
     SnackBar(
       backgroundColor: ColorConst.successColor,
       behavior: SnackBarBehavior.fixed,

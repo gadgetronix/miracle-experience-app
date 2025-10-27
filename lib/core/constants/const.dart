@@ -163,7 +163,7 @@ class Const {
 
     if (backButton) {
       backButtonPressedTime = currentTime;
-      showErrorSnackBar(context, 'Press again to exit');
+      showErrorSnackBar('Press again to exit');
       return false;
     } else {
       SystemNavigator.pop();
