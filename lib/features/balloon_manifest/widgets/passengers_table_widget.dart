@@ -231,8 +231,8 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
             flex: 1,
             child: Text(
               passenger.gender.isNotNullOrEmpty()
-                  ? '-'
-                  : passenger.gender!.toUpperCase(),
+                  ? passenger.gender!.toUpperCase()
+                  : '-',
               style: passengerInfoTextStyle,
             ),
           ),
