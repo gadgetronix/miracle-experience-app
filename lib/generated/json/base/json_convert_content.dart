@@ -164,6 +164,11 @@ class JsonConvert {
           Map<String, dynamic> e) =>
           ModelResponseBalloonManifestAssignments.fromJson(e)).toList() as M;
     }
+    if (<ModelResponseBalloonManifestSignature>[] is M) {
+      return data.map<ModelResponseBalloonManifestSignature>((
+          Map<String, dynamic> e) =>
+          ModelResponseBalloonManifestSignature.fromJson(e)).toList() as M;
+    }
     if (<ModelResponseBalloonManifestAssignmentsPaxes>[] is M) {
       return data
           .map<ModelResponseBalloonManifestAssignmentsPaxes>((
@@ -208,6 +213,8 @@ class JsonConvertClassCollection {
         .toString(): ModelResponseBalloonManifestEntity.fromJson,
     (ModelResponseBalloonManifestAssignments)
         .toString(): ModelResponseBalloonManifestAssignments.fromJson,
+    (ModelResponseBalloonManifestSignature)
+        .toString(): ModelResponseBalloonManifestSignature.fromJson,
     (ModelResponseBalloonManifestAssignmentsPaxes)
         .toString(): ModelResponseBalloonManifestAssignmentsPaxes.fromJson,
     (ModelResponseSigninEntity).toString(): ModelResponseSigninEntity.fromJson,

@@ -69,7 +69,8 @@ ModelResponseBalloonManifestAssignments $ModelResponseBalloonManifestAssignments
   if (pilotName != null) {
     modelResponseBalloonManifestAssignments.pilotName = pilotName;
   }
-  final String? signature = jsonConvert.convert<String>(json['signature']);
+  final ModelResponseBalloonManifestSignature? signature = jsonConvert.convert<
+      ModelResponseBalloonManifestSignature>(json['signature']);
   if (signature != null) {
     modelResponseBalloonManifestAssignments.signature = signature;
   }
@@ -125,7 +126,7 @@ Map<String, dynamic> $ModelResponseBalloonManifestAssignmentsToJson(
   data['id'] = entity.id;
   data['pilotId'] = entity.pilotId;
   data['pilotName'] = entity.pilotName;
-  data['signature'] = entity.signature;
+  data['signature'] = entity.signature?.toJson();
   data['tableNumber'] = entity.tableNumber;
   data['maxWeightWithPax'] = entity.maxWeightWithPax;
   data['defaultWeight'] = entity.defaultWeight;
@@ -142,7 +143,7 @@ extension ModelResponseBalloonManifestAssignmentsExtension on ModelResponseBallo
     int? id,
     String? pilotId,
     String? pilotName,
-    String? signature,
+    ModelResponseBalloonManifestSignature? signature,
     int? tableNumber,
     double? maxWeightWithPax,
     double? defaultWeight,
@@ -165,6 +166,46 @@ extension ModelResponseBalloonManifestAssignmentsExtension on ModelResponseBallo
       ..shortCode = shortCode ?? this.shortCode
       ..capacity = capacity ?? this.capacity
       ..paxes = paxes ?? this.paxes;
+  }
+}
+
+ModelResponseBalloonManifestSignature $ModelResponseBalloonManifestSignatureFromJson(
+    Map<String, dynamic> json) {
+  final ModelResponseBalloonManifestSignature modelResponseBalloonManifestSignature = ModelResponseBalloonManifestSignature();
+  final String? imageName = jsonConvert.convert<String>(json['imageName']);
+  if (imageName != null) {
+    modelResponseBalloonManifestSignature.imageName = imageName;
+  }
+  final String? imageUrl = jsonConvert.convert<String>(json['imageUrl']);
+  if (imageUrl != null) {
+    modelResponseBalloonManifestSignature.imageUrl = imageUrl;
+  }
+  final String? date = jsonConvert.convert<String>(json['date']);
+  if (date != null) {
+    modelResponseBalloonManifestSignature.date = date;
+  }
+  return modelResponseBalloonManifestSignature;
+}
+
+Map<String, dynamic> $ModelResponseBalloonManifestSignatureToJson(
+    ModelResponseBalloonManifestSignature entity) {
+  final Map<String, dynamic> data = <String, dynamic>{};
+  data['imageName'] = entity.imageName;
+  data['imageUrl'] = entity.imageUrl;
+  data['date'] = entity.date;
+  return data;
+}
+
+extension ModelResponseBalloonManifestSignatureExtension on ModelResponseBalloonManifestSignature {
+  ModelResponseBalloonManifestSignature copyWith({
+    String? imageName,
+    String? imageUrl,
+    String? date,
+  }) {
+    return ModelResponseBalloonManifestSignature()
+      ..imageName = imageName ?? this.imageName
+      ..imageUrl = imageUrl ?? this.imageUrl
+      ..date = date ?? this.date;
   }
 }
 

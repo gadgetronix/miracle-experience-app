@@ -97,7 +97,9 @@ class BalloonManifestHelper {
     ModelResponseBalloonManifestEntity? result,
   }) {
     if (assignment != null) {
-      signatureStatus.value = assignment.signature.isNotNullAndEmpty()
+      signatureStatus.value =
+          assignment.signature != null &&
+              assignment.signature!.date.isNotNullAndEmpty()
           ? SignatureStatus.success
           : SharedPrefUtils.getPendingSignatures().isNotNullAndEmpty &&
                 SharedPrefUtils.getPendingSignatures()!.any((element) {
@@ -107,7 +109,7 @@ class BalloonManifestHelper {
                 })
           ? SignatureStatus.offlinePending
           : SignatureStatus.pending;
-      signatureTime.value = assignment.signature.orEmpty();
+      signatureTime.value = assignment.signature?.date ?? '';
     }
   }
 
@@ -167,11 +169,11 @@ class BalloonManifestHelper {
         ..id = 1
         ..pilotId = "P001"
         ..pilotName = "John Smith"
-        // ..signature = (Signature()
-        //   ..imageName = "pilot_signature.png"
-        //   ..imageUrl = "https://example.com/signatures/pilot_signature.png"
-        //   ..date = "2025-10-25T13:49:02.443Z")
-        ..signature = null
+        ..signature = (ModelResponseBalloonManifestSignature()
+          ..imageName = "pilot_signature.png"
+          ..imageUrl = "https://example.com/signatures/pilot_signature.png"
+          ..date = "2025-10-25T13:49:02.443Z")
+        // ..signature = null
         ..tableNumber = 5
         ..maxWeightWithPax = 1200
         ..defaultWeight = 200

@@ -27,7 +27,7 @@ class ModelResponseBalloonManifestAssignments {
 	int? id;
 	String? pilotId;
 	String? pilotName;
-	String? signature;
+	ModelResponseBalloonManifestSignature? signature;
 	int? tableNumber;
 	double? maxWeightWithPax;
 	double? defaultWeight;
@@ -48,6 +48,25 @@ class ModelResponseBalloonManifestAssignments {
 		return jsonEncode(this);
 	}
 }
+
+@JsonSerializable()
+class ModelResponseBalloonManifestSignature {
+	String? imageName;
+	String? imageUrl;
+	String? date;
+
+	ModelResponseBalloonManifestSignature();
+
+	factory ModelResponseBalloonManifestSignature.fromJson(Map<String, dynamic> json) => $ModelResponseBalloonManifestSignatureFromJson(json);
+
+	Map<String, dynamic> toJson() => $ModelResponseBalloonManifestSignatureToJson(this);
+
+	@override
+	String toString() {
+		return jsonEncode(this);
+	}
+}
+
 
 @JsonSerializable()
 class ModelResponseBalloonManifestAssignmentsPaxes {
