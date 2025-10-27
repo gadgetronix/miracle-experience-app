@@ -109,7 +109,11 @@ class BalloonManifestHelper {
                 })
           ? SignatureStatus.offlinePending
           : SignatureStatus.pending;
-      signatureTime.value = assignment.signature?.date ?? '';
+      signatureTime.value =
+          (assignment.signature != null &&
+              assignment.signature!.date.isNotNullAndEmpty())
+          ? Const.convertDateTimeToDMYHM(assignment.signature!.date!)
+          : '';
     }
   }
 

@@ -72,7 +72,8 @@ class Const {
     return formattedDate;
   }
 
-  static String convertDateTimeToDMYHM(DateTime dateTime) {
+  static String convertDateTimeToDMYHM(String date) {
+    DateTime dateTime = DateTime.parse(date);
     String formattedDate = DateFormat('d/M/yyyy HH:mm').format(dateTime);
     return formattedDate;
   }

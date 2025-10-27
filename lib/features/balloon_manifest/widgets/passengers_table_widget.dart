@@ -74,7 +74,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
         if (state == OfflineSyncState.completed) {
           widget.helper.signatureStatus.value = SignatureStatus.success;
           widget.helper.signatureTime.value = Const.convertDateTimeToDMYHM(
-            DateTime.now(),
+            DateTime.now().toIso8601String(),
           );
         }
       },

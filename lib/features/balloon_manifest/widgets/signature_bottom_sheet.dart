@@ -29,14 +29,14 @@ class SignatureBottomSheet {
                   EasyLoading.show();
                 } else if (state?.resultType == APIResultType.success) {
                   helper.signatureTime.value = Const.convertDateTimeToDMYHM(
-                    DateTime.now(),
+                    DateTime.now().toIso8601String(),
                   );
                   helper.signatureStatus.value = SignatureStatus.success;
                   EasyLoading.dismiss();
                   Navigator.pop(context);
                 } else if (state?.resultType == APIResultType.noInternet) {
                   helper.signatureTime.value = Const.convertDateTimeToDMYHM(
-                    DateTime.now(),
+                    DateTime.now().toIso8601String(),
                   );
                   helper.signatureStatus.value = SignatureStatus.offlinePending;
                   Navigator.pop(context);
