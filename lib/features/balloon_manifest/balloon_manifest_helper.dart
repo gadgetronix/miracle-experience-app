@@ -6,8 +6,8 @@ class BalloonManifestHelper {
   factory BalloonManifestHelper() => _singleton;
   BalloonManifestHelper._internal();
 
-  late final BalloonManifestCubit balloonManifestCubit;
-  late final SignOutCubit signOutCubit;
+  late BalloonManifestCubit balloonManifestCubit;
+  late SignOutCubit signOutCubit;
 
   final ValueNotifier<bool> hasCachedTime = ValueNotifier(false);
   final ValueNotifier<String> cacheStatus = ValueNotifier('');
@@ -34,6 +34,15 @@ class BalloonManifestHelper {
 
   void loadManifestData() {
     balloonManifestCubit.callBalloonManifestAPI();
+  }
+
+  void dispose() {
+    balloonManifestCubit.close();
+    signOutCubit.close();
+    hasCachedTime.dispose();
+    cacheStatus.dispose();
+    signatureStatus.dispose();
+    signatureTime.dispose();
   }
 
   // ========== Signout ==========
