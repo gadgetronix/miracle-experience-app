@@ -24,6 +24,7 @@ class AppString {
   static const passengers = "Passengers";
   static const sign = "Sign";
   static const driverName = "Driver Name";
+  static const driver = "Driver";
   static const fullName = "Full Name";
   static const nationality = "Nationality";
   static const mf = "M/F";
@@ -32,8 +33,10 @@ class AppString {
   static const pickupLocation = "Pickup Location";
   static const pickup = "Pickup";
   static const kg = "KG";
+  static const specialRequest= "Special Request";
   static const takeOffWeight = "Take Off Weight";
   static const total = "Total";
   static const submit = "Submit";
   static const signed = "Signed";
+  static const noAssignmentsAvailable = "No assignments available";
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/network/base_response_model_entity.dart';
@@ -8,15 +9,19 @@ import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 import 'package:miracle_experience_mobile_app/core/network/api_result.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
-import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/manifest_content_widget.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/time_sync_required_widget.dart';
-import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/no_data_available_widget.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:signature/signature.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import '../../core/utils/secure_time_helper.dart';
 import '../authentications/signin_screen.dart';
+import 'widgets/passengers_table_widget.dart';
 
 part 'widgets/manifest_app_bar.dart';
+part 'widgets/no_assignment_widget.dart';
+part 'widgets/mobile_view/mobile_view_sign_widget.dart';
+part 'widgets/signature_bottom_sheet.dart';
 part 'balloon_manifest_helper.dart';
 
 class BalloonManifestScreen extends StatefulWidget {
@@ -50,11 +55,12 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
     }
   }
 
-  // ========================= UI =========================
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: ManifestAppBar(helper: helper,), body: _buildBody());
+    return Scaffold(
+      appBar: ManifestAppBar(helper: helper),
+      body: _buildBody(),
+    );
   }
 
   Widget _buildBody() {
@@ -80,8 +86,8 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
       return _handleOfflineState();
     }
 
-    if (state?.resultType == APIResultType.success && state?.result != null) {
-      return _handleSuccessState(state!.result!);
+    if (state?.resultType == APIResultType.success) {
+      return _handleSuccessState(state?.result);
     }
 
     return _buildGenericErrorState(state?.message);
@@ -91,16 +97,30 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
     return const Center(child: CircularProgressIndicator());
   }
 
-  Widget _handleSuccessState(ModelResponseBalloonManifestEntity result) {
+  Widget _handleSuccessState(ModelResponseBalloonManifestEntity? result) {
     SharedPrefUtils.setBalloonManifest(result.toString());
-    return ManifestContentWidget(manifest: result, isOfflineMode: false);
+    final assignment = result == null
+        ? null
+        : result.assignments.isNotNullAndEmpty
+        ? result.assignments!.first
+        : null;
+    helper.updateSignatureNotifiers(assignment: assignment, result: result);
+
+    return assignment != null
+        ? PassengersListWidget(
+            passengers: assignment.paxes ?? [],
+            manifest: result!,
+            assignment: assignment,
+            helper: helper,
+          )
+        : NoAssignmentWidget();
   }
 
   Widget _handleOfflineState() {
     final cachedData = SharedPrefUtils.getBalloonManifest();
 
     if (cachedData == null || cachedData.manifestDate == null) {
-      return const NoDataAvailableWidget();
+      return const NoAssignmentWidget();
     }
 
     return FutureBuilder<bool>(
@@ -111,9 +131,18 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
         }
 
         if (snapshot.hasData && snapshot.data == true) {
-          return ManifestContentWidget(
+          final assignment = cachedData.assignments!.first;
+
+          helper.updateSignatureNotifiers(
+            assignment: assignment,
+            result: cachedData,
+          );
+
+          return PassengersListWidget(
+            passengers: assignment.paxes ?? [],
             manifest: cachedData,
-            isOfflineMode: true,
+            assignment: assignment,
+            helper: helper,
           );
         }
 

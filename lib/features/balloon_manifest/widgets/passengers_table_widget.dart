@@ -1,41 +1,25 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
-import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
+import 'package:miracle_experience_mobile_app/features/balloon_manifest/balloon_manifest_screen.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:signature/signature.dart';
 
-import '../../../core/network/api_result.dart';
-import '../../../core/network/base_response_model_entity.dart';
+part 'mobile_view/mobile_header_widget.dart';
+part 'tablet_view/tablet_header_widget.dart';
+part 'header_info_widget.dart';
 
 class PassengersListWidget extends StatefulWidget {
   final List<ModelResponseBalloonManifestAssignmentsPaxes> passengers;
-  final String manifestId;
-  final int assignmentId;
-  final String pilotName;
-  final String balloonCode;
-  final int tableNumber;
-  final String location;
-  final String date;
-  final double otherWeights;
-  final String? signature;
+  final BalloonManifestHelper helper;
+  final ModelResponseBalloonManifestEntity manifest;
+  final ModelResponseBalloonManifestAssignments assignment;
 
   const PassengersListWidget({
     super.key,
     required this.passengers,
-    required this.pilotName,
-    required this.balloonCode,
-    required this.tableNumber,
-    required this.location,
-    required this.date,
-    required this.otherWeights,
-    required this.manifestId,
-    required this.assignmentId,
-    this.signature,
+    required this.helper,
+    required this.manifest,
+    required this.assignment,
   });
 
   @override
@@ -43,26 +27,9 @@ class PassengersListWidget extends StatefulWidget {
 }
 
 class _PassengersListWidgetState extends State<PassengersListWidget> {
-  late ValueNotifier<SignatureStatus> signatureStatus;
-
-  final ValueNotifier<String> signatureTime = ValueNotifier<String>('');
-
   @override
   initState() {
     super.initState();
-    signatureStatus = ValueNotifier<SignatureStatus>(
-      widget.signature.isNotNullAndEmpty()
-          ? SignatureStatus.success
-          : SharedPrefUtils.getPendingSignatures().isNotNullAndEmpty &&
-                SharedPrefUtils.getPendingSignatures()!.any((element) {
-                  final data = jsonDecode(element);
-                  return data['manifestId'] == widget.manifestId &&
-                      data['assignmentId'] == widget.assignmentId;
-                })
-          ? SignatureStatus.offlinePending
-          : SignatureStatus.pending,
-    );
-    timber('content ${signatureStatus.value}');
   }
 
   @override
@@ -71,24 +38,33 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
       return _buildEmptyState();
     }
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Column(
-          children: [
-            _buildHeader(),
-            const Divider(height: 1, thickness: 1),
-            if (Const.isTablet) ...[
-              _buildColumnHeaders(),
-              _buildTabletPassengersList(),
-            ] else ...[
-              _buildMobilePassengersList(),
-            ],
-            Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
-
-            _buildFooter(),
-          ],
-        );
-      },
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildHeader(),
+                const Divider(height: 1, thickness: 1),
+                if (Const.isTablet) ...[
+                  _buildColumnHeaders(),
+                  _buildTabletPassengersList(),
+                ] else ...[
+                  _buildMobilePassengersList(),
+                ],
+                Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
+                _buildFooter(),
+              ],
+            ),
+          ),
+        ),
+        if (!Const.isTablet)
+                MobileViewSignWidget(
+                  helper: widget.helper,
+                  manifestId: widget.manifest.uniqueId,
+                  assignmentId: widget.assignment.id,
+                ),
+      ],
     );
   }
 
@@ -96,12 +72,14 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
     return BlocListener<OfflineSyncCubit, OfflineSyncState>(
       listener: (context, state) {
         if (state == OfflineSyncState.completed) {
-          signatureStatus.value = SignatureStatus.success;
-          signatureTime.value = Const.convertDateTimeToDMYHM(DateTime.now());
+          widget.helper.signatureStatus.value = SignatureStatus.success;
+          widget.helper.signatureTime.value = Const.convertDateTimeToDMYHM(
+            DateTime.now(),
+          );
         }
       },
       child: ValueListenableBuilder<SignatureStatus>(
-        valueListenable: signatureStatus,
+        valueListenable: widget.helper.signatureStatus,
         builder: (context, value, child) {
           return Container(
             padding: EdgeInsets.symmetric(
@@ -114,262 +92,19 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
                   : ColorConst.primaryColor,
             ),
             child: Const.isTablet
-                ? _buildTabletHeader(status: value)
-                : _buildMobileHeader(status: value),
+                ? TabletHeaderWidget(
+                    status: value,
+                    manifest: widget.manifest,
+                    assignment: widget.assignment,
+                    helper: widget.helper,
+                  )
+                : MobileHeaderWidget(
+                    manifest: widget.manifest,
+                    assignment: widget.assignment,
+                  ),
           );
         },
       ),
-    );
-  }
-
-  Widget _buildTabletHeader({SignatureStatus? status}) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${AppString.pilot.toUpperCase().endWithColon()} ${widget.pilotName.toUpperCase()}',
-                style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  _buildHeaderInfo(AppString.date.toUpperCase(), widget.date),
-                  const SizedBox(width: 24),
-                  _buildHeaderInfo(
-                    AppString.location.toUpperCase(),
-                    widget.location,
-                  ),
-                  const SizedBox(width: 24),
-                  _buildHeaderInfo(
-                    AppString.balloon.toUpperCase(),
-                    widget.balloonCode,
-                  ),
-                  const SizedBox(width: 24),
-                  _buildHeaderInfo(
-                    AppString.table.toUpperCase(),
-                    widget.tableNumber.toString(),
-                  ),
-                  const SizedBox(width: 24),
-                  _buildHeaderInfo(
-                    AppString.passengers.toUpperCase(),
-                    widget.passengers.length.toString(),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        status == SignatureStatus.pending
-            ? GestureDetector(
-                onTap: () {
-                  _buildSignatureSheet(
-                    manifestId: widget.manifestId,
-                    assignmentId: widget.assignmentId,
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: ColorConst.whiteColor,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    AppString.sign,
-                    style: fontStyleBold14.copyWith(
-                      color: ColorConst.primaryColor,
-                    ),
-                  ),
-                ),
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-
-                    children: [
-                      Text(
-                        AppString.signed,
-                        style: fontStyleBold14.copyWith(
-                          color: ColorConst.whiteColor,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Icon(Icons.done, color: ColorConst.whiteColor),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  ValueListenableBuilder<String>(
-                    valueListenable: signatureTime,
-                    builder: (context, value, child) {
-                      return Text(
-                        value,
-                        style: fontStyleRegular12.copyWith(
-                          color: ColorConst.whiteColor,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-      ],
-    );
-  }
-
-  Widget _buildMobileHeader({SignatureStatus? status}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${AppString.pilot.toUpperCase().endWithColon()} ${widget.pilotName.toUpperCase()}',
-          style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
-        ),
-        const SizedBox(height: 8),
-
-        // First Row: Date & Location
-        Row(
-          children: [
-            Expanded(
-              child: _buildHeaderInfo(
-                AppString.date.toUpperCase(),
-                widget.date,
-              ),
-            ),
-            Expanded(
-              child: _buildHeaderInfo(
-                AppString.location.toUpperCase(),
-                widget.location,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Row(
-          children: [
-            Expanded(
-              child: _buildHeaderInfo(
-                AppString.balloon.toUpperCase(),
-                widget.balloonCode,
-              ),
-            ),
-            Expanded(
-              child: _buildHeaderInfo(
-                AppString.table.toUpperCase(),
-                widget.tableNumber.toString(),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: _buildHeaderInfo(
-                AppString.passengers.toUpperCase(),
-                widget.passengers.length.toString(),
-              ),
-            ),
-            status == SignatureStatus.pending
-                ? GestureDetector(
-                    onTap: () {
-                      _buildSignatureSheet(
-                        manifestId: widget.manifestId,
-                        assignmentId: widget.assignmentId,
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: ColorConst.whiteColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        AppString.sign,
-                        style: fontStyleBold14.copyWith(
-                          color: ColorConst.primaryColor,
-                        ),
-                      ),
-                    ),
-                  )
-                : Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-
-                          children: [
-                            Text(
-                              AppString.signed,
-                              style: fontStyleBold14.copyWith(
-                                color: ColorConst.whiteColor,
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            const Icon(
-                              Icons.done,
-                              color: ColorConst.whiteColor,
-                            ),
-                            const SizedBox(width: 5),
-                            ValueListenableBuilder<String>(
-                              valueListenable: signatureTime,
-                              builder: (context, value, child) {
-                                return Text(
-                                  value,
-                                  style: fontStyleRegular12.copyWith(
-                                    color: ColorConst.whiteColor,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 4),
-                        ValueListenableBuilder<String>(
-                          valueListenable: signatureTime,
-                          builder: (context, value, child) {
-                            return Text(
-                              value,
-                              style: fontStyleRegular12.copyWith(
-                                color: ColorConst.whiteColor,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHeaderInfo(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: fontStyleRegular10.copyWith(color: ColorConst.whiteColor),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          value,
-          style: fontStyleBold14.copyWith(color: ColorConst.whiteColor),
-        ),
-      ],
     );
   }
 
@@ -492,7 +227,15 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
           ),
 
           // Gender
-          Expanded(flex: 1, child: _buildGenderBadge(passenger.gender)),
+          Expanded(
+            flex: 1,
+            child: Text(
+              passenger.gender.isNotNullOrEmpty()
+                  ? '-'
+                  : passenger.gender!.toUpperCase(),
+              style: passengerInfoTextStyle,
+            ),
+          ),
 
           // Tour Operator
           Expanded(
@@ -554,60 +297,142 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
           Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
       itemBuilder: (context, index) {
         final passenger = widget.passengers[index];
-        return _buildMobilePassengerCard(passenger, index + 1);
+        return _buildMobilePassengerRow(passenger, index + 1);
       },
     );
   }
 
-  Widget _buildMobilePassengerCard(
+  Widget _buildMobilePassengerRow(
     ModelResponseBalloonManifestAssignmentsPaxes passenger,
     int number,
   ) {
     return GestureDetector(
       onTap: () {
-        
+        CustomBottomSheet.instance.modalBottomSheet(
+          child: _buildPassengerDetailBottomSheet(passenger),
+          context: context,
+        );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: ColoredBox(
+        color: Colors.transparent,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    passenger.name ?? '',
+                    style: passengerInfoMobileTextStyle.copyWith(fontSize: 15),
+                  ),
+                  Text(
+                    '${passenger.weight.toString()} KG',
+                    style: passengerInfoMobileTextStyle,
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      "${AppString.driver.endWithColon()} ${passenger.driverName ?? ''}",
+                      style: passengerInfoMobileTextStyle.copyWith(
+                        color: ColorConst.textGreyColor,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Flexible(
+                    child: Text(
+                      "${AppString.pickup.endWithColon()} ${passenger.location?.capitalizeByWord() ?? ''}",
+                      style: passengerInfoMobileTextStyle.copyWith(
+                        color: ColorConst.textGreyColor,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPassengerDetailBottomSheet(
+    ModelResponseBalloonManifestAssignmentsPaxes passenger,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(passenger.name ?? '', style: passengerInfoMobileTextStyle),
-                Text(
-                  '${passenger.weight.toString()} KG',
-                  style: passengerInfoMobileTextStyle,
-                ),
-              ],
+            // Title
+            Center(
+              child: Text(
+                passenger.name ?? 'Unknown Passenger',
+                style: fontStyleBold18,
+              ),
             ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${AppString.driverName.endWithColon()} ${passenger.driverName ?? ''}",
-                  style: passengerInfoMobileTextStyle,
-                ),
-                Text(
-                  "${AppString.pickup.endWithColon()} ${passenger.location ?? ''}",
-                  style: passengerInfoMobileTextStyle,
-                ),
-              ],
+            Divider(thickness: 1, height: 20, color: Colors.grey.shade300),
+
+            // Details List
+            _buildDetailRow(AppString.driver, passenger.driverName ?? '-'),
+            _buildDetailRow(AppString.nationality, passenger.country ?? '-'),
+            _buildDetailRow(AppString.mf, passenger.gender ?? '-'),
+            _buildDetailRow(
+              AppString.tourOperator,
+              passenger.bookingBy?.capitalizeByWord() ?? '-',
             ),
+            _buildDetailRow(AppString.permit, passenger.permitNumber ?? '-'),
+            _buildDetailRow(
+              AppString.pickupLocation,
+              passenger.location?.capitalizeByWord() ?? '-',
+            ),
+            _buildDetailRow(
+              AppString.kg,
+              passenger.weight != null
+                  ? '${passenger.weight!.toStringAsFixed(0)} KG'
+                  : '-',
+            ),
+            if (passenger.specialRequest.isNotNullAndEmpty()) ...[
+              _buildDetailRow(
+                AppString.specialRequest,
+                passenger.specialRequest ?? '-',
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 
-  // ========== SHARED WIDGETS ==========
-  Widget _buildGenderBadge(String? gender) {
-    if (gender == null || gender.isEmpty) {
-      return Text('-', style: passengerInfoTextStyle);
-    }
-    return Text(gender.toUpperCase(), style: passengerInfoTextStyle);
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text("$label:", style: passengerInfoMobileTextStyle),
+          ),
+          Expanded(
+            flex: 5,
+            child: Text(value, style: passengerInfoMobileTextStyle),
+          ),
+        ],
+      ),
+    );
   }
+
+  // ========== SHARED WIDGETS ==========
 
   Widget _buildFooter() {
     final totalWeight = widget.passengers.fold<double>(
@@ -616,7 +441,10 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
     );
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: Const.isTablet ? 25 : 16),
+      padding: EdgeInsets.symmetric(
+        vertical: 12,
+        horizontal: Const.isTablet ? 25 : 16,
+      ),
       decoration: BoxDecoration(
         color: ColorConst.whiteColor,
         borderRadius: const BorderRadius.only(
@@ -630,16 +458,24 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${AppString.takeOffWeight.endWithColon()} ${(widget.otherWeights + totalWeight).toStringAsFixed(0)}',
-                style: passengerInfoTextStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                '${AppString.takeOffWeight.endWithColon()} ${((widget.assignment.pilotWeight ?? 0) + (widget.assignment.defaultWeight ?? 0) + totalWeight).toStringAsFixed(0)}',
+                style: Const.isTablet
+                    ? passengerInfoTextStyle.copyWith(
+                        fontWeight: FontWeight.bold,
+                      )
+                    : passengerInfoMobileTextStyle.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
               ),
               Text(
-                '${AppString.total.endWithColon()}: ${totalWeight.toStringAsFixed(0)} KG',
-                style: passengerInfoTextStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                '${AppString.total.endWithColon()} ${totalWeight.toStringAsFixed(0)} KG',
+                style: Const.isTablet
+                    ? passengerInfoTextStyle.copyWith(
+                        fontWeight: FontWeight.bold,
+                      )
+                    : passengerInfoMobileTextStyle.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
               ),
             ],
           );
@@ -671,90 +507,6 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
           ),
         ),
       ),
-    );
-  }
-
-  _buildSignatureSheet({String? manifestId, int? assignmentId}) {
-    final UploadSignatureCubit uploadSignatureCubit = UploadSignatureCubit();
-    final SignatureController controller = SignatureController(
-      penStrokeWidth: 3,
-      penColor: Colors.black,
-      exportBackgroundColor: Colors.white,
-    );
-    return CustomBottomSheet.instance.modalBottomSheet(
-      context: GlobalVariable.appContext,
-      bottomButtonName: AppString.submit,
-      child: BlocProvider.value(
-        value: uploadSignatureCubit,
-        child:
-            BlocListener<
-              UploadSignatureCubit,
-              APIResultState<BaseResponseModelEntity>?
-            >(
-              listener: (context, state) {
-                if (state?.resultType == APIResultType.loading) {
-                  EasyLoading.show();
-                } else if (state?.resultType == APIResultType.success) {
-                  signatureTime.value = Const.convertDateTimeToDMYHM(
-                    DateTime.now(),
-                  );
-                  signatureStatus.value = SignatureStatus.success;
-                  EasyLoading.dismiss();
-                  Navigator.pop(context); // Close bottom sheet
-                } else if (state?.resultType == APIResultType.noInternet) {
-                  signatureTime.value = Const.convertDateTimeToDMYHM(
-                    DateTime.now(),
-                  );
-                  signatureStatus.value = SignatureStatus.offlinePending;
-                  Navigator.pop(context); // Close bottom sheet
-                  EasyLoading.dismiss();
-                } else if (state?.resultType == APIResultType.failure) {
-                  EasyLoading.dismiss();
-                  showErrorSnackBar(
-                    context,
-                    state?.message ?? 'Something went wrong. Please try again.',
-                  );
-                }
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Signature(
-                    controller: controller,
-                    height: 300,
-                    backgroundColor: Colors.grey[200]!,
-                  ),
-                ],
-              ),
-            ),
-      ),
-      onBottomPressed: () async {
-        if (controller.isNotEmpty) {
-          // Convert the signature to image bytes
-          final signatureBytes = await controller.toPngBytes();
-
-          if (signatureBytes != null) {
-            // Save the bytes temporarily as a file
-            final tempDir = await getTemporaryDirectory();
-            final filePath = '${tempDir.path}/signature.png';
-            final signatureFile = File(filePath);
-            await signatureFile.writeAsBytes(signatureBytes);
-            final signatureImageBase64 = base64Encode(signatureBytes);
-
-            // Now call the upload API
-            await uploadSignatureCubit.callUploadSignatureAPI(
-              manifestId: manifestId ?? '0',
-              assignmentId: assignmentId ?? 0,
-              date: DateTime.now().toIso8601String(),
-              signatureImageBase64: signatureImageBase64,
-              signatureFile: signatureFile,
-            );
-          }
-        } else {
-          EasyLoading.showToast("Please add your signature before submitting.");
-        }
-      },
     );
   }
 }

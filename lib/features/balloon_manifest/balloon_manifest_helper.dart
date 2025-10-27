@@ -11,6 +11,8 @@ class BalloonManifestHelper {
 
   final ValueNotifier<bool> hasCachedTime = ValueNotifier(false);
   final ValueNotifier<String> cacheStatus = ValueNotifier('');
+  late ValueNotifier<SignatureStatus> signatureStatus;
+  late ValueNotifier<String> signatureTime;
 
   Future<void> initialize() async {
     _initializeDependencies();
@@ -22,6 +24,8 @@ class BalloonManifestHelper {
   void _initializeDependencies() {
     balloonManifestCubit = BalloonManifestCubit();
     signOutCubit = SignOutCubit();
+    signatureStatus = ValueNotifier(SignatureStatus.pending);
+    signatureTime = ValueNotifier('');
   }
 
   void _initializeTimezone() {
@@ -88,6 +92,25 @@ class BalloonManifestHelper {
     cacheStatus.value = status;
   }
 
+  updateSignatureNotifiers({
+    ModelResponseBalloonManifestAssignments? assignment,
+    ModelResponseBalloonManifestEntity? result,
+  }) {
+    if (assignment != null) {
+      signatureStatus.value = assignment.signature.isNotNullAndEmpty()
+          ? SignatureStatus.success
+          : SharedPrefUtils.getPendingSignatures().isNotNullAndEmpty &&
+                SharedPrefUtils.getPendingSignatures()!.any((element) {
+                  final data = jsonDecode(element);
+                  return data['manifestId'] == result!.uniqueId &&
+                      data['assignmentId'] == assignment.id;
+                })
+          ? SignatureStatus.offlinePending
+          : SignatureStatus.pending;
+      signatureTime.value = assignment.signature.orEmpty();
+    }
+  }
+
   // ========== Validation ==========
 
   Future<bool> canShowOfflineData(String manifestDateStr) async {
@@ -132,8 +155,63 @@ class BalloonManifestHelper {
   ) {
     debugPrint('Current EAT Time: $currentTime');
     debugPrint('Cutoff Time (11 AM): $cutoffTime');
-    debugPrint(
-      canShow ? 'Can show offline data' : 'Data expired (past 11 AM)',
-    );
+    debugPrint(canShow ? 'Can show offline data' : 'Data expired (past 11 AM)');
   }
+
+  final dummyData = ModelResponseBalloonManifestEntity()
+    ..location = "Serengeti North"
+    ..manifestDate = "2025-10-25"
+    ..uniqueId = "MN-001"
+    ..assignments = [
+      ModelResponseBalloonManifestAssignments()
+        ..id = 1
+        ..pilotId = "P001"
+        ..pilotName = "John Smith"
+        // ..signature = (Signature()
+        //   ..imageName = "pilot_signature.png"
+        //   ..imageUrl = "https://example.com/signatures/pilot_signature.png"
+        //   ..date = "2025-10-25T13:49:02.443Z")
+        ..signature = null
+        ..tableNumber = 5
+        ..maxWeightWithPax = 1200
+        ..defaultWeight = 200
+        ..pilotWeight = 75
+        ..knownLanguage = [1, 2]
+        ..shortCode = "A1"
+        ..capacity = 8
+        ..paxes = [
+          ModelResponseBalloonManifestAssignmentsPaxes()
+            ..id = 101
+            ..isFOC = false
+            ..name = "Alice Johnson"
+            ..quadrantPosition = 1
+            ..gender = "Female"
+            ..age = 29
+            ..weight = 65
+            ..country = "USA"
+            ..dietaryRestriction = "Vegan"
+            ..specialRequest = "Window side view"
+            ..permitNumber = "PRM12345"
+            ..bookingBy = "SafariWorld Tours"
+            ..location = "Serengeti North"
+            ..driverName = "James Peter"
+            ..medicalCondition = "None",
+          ModelResponseBalloonManifestAssignmentsPaxes()
+            ..id = 102
+            ..isFOC = true
+            ..name = "Bob Williams"
+            ..quadrantPosition = 2
+            ..gender = "Male"
+            ..age = 34
+            ..weight = 82
+            ..country = "UK"
+            ..dietaryRestriction = "None"
+            ..specialRequest = "Birthday surprise"
+            ..permitNumber = "PRM54321"
+            ..bookingBy = "SafariWorld Tours"
+            ..location = "Serengeti North"
+            ..driverName = "James Peter"
+            ..medicalCondition = "Asthma",
+        ],
+    ];
 }

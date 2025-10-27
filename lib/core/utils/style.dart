@@ -11,9 +11,9 @@ TextStyle passengerInfoTextStyle = TextStyle(
 );
 
 TextStyle passengerInfoMobileTextStyle = TextStyle(
-  fontSize: 15,
+  fontSize: 14,
   fontFamily: FontAsset.helvetica,
-  fontWeight: FontAsset.medium,
+  fontWeight: FontAsset.regular,
   color: ColorConst.textColor,
 );
 
