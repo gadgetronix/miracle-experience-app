@@ -16,6 +16,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../../core/utils/secure_time_helper.dart';
 import '../authentications/signin_screen.dart';
 
+part 'widgets/manifest_app_bar.dart';
 part 'balloon_manifest_helper.dart';
 
 class BalloonManifestScreen extends StatefulWidget {
@@ -53,63 +54,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildAppBar(), body: _buildBody());
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: const Text(
-        AppString.balloonManifest,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontFamily: FontAsset.helvetica,
-        ),
-      ),
-      elevation: 2,
-      backgroundColor: ColorConst.whiteColor,
-      actions: [
-        BlocProvider.value(
-          value: helper.signOutCubit,
-          child:
-              BlocListener<
-                SignOutCubit,
-                APIResultState<BaseResponseModelEntity>?
-              >(
-                listener: (context, state) {
-                  EasyLoading.dismiss();
-                  if (state?.resultType == APIResultType.loading) {
-                    EasyLoading.show();
-                  } else if (state?.resultType == APIResultType.success) {
-                    SharedPrefUtils.remove();
-                    navigateToPageAndRemoveAllPage(const SigninScreen());
-                  } else {
-                    showErrorSnackBar(
-                      context,
-                      state?.message ?? 'Logout failed',
-                    );
-                  }
-                },
-                child: GestureDetector(
-                  onTap: () => showLogoutDialog(
-                    title: AppString.logout,
-                    content: AppString.logoutDesc,
-                    cancelText: AppString.cancel,
-                    yesText: AppString.logout,
-                    noFunction: () => Navigator.pop(context),
-                    yesFunction: () {
-                      Navigator.pop(context);
-                      helper.callSignOutAPI();
-                    },
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 25),
-                    child: Text(AppString.logout, style: fontStyleMedium16),
-                  ),
-                ),
-              ),
-        ),
-      ],
-    );
+    return Scaffold(appBar: ManifestAppBar(helper: helper,), body: _buildBody());
   }
 
   Widget _buildBody() {
