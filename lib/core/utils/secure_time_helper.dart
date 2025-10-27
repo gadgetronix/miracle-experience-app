@@ -100,7 +100,7 @@ class SecureTimeHelper {
         timber('Device was rebooted (uptime reset) - need new sync');
         timber('   Stored uptime: ${storedUptime}ms');
         timber('   Current uptime: ${currentUptime}ms');
-        return null;
+        return DateTime.now();
       }
 
       // Calculate elapsed time since last sync (using monotonic clock!)
