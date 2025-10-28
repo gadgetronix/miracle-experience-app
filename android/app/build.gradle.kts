@@ -62,6 +62,22 @@ android {
         )
     }
 }
+
+flavorDimensions += "track"
+
+productFlavors {
+    create("beta") {
+        dimension = "track"
+        applicationIdSuffix = ".internal"
+        manifestPlaceholders.put("applicationLabel", "[Beta] Miracle Experience")
+    }
+    create("stable") {
+        dimension = "track"
+        manifestPlaceholders.put("applicationLabel", "Miracle Experience")
+    }
+}
+
+
     
 }
 

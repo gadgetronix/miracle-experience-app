@@ -31,6 +31,7 @@ dependencies:
   path_provider: ^2.1.5
   shared_preferences: ^2.5.3
   shimmer: ^3.0.0
+  shorebird_code_push: ^2.0.5
   signature: ^6.3.0
   timezone: ^0.10.1
   upgrader: ^12.1.0
@@ -45,6 +46,7 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
+    - shorebird.yaml
 
   fonts:
     - family: Halvetica
