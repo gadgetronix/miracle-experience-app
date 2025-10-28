@@ -24,17 +24,13 @@ class BalloonManifestRepository {
 
   static Future<APIResultState<BaseResponseModelEntity>>
   callUploadSignatureAPI({
-    required String manifestId,
     required int assignmentId,
-    required String date,
-    String? signatureImageBase64,
+    required String signedDate,
     required File signatureFile,
   }) async {
     FormData formData = FormData.fromMap({
-      "ManifestId": manifestId,
       "AssignmentId": assignmentId,
-      "Date": date,
-      "SignatureImage": signatureImageBase64,
+      "SignedDate": signedDate,
       "SignatureFile": await MultipartFile.fromFile(
         signatureFile.path,
         filename: signatureFile.path.split("/").last,

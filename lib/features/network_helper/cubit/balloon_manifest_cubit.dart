@@ -6,7 +6,6 @@ import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/core/network/base_response_model_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/repositories/balloon_manifest_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/basic_features_network.dart';
 
@@ -30,21 +29,17 @@ class UploadSignatureCubit
   UploadSignatureCubit() : super(null);
 
   Future<void> callUploadSignatureAPI({
-    required String manifestId,
     required int assignmentId,
-    required String date,
-    required String signatureImageBase64,
+    required String signedDate,
     required File signatureFile,
   }) async {
     emit(const LoadingState());
 
     final APIResultState<BaseResponseModelEntity> apiResultFromNetwork =
         await BalloonManifestRepository.callUploadSignatureAPI(
-          manifestId: manifestId,
           assignmentId: assignmentId,
-          signatureImageBase64: signatureImageBase64,
           signatureFile: signatureFile,
-          date: date,
+          signedDate: signedDate,
         );
 
     final result = apiResultFromNetwork;
@@ -53,11 +48,9 @@ class UploadSignatureCubit
       // 🔥 Store this request locally for retry
       await SharedPrefUtils.setPendingSignatures(
         data: {
-          "manifestId": manifestId,
           "assignmentId": assignmentId,
-          "date": date,
+          "SignedDate": signedDate,
           "signatureFilePath": signatureFile.path,
-          "signatureImageBase64": signatureImageBase64,
         },
         isList: false,
       );
@@ -105,16 +98,26 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
 
         if (!file.existsSync()) continue;
 
+        final signedDate = data['SignedDate'];
+
         final apiResultFromNetwork =
             await BalloonManifestRepository.callUploadSignatureAPI(
-              manifestId: data['manifestId'],
               assignmentId: data['assignmentId'],
-              date: data['date'],
-              signatureImageBase64: data['signatureImageBase64'],
+              signedDate: data['SignedDate'],
               signatureFile: file,
             );
 
         if (apiResultFromNetwork.resultType == APIResultType.success) {
+          final ModelResponseBalloonManifestEntity? cacheData =
+              SharedPrefUtils.getBalloonManifest();
+          if (cacheData != null && cacheData.assignments.isNotNullAndEmpty) {
+            cacheData.assignments!.first.signature =
+                ModelResponseBalloonManifestSignature()
+                  ..date = signedDate
+                  ..imageName = 'success.png';
+          }
+          SharedPrefUtils.setBalloonManifest(cacheData.toString());
+
           // Remove successfully uploaded entry
           emit(OfflineSyncState.completed);
           pendingList.remove(item);

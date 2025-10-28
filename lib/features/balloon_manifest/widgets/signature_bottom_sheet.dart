@@ -28,17 +28,16 @@ class SignatureBottomSheet {
                 if (state?.resultType == APIResultType.loading) {
                   EasyLoading.show();
                 } else if (state?.resultType == APIResultType.success) {
-                  helper.signatureTime.value = Const.convertDateTimeToDMYHM(
-                    DateTime.now().toIso8601String(),
+                  helper.updateSignedDateInPrefs(
+                    signedDateTime: DateTime.now().toIso8601String(),
+                    imageName: 'success.png',
                   );
-                  helper.signatureStatus.value = SignatureStatus.success;
                   EasyLoading.dismiss();
                   Navigator.pop(context);
                 } else if (state?.resultType == APIResultType.noInternet) {
-                  helper.signatureTime.value = Const.convertDateTimeToDMYHM(
-                    DateTime.now().toIso8601String(),
+                  helper.updateSignedDateInPrefs(
+                    signedDateTime: DateTime.now().toIso8601String(),
                   );
-                  helper.signatureStatus.value = SignatureStatus.offlinePending;
                   Navigator.pop(context);
                   EasyLoading.dismiss();
                 } else if (state?.resultType == APIResultType.failure) {
@@ -70,10 +69,8 @@ class SignatureBottomSheet {
             await file.writeAsBytes(bytes);
 
             await uploadSignatureCubit.callUploadSignatureAPI(
-              manifestId: manifestId ?? '0',
               assignmentId: assignmentId ?? 0,
-              date: DateTime.now().toIso8601String(),
-              signatureImageBase64: base64Encode(bytes),
+              signedDate: DateTime.now().toIso8601String(),
               signatureFile: file,
             );
           }

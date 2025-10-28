@@ -73,6 +73,22 @@ class BalloonManifestHelper {
     signOutCubit.callSignOutAPI(modelRequestSigninEntity);
   }
 
+  updateSignedDateInPrefs({required String signedDateTime, String? imageName}) {
+    signatureTime.value = Const.convertDateTimeToDMYHM(signedDateTime);
+    signatureStatus.value = imageName.isNullOrEmpty()
+        ? SignatureStatus.offlinePending
+        : SignatureStatus.success;
+    final ModelResponseBalloonManifestEntity? cacheData =
+        SharedPrefUtils.getBalloonManifest();
+    if (cacheData != null && cacheData.assignments.isNotNullAndEmpty) {
+      cacheData.assignments!.first.signature =
+          ModelResponseBalloonManifestSignature()
+            ..date = signedDateTime
+            ..imageName = imageName;
+    }
+    SharedPrefUtils.setBalloonManifest(cacheData.toString());
+  }
+
   // ========== Time Sync ==========
 
   Future<void> _initializeTimeSync() async {
@@ -108,13 +124,13 @@ class BalloonManifestHelper {
     if (assignment != null) {
       signatureStatus.value =
           assignment.signature != null &&
-              assignment.signature!.date.isNotNullAndEmpty()
+              assignment.signature!.date.isNotNullAndEmpty() &&
+              assignment.signature!.imageName.isNotNullAndEmpty()
           ? SignatureStatus.success
           : SharedPrefUtils.getPendingSignatures().isNotNullAndEmpty &&
                 SharedPrefUtils.getPendingSignatures()!.any((element) {
                   final data = jsonDecode(element);
-                  return data['manifestId'] == result!.uniqueId &&
-                      data['assignmentId'] == assignment.id;
+                  return data['assignmentId'] == assignment.id;
                 })
           ? SignatureStatus.offlinePending
           : SignatureStatus.pending;

@@ -52,18 +52,22 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
                 ] else ...[
                   _buildMobilePassengersList(),
                 ],
-                Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
+                Divider(
+                  height: 1,
+                  thickness: 0.5,
+                  color: Colors.grey.shade300,
+                ),
                 _buildFooter(),
               ],
             ),
           ),
         ),
         if (!Const.isTablet)
-                MobileViewSignWidget(
-                  helper: widget.helper,
-                  manifestId: widget.manifest.uniqueId,
-                  assignmentId: widget.assignment.id,
-                ),
+          MobileViewSignWidget(
+            helper: widget.helper,
+            manifestId: widget.manifest.uniqueId,
+            assignmentId: widget.assignment.id,
+          ),
       ],
     );
   }
@@ -73,9 +77,14 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
       listener: (context, state) {
         if (state == OfflineSyncState.completed) {
           widget.helper.signatureStatus.value = SignatureStatus.success;
-          widget.helper.signatureTime.value = Const.convertDateTimeToDMYHM(
-            DateTime.now().toIso8601String(),
-          );
+          final cacheData = SharedPrefUtils.getBalloonManifest();
+          if (cacheData != null &&
+              cacheData.assignments.isNotNullAndEmpty &&
+              cacheData.assignments!.first.signature != null) {
+            widget.helper.signatureTime.value = Const.convertDateTimeToDMYHM(
+              cacheData.assignments!.first.signature!.date!,
+            );
+          }
         }
       },
       child: ValueListenableBuilder<SignatureStatus>(
