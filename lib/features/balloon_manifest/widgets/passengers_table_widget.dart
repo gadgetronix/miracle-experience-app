@@ -41,24 +41,30 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildHeader(),
-                const Divider(height: 1, thickness: 1),
-                if (Const.isTablet) ...[
-                  _buildColumnHeaders(),
-                  _buildTabletPassengersList(),
-                ] else ...[
-                  _buildMobilePassengersList(),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              widget.helper.loadManifestData();
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  const Divider(height: 1, thickness: 1),
+                  if (Const.isTablet) ...[
+                    _buildColumnHeaders(),
+                    _buildTabletPassengersList(),
+                  ] else ...[
+                    _buildMobilePassengersList(),
+                  ],
+                  Divider(
+                    height: 1,
+                    thickness: 0.5,
+                    color: Colors.grey.shade300,
+                  ),
+                  _buildFooter(),
                 ],
-                Divider(
-                  height: 1,
-                  thickness: 0.5,
-                  color: Colors.grey.shade300,
-                ),
-                _buildFooter(),
-              ],
+              ),
             ),
           ),
         ),

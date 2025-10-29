@@ -6,4 +6,6 @@ FLUTTER VERSION USED FOR THIS PROJECT IS 3.35.4
 
 1. To generate splash for this project; make required changes in native_splash.yaml and run below command
 
+2. --flavor=stable --release-version=0.1.0+1                              shorebird release android --flavor beta --flutter-version=3.35.4 --artifact=apk
+
 dart run flutter_native_splash:create --path=native_splash.yaml
