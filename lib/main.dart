@@ -10,6 +10,7 @@ import 'package:upgrader/upgrader.dart';
 import 'core/basic_features.dart';
 import 'core/utils/app_loader.dart';
 import 'core/utils/secure_time_helper.dart';
+import 'shorebird_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,7 @@ Future<void> main() async {
   // await Firebase.initializeApp();
   // await NotificationManager().init();
   await ScreenUtil.ensureScreenSize();
+  await ShorebirdManager().init();
   _initializeKronos();
   // orientations();
   runApp(
