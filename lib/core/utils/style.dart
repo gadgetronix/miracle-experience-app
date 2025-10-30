@@ -4,7 +4,7 @@ import '../constants/color_const.dart';
 import '../constants/const.dart';
 
 TextStyle passengerInfoTextStyle = TextStyle(
-  fontSize: 10,
+  fontSize: 12,
   fontFamily: FontAsset.helvetica,
   fontWeight: FontAsset.medium,
   color: ColorConst.textColor,

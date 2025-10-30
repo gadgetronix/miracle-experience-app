@@ -45,26 +45,39 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
             onRefresh: () async {
               widget.helper.loadManifestData();
             },
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  const Divider(height: 1, thickness: 1),
-                  if (Const.isTablet) ...[
-                    _buildColumnHeaders(),
-                    _buildTabletPassengersList(),
-                  ] else ...[
-                    _buildMobilePassengersList(),
-                  ],
-                  Divider(
-                    height: 1,
-                    thickness: 0.5,
-                    color: Colors.grey.shade300,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Column(
+                      children: [
+                        _buildHeader(),
+                        const Divider(height: 1, thickness: 1),
+                        if (Const.isTablet) ...[
+                          _buildColumnHeaders(),
+                          _buildTabletPassengersList(),
+                        ] else ...[
+                          _buildMobilePassengersList(),
+                        ],
+                        Divider(
+                          height: 1,
+                          thickness: 0.5,
+                          color: Colors.grey.shade300,
+                        ),
+                        _buildFooter(),
+                        if (Const.isTablet)
+                          SizedBox(
+                            height: Dimensions.getSafeAreaBottomHeight() + 10,
+                          ),
+                      ],
+                    ),
                   ),
-                  _buildFooter(),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ),
@@ -140,8 +153,9 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
           _buildColumnHeader(AppString.nationality, flex: 3),
           _buildColumnHeader(AppString.mf, flex: 1),
           _buildColumnHeader(AppString.tourOperator, flex: 4),
-          const SizedBox(width: 5),
+          const SizedBox(width: 3),
           _buildColumnHeader(AppString.permit, flex: 2),
+          const SizedBox(width: 3),
           _buildColumnHeader(AppString.pickupLocation, flex: 4),
           const SizedBox(width: 5),
           _buildColumnHeader(AppString.kg, flex: 1),
@@ -262,7 +276,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 3),
 
           // Permit Code
           Expanded(
@@ -274,6 +288,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
+          const SizedBox(width: 3),
 
           // Pickup Location
           Expanded(
