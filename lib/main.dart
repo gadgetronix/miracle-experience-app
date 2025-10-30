@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:miracle_experience_mobile_app/features/authentications/signin_screen.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/balloon_manifest_screen.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:upgrader/upgrader.dart';
 
@@ -38,15 +39,27 @@ Future<void> _initializeKronos() async {
   try {
     final success = await SecureTimeHelper.syncAndPersist();
     if (success) {
-    } else {
-    }
+    } else {}
   } catch (e) {
     timber('Initial sync error: $e');
   }
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  NoScreenshot noScreenshot = NoScreenshot.instance;
+
+  @override
+  void initState() {
+    noScreenshot.screenshotOff();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +84,9 @@ class MainApp extends StatelessWidget {
             builder: (context, child) {
               Const.init(context);
               return MediaQuery(
-                data: MediaQuery.of(context).copyWith(
-                  textScaler: TextScaler.linear(
-                    1.0,
-                  ),
-                ),
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: TextScaler.linear(1.0)),
                 child: child!,
               );
             },
