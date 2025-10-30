@@ -19,7 +19,7 @@ import '../authentications/signin_screen.dart';
 import 'widgets/passengers_table_widget.dart';
 
 part 'widgets/manifest_app_bar.dart';
-part 'widgets/no_assignment_widget.dart';
+part 'widgets/general_error_widget.dart';
 part 'widgets/mobile_view/mobile_view_sign_widget.dart';
 part 'widgets/signature_bottom_sheet.dart';
 part 'balloon_manifest_helper.dart';
@@ -87,17 +87,23 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
     }
 
     if (state?.resultType == APIResultType.success) {
-      return _handleSuccessState(state?.result);
+      return _handleSuccessState(state?.result, message: state?.message);
     }
 
-    return _buildGenericErrorState(state?.message);
+    return GeneralErrorWidget(
+      message: state?.message ?? 'Something went wrong',
+      helper: helper,
+    );
   }
 
   Widget _buildLoadingState() {
     return const Center(child: CircularProgressIndicator());
   }
 
-  Widget _handleSuccessState(ModelResponseBalloonManifestEntity? result) {
+  Widget _handleSuccessState(
+    ModelResponseBalloonManifestEntity? result, {
+    String? message,
+  }) {
     SharedPrefUtils.setBalloonManifest(result.toString());
     final assignment = result == null
         ? null
@@ -113,14 +119,20 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
             assignment: assignment,
             helper: helper,
           )
-        : NoAssignmentWidget();
+        : GeneralErrorWidget(
+            message: message ?? AppString.noAssignmentsAvailable,
+            helper: helper,
+          );
   }
 
   Widget _handleOfflineState() {
     final cachedData = SharedPrefUtils.getBalloonManifest();
 
     if (cachedData == null || cachedData.manifestDate == null) {
-      return const NoAssignmentWidget();
+      return GeneralErrorWidget(
+        message: AppString.noAssignmentsAvailable,
+        helper: helper,
+      );
     }
 
     return FutureBuilder<bool>(
@@ -162,38 +174,6 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
           },
         );
       },
-    );
-  }
-
-  Widget _buildGenericErrorState(String? message) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text(
-              message ?? 'An error occurred',
-              style: fontStyleSemiBold14,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: helper.loadManifestData,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(
-                  ColorConst.primaryColor,
-                ),
-                foregroundColor: WidgetStateProperty.all(ColorConst.whiteColor),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

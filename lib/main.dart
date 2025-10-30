@@ -34,15 +34,12 @@ void orientations() {
 Future<void> _initializeKronos() async {
   tz.initializeTimeZones();
   try {
-    // timber('🚀 App starting - attempting time sync...');
     final success = await SecureTimeHelper.syncAndPersist();
     if (success) {
-      // timber('✅ Initial time sync successful');
     } else {
-      // timber('⚠️  Initial time sync failed - app opened offline');
     }
   } catch (e) {
-    timber('❌ Initial sync error: $e');
+    timber('Initial sync error: $e');
   }
 }
 
@@ -75,7 +72,6 @@ class MainApp extends StatelessWidget {
                 data: MediaQuery.of(context).copyWith(
                   textScaler: TextScaler.linear(
                     1.0,
-                    // state.fontHeight?.toDouble() ?? 1.0
                   ),
                 ),
                 child: child!,
