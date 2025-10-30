@@ -21,9 +21,7 @@ class GeneralErrorWidget extends StatelessWidget {
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight, // 👈 ensures full height
-            ),
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: IntrinsicHeight(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),

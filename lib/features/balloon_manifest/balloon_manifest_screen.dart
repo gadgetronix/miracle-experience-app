@@ -168,6 +168,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
                 return TimeSyncRequiredWidget(
                   hasCachedTime: hasCached,
                   cacheStatus: status,
+                  helper: helper,
                 );
               },
             );

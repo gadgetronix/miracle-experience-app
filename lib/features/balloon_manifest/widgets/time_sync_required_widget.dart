@@ -1,32 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
+import 'package:miracle_experience_mobile_app/features/balloon_manifest/balloon_manifest_screen.dart';
 
 /// Widget displayed when time sync is required
 class TimeSyncRequiredWidget extends StatelessWidget {
   final bool hasCachedTime;
   final String cacheStatus;
+  final BalloonManifestHelper helper;
 
   const TimeSyncRequiredWidget({
     super.key,
     required this.hasCachedTime,
     required this.cacheStatus,
+    required this.helper,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildIcon(),
-            const SizedBox(height: 24),
-            _buildTitle(),
-            const SizedBox(height: 12),
-            _buildMessage(),
-          ],
-        ),
+    return RefreshIndicator(
+      onRefresh: () async {
+        helper.loadManifestData();
+      },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: IntrinsicHeight(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildIcon(),
+                        const SizedBox(height: 24),
+                        _buildTitle(),
+                        const SizedBox(height: 12),
+                        _buildMessage(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -38,11 +60,7 @@ class TimeSyncRequiredWidget extends StatelessWidget {
         color: Colors.orange.shade50,
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        Icons.sync_problem,
-        size: 64,
-        color: Colors.orange.shade700,
-      ),
+      child: Icon(Icons.sync_problem, size: 64, color: Colors.orange.shade700),
     );
   }
 
@@ -56,11 +74,12 @@ class TimeSyncRequiredWidget extends StatelessWidget {
 
   Widget _buildMessage() {
     String message;
-    
+
     if (!hasCachedTime) {
       message = 'Please connect to internet once to enable offline access.';
     } else if (cacheStatus.contains('restarted')) {
-      message = 'Your device was restarted. Please connect to internet to re-sync time.';
+      message =
+          'Your device was restarted. Please connect to internet to re-sync time.';
     } else {
       message = 'Manifest data has expired.';
     }
@@ -71,5 +90,4 @@ class TimeSyncRequiredWidget extends StatelessWidget {
       textAlign: TextAlign.center,
     );
   }
-
-  }
+}
