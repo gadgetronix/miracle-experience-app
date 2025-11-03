@@ -39,7 +39,7 @@ APIResultState<T> getAPIResultFromNetwork<T>(NetworkResult networkResult) {
       logger.w("user timeOut");
       return TimeOutState(resultType: APIResultType.timeOut);
     case NetworkResultType.unauthorised:
-      SharedPrefUtils.remove();
+      SharedPrefUtils.onLogout();
       showErrorSnackBar(
         "Session Expired. Please login again.",
       );
@@ -51,7 +51,7 @@ APIResultState<T> getAPIResultFromNetwork<T>(NetworkResult networkResult) {
       );
 
     case NetworkResultType.notFound:
-      SharedPrefUtils.remove();
+      SharedPrefUtils.onLogout();
       navigateToPageAndRemoveAllPage(SigninScreen());
       return const UserDeletedState(resultType: APIResultType.notFound);
     case NetworkResultType.success:

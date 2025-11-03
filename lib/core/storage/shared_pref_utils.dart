@@ -59,6 +59,15 @@ class SharedPrefUtils {
     return prefs.setString("token", value);
   }
 
+  static int? getLastPatch() {
+    return _prefsInstance?.getInt("last_patch");
+  }
+
+  static Future<bool> setLastPatch(int value) async {
+    var prefs = await _instance;
+    return prefs.setInt("last_patch", value);
+  }
+
   // static ModelResponseAuthEntity? getUser() {
   //   String? stringModel = _prefsInstance?.getString("User");
   //   ModelResponseAuthEntity? userModel =
@@ -120,7 +129,10 @@ class SharedPrefUtils {
 
   static Future<void> onLogout() async {
     var prefs = await _instance;
-    prefs.remove("User");
+    prefs.remove("IsUserLoggedIn");
+    prefs.remove("token");
+    prefs.remove("BalloonManifest");
+    prefs.remove("pending_signatures");
     SharedPrefUtils.setIsUserLoggedIn(false);
   }
 }

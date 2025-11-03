@@ -33,7 +33,7 @@ class ManifestAppBar extends StatelessWidget implements PreferredSizeWidget {
                   if (state?.resultType == APIResultType.loading) {
                     EasyLoading.show();
                   } else if (state?.resultType == APIResultType.success) {
-                    SharedPrefUtils.remove();
+                    SharedPrefUtils.onLogout();
                     navigateToPageAndRemoveAllPage(const SigninScreen());
                   } else {
                     showErrorSnackBar(state?.message ?? 'Logout failed');
