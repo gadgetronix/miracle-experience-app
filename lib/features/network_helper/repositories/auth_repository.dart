@@ -8,28 +8,33 @@ class AuthRepository {
   static Future<APIResultState<ModelResponseSigninEntity>> callSigninAPI(
     ModelRequestSigninEntity modelRequestSigninEntity,
   ) async {
-    var networkResult = await APIHelper.instance.callPostApi(
-      NetworkConstant.signin,
-      modelRequestSigninEntity,
-      false,
+    var networkResult = await APIHelper.instance.performRequestWithRetry(
+      apiMethod: () => APIHelper.instance.callPostApi(
+        NetworkConstant.signin,
+        modelRequestSigninEntity,
+        false,
+      ),
     );
 
     var apiResultFromNetwork =
         getAPIResultFromNetwork<ModelResponseSigninEntity>(networkResult);
     return apiResultFromNetwork;
   }
-  
+
   static Future<APIResultState<BaseResponseModelEntity>> callSignoutAPI(
     ModelRequestSigninEntity modelRequestSigninEntity,
   ) async {
-    var networkResult = await APIHelper.instance.callPostApi(
-      NetworkConstant.signOut,
-      modelRequestSigninEntity,
-      false,
+    var networkResult = await APIHelper.instance.performRequestWithRetry(
+      apiMethod: () => APIHelper.instance.callPostApi(
+        NetworkConstant.signOut,
+        modelRequestSigninEntity,
+        false,
+      ),
     );
 
-    var apiResultFromNetwork =
-        getAPIResultFromNetwork<BaseResponseModelEntity>(networkResult);
+    var apiResultFromNetwork = getAPIResultFromNetwork<BaseResponseModelEntity>(
+      networkResult,
+    );
     return apiResultFromNetwork;
   }
 }

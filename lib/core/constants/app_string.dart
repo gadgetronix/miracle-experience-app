@@ -33,10 +33,11 @@ class AppString {
   static const pickupLocation = "Pickup Location";
   static const pickup = "Pickup";
   static const kg = "KG";
-  static const specialRequest= "Special Request";
+  static const specialRequest = "Special Request";
   static const takeOffWeight = "Take Off Weight";
   static const total = "Total";
   static const submit = "Submit";
   static const signed = "Signed";
-  static const noAssignmentsAvailable = "There’s no manifest assigned to you right now. Please check again later - your manifest will appear here once it’s ready.";
+  static const noAssignmentsAvailable =
+      "There’s no manifest assigned to you right now. Please check again later - your manifest will appear here once it’s ready.";
 }

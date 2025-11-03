@@ -6,6 +6,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as network;
+import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
 
 import '../basic_features.dart';
 import 'api_url.dart';
@@ -48,7 +49,7 @@ class APIHelper {
       try {
         var resp = await network
             .post(Uri.parse(callingURL), body: parameter, headers: _headers)
-            .timeout(const Duration(minutes: 1));
+            .timeout(const Duration(seconds: 20));
         timber("API Resp -> ${resp.statusCode} ${resp.body}");
         EasyLoading.dismiss();
         if (resp.statusCode == 200 || resp.statusCode == 201) {
@@ -208,7 +209,9 @@ class APIHelper {
         EasyLoading.show();
       }
       try {
-        var resp = await network.get(Uri.parse(callingURL), headers: _headers);
+        var resp = await network
+            .get(Uri.parse(callingURL), headers: _headers)
+            .timeout(Duration(seconds: 20));
         if (_isDebug) timber("API Response -> ${resp.statusCode} ${resp.body}");
         EasyLoading.dismiss();
 
@@ -220,6 +223,8 @@ class APIHelper {
         } else {
           return Future.value(NetworkResult.error(resp.body));
         }
+      } on TimeoutException catch (_) {
+        return NetworkResult.timeout();
       } catch (e, s) {
         EasyLoading.dismiss();
         if (_isDebug) {
@@ -414,11 +419,16 @@ class APIHelper {
       }
       try {
         var dio = Dio();
-        var responseString = await dio.post(
-          callingURL,
-          data: formData,
-          options: Options(headers: _headers, contentType: "application/json"),
-        );
+        var responseString = await dio
+            .post(
+              callingURL,
+              data: formData,
+              options: Options(
+                headers: _headers,
+                contentType: "application/json",
+              ),
+            )
+            .timeout(Duration(seconds: 30));
 
         if (_isDebug) timber("API Response -> $responseString");
         EasyLoading.dismiss();
@@ -434,6 +444,8 @@ class APIHelper {
             NetworkResult.error(json.encode(responseString.data)),
           );
         }
+      } on TimeoutException catch (_) {
+        return NetworkResult.timeout();
       } catch (e, s) {
         EasyLoading.dismiss();
         if (_isDebug) {
@@ -447,6 +459,46 @@ class APIHelper {
     } else {
       return Future.value(NetworkResult.noInternet());
     }
+  }
+
+  Future<NetworkResult> performRequestWithRetry({
+    required Future<NetworkResult> Function() apiMethod,
+    int maxRetries = 3,
+    Duration baseDelay = const Duration(seconds: 3),
+  }) async {
+    int attempt = 1;
+
+    while (attempt <= maxRetries) {
+      try {
+        final response = await apiMethod();
+        //If it's not a timeout, return immediately
+        if (response.networkResultType != NetworkResultType.timeOut) {
+          return response;
+        }
+
+        // If timeout, retry (if limit not reached)
+        if (attempt <= maxRetries) {
+          final delaySeconds = baseDelay.inSeconds * (attempt);
+          logger.w(
+            "Timeout on attempt $attempt. Retrying after $delaySeconds seconds...",
+          );
+          await Future.delayed(Duration(seconds: delaySeconds));
+          attempt++;
+
+          continue;
+        } else {
+          showErrorSnackBar(
+            "Connection too weak — please move to an area with better signal.",
+          );
+          return NetworkResult.noInternet();
+        }
+      } catch (e, s) {
+        // Handle unexpected exceptions
+        logger.e("Error during performRequestWithRetry: $e");
+        return NetworkResult.cacheError();
+      }
+    }
+    return NetworkResult.noInternet();
   }
 
   Future<void> _createHeaders() async {

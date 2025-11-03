@@ -9,10 +9,12 @@ import '../../../core/basic_features_network.dart';
 class BalloonManifestRepository {
   static Future<APIResultState<ModelResponseBalloonManifestEntity>>
   callBalloonManifestAPI() async {
-    var networkResult = await APIHelper.instance.callGetApi(
-      NetworkConstant.balloonManifest,
-      null,
-      false,
+    var networkResult = await APIHelper.instance.performRequestWithRetry(
+      apiMethod: () => APIHelper.instance.callGetApi(
+        NetworkConstant.balloonManifest,
+        null,
+        false,
+      ),
     );
 
     var apiResultFromNetwork =
@@ -37,10 +39,12 @@ class BalloonManifestRepository {
       ),
     });
 
-    var networkResult = await APIHelper.instance.callPostMultiPartWithFromData(
-      NetworkConstant.uploadSignature,
-      formData,
-      false,
+    var networkResult = await APIHelper.instance.performRequestWithRetry(
+      apiMethod: () => APIHelper.instance.callPostMultiPartWithFromData(
+        NetworkConstant.uploadSignature,
+        formData,
+        false,
+      ),
     );
 
     var apiResultFromNetwork = getAPIResultFromNetwork<BaseResponseModelEntity>(
