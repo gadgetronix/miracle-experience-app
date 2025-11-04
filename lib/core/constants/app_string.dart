@@ -3,6 +3,11 @@ class AppString {
   static const cancel = "Cancel";
   static const done = "Done";
 
+  //Shorebird
+  static const restart = "Restart";
+  static const restartDesc = "The app needs to restart to apply the latest updates. Please reopen it to continue.";
+  static const restartNow = "Restart now";
+
   //Signin screen strings
   static const welcomeToMiracleExperienceSigninToContinue =
       "Welcome to Miracle Experience\nSign in to continue";
