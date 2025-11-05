@@ -16,7 +16,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import '../../core/utils/secure_time_helper.dart';
 import '../authentications/signin_screen.dart';
-import 'widgets/passengers_table_widget.dart';
+import 'widgets/passengers_list_widget.dart';
 
 part 'widgets/manifest_app_bar.dart';
 part 'widgets/general_error_widget.dart';

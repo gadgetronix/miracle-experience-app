@@ -17,39 +17,29 @@ class ShorebirdManager {
   /// Check for updates *before* runApp
   Future<void> preInitCheck() async {
     try {
-      print('🔍 Checking for Shorebird update...');
       var status = await _shorebird.checkForUpdate();
-      print('📦 Initial update status: $status');
 
       if (status == UpdateStatus.outdated) {
-        print('⬇️ Patch outdated — waiting to finish download...');
         bool readyToRestart = false;
         int attempts = 0;
 
         while (!readyToRestart && attempts < 15) {
           await Future.delayed(const Duration(seconds: 2));
           status = await _shorebird.checkForUpdate();
-          print('⏳ Checking again... $status');
           if (status == UpdateStatus.restartRequired) readyToRestart = true;
           attempts++;
         }
 
         if (readyToRestart) {
-          print('✅ Patch ready — marking restart required.');
           shouldShowRestartDialog = true;
-        } else {
-          print('⚠️ Timed out waiting for patch download.');
         }
       } else if (status == UpdateStatus.restartRequired) {
-        print('📦 Patch already downloaded — mark restart required.');
         shouldShowRestartDialog = true;
-      } else {
-        print('✅ App is up-to-date.');
-      }
+      } 
     } on UpdateException catch (e) {
-      print('❌ UpdateException: ${e.message}');
+      timber('❌ UpdateException: ${e.message}');
     } catch (e) {
-      print('⚠️ Unexpected error: $e');
+      timber('⚠️ Unexpected error: $e');
     }
   }
 }

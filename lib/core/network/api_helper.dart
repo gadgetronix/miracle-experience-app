@@ -490,7 +490,7 @@ class APIHelper {
           showErrorSnackBar(
             "Connection too weak — please move to an area with better signal.",
           );
-          return NetworkResult.noInternet();
+          return NetworkResult.timeout();
         }
       } catch (e, s) {
         // Handle unexpected exceptions

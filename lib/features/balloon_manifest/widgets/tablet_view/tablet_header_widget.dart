@@ -1,4 +1,4 @@
-part of '../passengers_table_widget.dart';
+part of '../passengers_list_widget.dart';
 
 class TabletHeaderWidget extends StatelessWidget {
   const TabletHeaderWidget({
