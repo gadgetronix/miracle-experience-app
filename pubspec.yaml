@@ -1,7 +1,7 @@
 name: miracle_experience_mobile_app
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.0+3
+version: 0.1.0+4
 
 environment:
   sdk: ^3.9.2
@@ -20,7 +20,9 @@ dependencies:
   
   flutter_bloc: ^9.1.1
   flutter_easyloading: ^3.0.5
-  flutter_kronos_plus: ^1.0.0+1
+  flutter_kronos_plus:
+    git:
+      url: https://github.com/Stif-UK/flutter-kronos-plus.git
   flutter_local_notifications: ^19.5.0
   flutter_native_splash: ^2.4.7
   flutter_screenutil: ^5.9.3

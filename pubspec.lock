@@ -297,11 +297,12 @@ packages:
   flutter_kronos_plus:
     dependency: "direct main"
     description:
-      name: flutter_kronos_plus
-      sha256: fc09cf569118fe0dbc0e9aaed3f6582e061fe56f0ce8d8aa5c1e1480d46ac85a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+1"
+      path: "."
+      ref: HEAD
+      resolved-ref: fa9d633e6b424cd1be13e76a3c844e9aaaf8a1cc
+      url: "https://github.com/Stif-UK/flutter-kronos-plus.git"
+    source: git
+    version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
