@@ -77,6 +77,11 @@ class Const {
     String formattedDate = DateFormat('d/M/yyyy HH:mm').format(dateTime);
     return formattedDate;
   }
+  
+  static String convertDateTimeToDMY(DateTime dateTime) {
+    String formattedDate = DateFormat('d MMM yyyy').format(dateTime);
+    return formattedDate;
+  }
 
   static String convertDateTimeToHHMMA(String date, {bool addSpace = true}) {
     DateTime dateTime = DateFormat('HH:mm').parse(date);

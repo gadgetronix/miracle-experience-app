@@ -45,4 +45,23 @@ class AppString {
   static const signed = "Signed";
   static const noAssignmentsAvailable =
       "There’s no manifest assigned to you right now. Please check again later - your manifest will appear here once it’s ready.";
+
+  //Waiver Screen
+  static const balloonSafariWaivers = "Balloon Safari Waivers";
+  static const selectDate = "Select date";
+  static const selectArea = "Select area";
+  static const bookingCode = "Booking Code";
+  static const enterBookingId = "Enter Booking Id";
+  static const search = "Search";
+  static const area = "Area";
+  static const flightDate = "Flight Date";
+  static const customerName = "Customer Name";
+  static const bookingBy = "Booking By";
+  static const pax = "Pax";
+  static const checkedIn = "Checked-in";
+  static const waiver = "Waiver";
+  static const checkInPending = "Check-in Pending";
+  static const viewWaiver = "View Waiver";
+  static const waiverPending = "Waiver Pending (0/2)";
+  static const viewPermit = "View Permit";
 }

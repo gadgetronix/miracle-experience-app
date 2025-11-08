@@ -39,17 +39,18 @@ class ColorConst {
   static const Color textFieldColor = Color(0xfff9f9f9);
   static const Color textFieldFillColor = Color(0xfff5f5f5);
 
-  static const Color dividerColor = Color(0xffDFDFDF);
+  static const Color dividerColor = Color(0xfff7f7f7);
   static const Color dividerDarkColor = Color(0xff484848);
   static const Color textFieldBorderColor = Color(0xffe4dfdf);
   static Color dialogRedColor = const Color(0xffe43b44);
-  static Color blueColor = const Color(0xff0094ff);
+  static Color blueColor = const Color(0xff367DF2);
   static Color hintColor = const Color(0xff7c7c7c);
   static Color transparent = Colors.transparent;
 
   static const Color textColor = Color(0xff1A1A1A);
-  // static const Color textTitleColor = Color(0xff1A1A1A);
-  static const Color textGreyColor = Color(0xff7c7c7c);
+  static const Color textSecondaryColor = Color(0xff4e4e4e);
+
+  static const Color textGreyColor = Color(0xff7c7c7c); //todo ask ali
   // static const Color lightPurpleColor = Color(0xffb6becf);
   static const Color textRedColor = Color(0xffe55451);
   static const Color suffixColor = Color(0xffD1D1D1);
@@ -61,4 +62,5 @@ class ColorConst {
   static const Color redButtonColor = Color(0xFFeca0b5);
   static const Color errorSnackbarColor = Color(0xFFCE5A52);
   static const Color successColor = Color(0xFF13AF13);
+  static const Color arrowColor = Color(0xFF696969);
 }

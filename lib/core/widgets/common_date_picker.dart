@@ -36,11 +36,11 @@ Future<DateTime?> openCupertinoCalender(
   return showModalBottomSheet(
       useRootNavigator: true,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: ColorConst.transparent,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(Dimensions.r10),
-              topRight: Radius.circular(Dimensions.r10))),
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10))),
       context: (GlobalVariable.appContext),
       enableDrag: true,
       isDismissible: true,
@@ -49,7 +49,7 @@ Future<DateTime?> openCupertinoCalender(
           children: [
             Container(
               margin: const EdgeInsets.only(bottom: 15),
-              color: Colors.transparent,
+              color: ColorConst.transparent,
               alignment: Alignment.center,
               child: InkWell(
                   onTap: () {
@@ -57,20 +57,20 @@ Future<DateTime?> openCupertinoCalender(
                   },
                   child: CircleAvatar(
                     backgroundColor:
-                        Theme.of(context).colorScheme.primaryContainer,
-                    radius: Dimensions.r22,
-                    child: const Icon(
+                        ColorConst.whiteColor,
+                    radius: 22,
+                    child: Icon(
                       Icons.close_rounded,
-                      color: Color(0xff979c9e),
+                      color: ColorConst.blackColor,
                     ),
                   )),
             ),
             Container(
               decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
+                  color: ColorConst.whiteColor,
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(Dimensions.r20),
-                      topRight: Radius.circular(Dimensions.r20))),
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
               child: Column(
                 children: [
                   // SizedBox(
@@ -81,8 +81,8 @@ Future<DateTime?> openCupertinoCalender(
                   //   // style: fontStyleBold18,
                   // ),
                   Container(
-                    padding: EdgeInsets.all(Dimensions.commonPaddingForScreen),
-                    height: Dimensions.h216,
+                    padding: EdgeInsets.all(16),
+                    height: 216,
                     child: CupertinoTheme(
                       data: CupertinoThemeData(
                         textTheme: CupertinoTextThemeData(
@@ -113,8 +113,9 @@ Future<DateTime?> openCupertinoCalender(
       });
 }
 
-Future<String?> openCalendar(
-  BuildContext context, {
+Future<DateTime?> openCalendar(
+  {
+    required BuildContext context, 
   DateTime? initialDate,
   DateTime? firstDate,
   DateTime? lastDate,
@@ -141,25 +142,17 @@ Future<String?> openCalendar(
         initialDatePickerMode: DatePickerMode.day);
 
 
-    if (date != null) {
-      final String selectedDate = changeDateFormat(
-          date.toString(),
-          AppDateFormats.dateFormatToday,
-          outputDateFormat ?? AppDateFormats.dateFormatDDMMYYY);
-      return selectedDate;
-    }
+      return date;
   } else {
     DateTime? selectedDateTime;
     await openCupertinoCalender(
         initialDate: initialDate,
         onSelect: (DateTime selectedDate) {
-          logger.e(selectedDate);
           selectedDateTime = selectedDate;
         },
         maxDate: lastDate);
     if (selectedDateTime != null) {
-      return changeDateFormat(selectedDateTime.toString(),
-          AppDateFormats.dateFormatToday, AppDateFormats.dateFormatDDMMYYY);
+      return selectedDateTime;
     }
   }
   return null;

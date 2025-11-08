@@ -48,6 +48,11 @@ extension StringExtension on String {
       return '$this:';
     }
   }
+  
+  String wrapWithBrackets() {
+    
+      return '($this)';
+  }
 }
 
 extension IntExtention on int? {
