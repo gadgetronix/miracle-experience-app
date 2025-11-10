@@ -61,12 +61,12 @@ class WaiverListHelper {
       ModelResponseWaiverListEntity(
         bookingCode: "ME-1245",
         flightDate: "2025-11-04",
-        customerName: "John Doe",
-        pickupLocation: "Hotel Pearl Downtown",
-        area: "Deira",
-        bookingBy: "Ali Hassan",
+        customerName: "Conchon philippe x 3",
+        pickupLocation: "RONJO CAMP (MKSC) Pick up: 04:45 AM",
+        area: "SERONERA",
+        bookingBy: "ME (Staff)	",
         pax: 3,
-        checkIn: "1/3 Checked in ✅\n2025-11-05 / 10:19 AM",
+        checkIn: "3/3 Checked in ✅ 2025-11-08 / 05:56 AM",
         isWaiverSigned: true
       ),
       ModelResponseWaiverListEntity(

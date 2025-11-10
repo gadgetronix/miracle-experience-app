@@ -17,6 +17,20 @@ TextStyle passengerInfoMobileTextStyle = TextStyle(
   color: ColorConst.textColor,
 );
 
+TextStyle tabletWaiverInfoTextStyle = TextStyle(
+  fontSize: 12,
+  fontFamily: FontAsset.helvetica,
+  fontWeight: FontAsset.medium,
+  color: ColorConst.textColor,
+);
+
+TextStyle tabletWaiverHeaderTextStyle = TextStyle(
+  fontSize: 12,
+  fontFamily: FontAsset.helvetica,
+  fontWeight: FontAsset.bold,
+  color: ColorConst.textColor,
+);
+
 //REGULAR
 
 TextStyle fontStyleRegular11 = TextStyle(

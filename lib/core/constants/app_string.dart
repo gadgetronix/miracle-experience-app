@@ -2,6 +2,7 @@ class AppString {
   static const appName = "Miracle Experience";
   static const cancel = "Cancel";
   static const done = "Done";
+  static const noInternetFound = "No internet found";
 
   //Shorebird
   static const restart = "Restart";
@@ -57,11 +58,17 @@ class AppString {
   static const flightDate = "Flight Date";
   static const customerName = "Customer Name";
   static const bookingBy = "Booking By";
+  static const booking = "Booking";
   static const pax = "Pax";
+  static const checkIn = "Check In";
+  static const viewCheckIn = "View Check in";
+  static const action = "Action";
   static const checkedIn = "Checked-in";
   static const waiver = "Waiver";
+  static const signWaiver = "Sign Waiver";
   static const checkInPending = "Check-in Pending";
   static const viewWaiver = "View Waiver";
   static const waiverPending = "Waiver Pending (0/2)";
   static const viewPermit = "View Permit";
+  static const addPermit = "Add Permit";
 }
