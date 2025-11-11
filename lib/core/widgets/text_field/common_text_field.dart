@@ -84,7 +84,8 @@ class CommonTextField extends StatelessWidget {
           textInputAction: textInputAction,
           validator: validator,
           textCapitalization: textCapitalization,
-          readOnly: readOnly,
+          // readOnly: readOnly,
+          enabled: !readOnly,
           focusNode: focusNode,
           obscureText: obscureText ?? false,
           autofocus: autoFocus ?? false,
@@ -92,6 +93,7 @@ class CommonTextField extends StatelessWidget {
           minLines: minLine,
           maxLength: maxLength,
           controller: textController,
+          cursorColor: ColorConst.primaryColor,
           inputFormatters: inputFormatters,
           onFieldSubmitted: onFieldSubmit,
           onEditingComplete: onEditingComplete,
@@ -101,7 +103,7 @@ class CommonTextField extends StatelessWidget {
           style:
               textStyle ??
               (readOnly
-                  ? fontStyleMedium13.apply(
+                  ? fontStyleMedium14.apply(
                       color: ColorConst.textColor.withOpacity(0.5),
                     )
                   : fontStyleMedium16),
@@ -113,7 +115,7 @@ class CommonTextField extends StatelessWidget {
             hintText: hintText ?? '',
             hintStyle:
                 hintTextStyle ??
-                fontStyleSemiBold13.apply(color: ColorConst.hintColor),
+                fontStyleRegular13.apply(color: ColorConst.hintColor),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
             contentPadding:
@@ -127,6 +129,10 @@ class CommonTextField extends StatelessWidget {
               borderSide: BorderSide(color: ColorConst.transparent),
             ),
             enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: ColorConst.transparent),
+            ),
+            disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: ColorConst.transparent),
             ),

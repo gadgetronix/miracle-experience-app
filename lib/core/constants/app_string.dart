@@ -71,4 +71,9 @@ class AppString {
   static const waiverPending = "Waiver Pending (0/2)";
   static const viewPermit = "View Permit";
   static const addPermit = "Add Permit";
+
+  //Special Request Screen
+  static const dietaryRestriction = "Dietary Restriction";
+  static const ifNothingLeaveBlank = "If nothing, leave blank";
+  static const medicalCondition = "Medical Condition";
 }

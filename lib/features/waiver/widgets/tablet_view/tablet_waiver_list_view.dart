@@ -215,7 +215,9 @@ class TabletWaiverListView extends StatelessWidget {
                         ),
                         SizedBox(height: 8),
                         TabletWaiverListButton(
-                          onTap: () {},
+                          onTap: () {
+                            navigateToPage(SpecialRequestScreen());
+                          },
                           text: AppString.specialRequest,
                           backgroundColor: ColorConst.greyColor,
                           textColor: ColorConst.textColor,
