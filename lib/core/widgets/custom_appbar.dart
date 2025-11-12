@@ -22,42 +22,16 @@ class CustomAppBar extends AppBar {
   }) : super(
          automaticallyImplyLeading: false,
          centerTitle: centerTile,
-         //  backgroundColor: ColorConst.primaryColor,
-         flexibleSpace: Container(
-           decoration: BoxDecoration(
-             gradient: LinearGradient(
-               begin: Alignment.topCenter,
-               end: Alignment.bottomCenter,
-               colors: [
-                 // This color will be at the very top (the status bar area)
-                 ColorConst.primaryColor,
-                 // This color will be at the bottom (the main AppBar area)
-                 Colors.white,
-               ],
-               // The gradient stops exactly at the boundary between the status bar and the AppBar.
-               // This creates the sharp two-color effect.
-               stops: [
-                 0.5,
-                 Dimensions.getSafeAreaTopHeight() /
-                     (Dimensions.getSafeAreaTopHeight() + kToolbarHeight),
-               ],
-             ),
-           ),
-         ),
-         // This is crucial for the icon brightness.
-         // We set it to light because the top part is red.
-         systemOverlayStyle: const SystemUiOverlayStyle(
-           statusBarIconBrightness: Brightness.light,
-         ),
+          backgroundColor: ColorConst.whiteColor,
          leading:
              showLeading
                  ? Padding(
                    padding: EdgeInsets.only(left: Dimensions.w3),
                    child: InkWell(
                      child: const Icon(
-                       Icons.arrow_back_ios,
+                       Icons.arrow_back_ios_new,
                        size: 20,
-                       color: ColorConst.blackColor,
+                       color: ColorConst.textColor,
                      ),
                      onTap: () {
                        if (backPress != null) {
@@ -72,7 +46,7 @@ class CustomAppBar extends AppBar {
                  : null,
          title:
              titleWidget ??
-             Text(title, style: textStyle ?? fontStyleSemiBold18),
+             Text(title, style: textStyle ?? fontStyleBold18),
        );
 
   CustomAppBar.rowAppBar({super.key, double elevation = 1, required Widget row})

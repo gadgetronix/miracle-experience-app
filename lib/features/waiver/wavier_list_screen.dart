@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/basic_features.dart';
 import '../../core/widgets/common_date_picker.dart';
@@ -8,6 +9,9 @@ part 'waiver_list_helper.dart';
 part 'widgets/mobile_view/mobile_waiver_list_view.dart';
 part 'widgets/tablet_view/tablet_waiver_list_view.dart';
 part 'widgets/waiver_list_app_bar.dart';
+part 'widgets/list_bottom_sheet.dart';
+part 'sign_waiver_screen.dart';
+part 'special_request_screen.dart';
 
 class WaiverListScreen extends StatefulWidget {
   const WaiverListScreen({super.key});
@@ -43,7 +47,8 @@ class _WaiverListScreenState extends State<WaiverListScreen> {
   ),
       body: RefreshIndicator(
         onRefresh: helper.loadWaiverList,
-        child: MobileWaiverListView(waivers: helper.waiverList.value, helper: helper)
+        child: TabletWaiverListView(waivers: helper.waiverList.value, helper: helper)
+        // child: MobileWaiverListView(waivers: helper.waiverList.value, helper: helper)
                
       ),
     );

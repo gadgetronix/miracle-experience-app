@@ -3,6 +3,7 @@ class AppString {
   static const cancel = "Cancel";
   static const done = "Done";
   static const noInternetFound = "No internet found";
+  static const save = "Save";
 
   //Shorebird
   static const restart = "Restart";
@@ -71,9 +72,18 @@ class AppString {
   static const waiverPending = "Waiver Pending (0/2)";
   static const viewPermit = "View Permit";
   static const addPermit = "Add Permit";
+  static const filterLocation = "Filter location";
 
   //Special Request Screen
   static const dietaryRestriction = "Dietary Restriction";
   static const ifNothingLeaveBlank = "If nothing, leave blank";
   static const medicalCondition = "Medical Condition";
+
+  //Sign Waiver Screen
+  static const firstName = "First Name";
+  static const lastName = "Last Name";
+  static const gender = "Gender";
+  static const age = "Age";
+  static const weight = "Weight";
+  static const country = "Country";
 }

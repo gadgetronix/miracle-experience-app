@@ -180,83 +180,77 @@ class WaiverFilterWidget extends StatelessWidget {
                       final selected = await CustomBottomSheet.instance
                           .modalBottomSheet(
                             context: context,
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight:
-                                    MediaQuery.of(context).size.height * 0.8,
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  const SizedBox(height: 35),
-                                  Center(
-                                    child: Text(
-                                      "Filter location",
-                                      style: fontStyleSemiBold18,
-                                    ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const SizedBox(height: 35),
+                                Center(
+                                  child: Text(
+                                    AppString.filterLocation,
+                                    style: fontStyleSemiBold18,
                                   ),
-                                  const SizedBox(height: 25),
-                                  Flexible(
-                                    child: ListView.builder(
-                                      primary: false,
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.zero,
-                                      itemCount: helper.areaList.length,
-                                      itemBuilder: (context, int index) {
-                                        return Container(
-                                          margin: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                            vertical: 5,
+                                ),
+                                const SizedBox(height: 25),
+                                Flexible(
+                                  child: ListView.builder(
+                                    primary: false,
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    itemCount: helper.areaList.length,
+                                    itemBuilder: (context, int index) {
+                                      return Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: ColorConst.dividerColor,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
                                           ),
-                                          decoration: BoxDecoration(
-                                            color: ColorConst.dividerColor,
-                                            borderRadius: BorderRadius.circular(
-                                              10,
+                                        ),
+                                        child: ListTile(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          title: Center(
+                                            child: Text(
+                                              helper.areaList[index],
+                                              style: fontStyleSemiBold16,
+                                              textAlign: TextAlign.center,
                                             ),
                                           ),
-                                          child: ListTile(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            title: Center(
-                                              child: Text(
-                                                helper.areaList[index],
-                                                style: fontStyleSemiBold16,
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                            trailing:
-                                                helper.areaList[index] == area
-                                                ? const Icon(
-                                                    Icons.check,
-                                                    color:
-                                                        ColorConst.primaryColor,
-                                                    size: 20,
-                                                  )
-                                                : const SizedBox(
-                                                    width: 20,
-                                                    height: 20,
-                                                  ),
-                                            leading: const SizedBox(
-                                              width: 20,
-                                              height: 20,
-                                            ),
-                                            onTap: () {
-                                              Navigator.pop(
-                                                context,
-                                                helper.areaList[index],
-                                              );
-                                            },
+                                          trailing:
+                                              helper.areaList[index] == area
+                                              ? const Icon(
+                                                  Icons.check,
+                                                  color:
+                                                      ColorConst.primaryColor,
+                                                  size: 20,
+                                                )
+                                              : const SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                ),
+                                          leading: const SizedBox(
+                                            width: 20,
+                                            height: 20,
                                           ),
-                                        );
-                                      },
-                                    ),
+                                          onTap: () {
+                                            Navigator.pop(
+                                              context,
+                                              helper.areaList[index],
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  const SizedBox(height: 20),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(height: 20),
+                              ],
                             ),
                           );
 

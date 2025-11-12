@@ -33,6 +33,7 @@ class CommonTextField extends StatelessWidget {
   final TextStyle? textStyle;
   final TextStyle? hintTextStyle;
   final EdgeInsetsGeometry? contentPadding;
+  final BorderRadius? borderRadius;
 
   const CommonTextField({
     super.key,
@@ -63,7 +64,7 @@ class CommonTextField extends StatelessWidget {
     this.hintText,
     this.autoFocus,
     this.prefixIcon,
-    this.minLine,
+    this.minLine, this.borderRadius,
   });
 
   @override
@@ -71,13 +72,13 @@ class CommonTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title.isNotNullAndEmpty())
+        if (title != null)
           Padding(
             padding: EdgeInsets.only(
-              bottom: 8,
-              top: 14,
+              bottom: 6,
+              // top: 14,
             ),
-            child: Text(title!, style: titleTextStyle ?? fontStyleSemiBold13),
+            child: Text(title!, style: titleTextStyle ?? fontStyleSemiBold14),
           ),
         TextFormField(
           key: key,
@@ -125,30 +126,30 @@ class CommonTextField extends StatelessWidget {
                   horizontal: 16,
                 ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: borderRadius ?? BorderRadius.circular(8),
               borderSide: BorderSide(color: ColorConst.transparent),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: borderRadius ?? BorderRadius.circular(8),
               borderSide: BorderSide(color: ColorConst.transparent),
             ),
             disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: borderRadius ?? BorderRadius.circular(8),
               borderSide: BorderSide(color: ColorConst.transparent),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: borderRadius ?? BorderRadius.circular(8),
               borderSide: BorderSide(
                 color: ColorConst.primaryColor,
                 width: 1.5,
               ),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: borderRadius ?? BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.red),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: borderRadius ?? BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.red, width: 1.5),
             ),
             errorStyle: TextStyle(color: Colors.red, fontSize: 12),
