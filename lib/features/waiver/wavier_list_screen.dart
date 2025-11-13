@@ -4,13 +4,14 @@ import 'package:flutter/services.dart';
 import '../../core/basic_features.dart';
 import '../../core/widgets/common_date_picker.dart';
 import '../network_helper/models/response_model/model_response_waiver_list_entity.dart';
+import 'sign_waiver_screen.dart';
 
 part 'waiver_list_helper.dart';
 part 'widgets/mobile_view/mobile_waiver_list_view.dart';
 part 'widgets/tablet_view/tablet_waiver_list_view.dart';
 part 'widgets/waiver_list_app_bar.dart';
 part 'widgets/list_bottom_sheet.dart';
-part 'sign_waiver_screen.dart';
+part 'waiver_details_screen.dart';
 part 'special_request_screen.dart';
 
 class WaiverListScreen extends StatefulWidget {

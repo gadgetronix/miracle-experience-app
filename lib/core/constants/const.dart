@@ -37,7 +37,6 @@ class Const {
     _isTablet = shortestSide >= 600; // common threshold
   }
 
-  /// Access anywhere
   static bool get isTablet {
     if (_isTablet == null) {
       throw Exception(

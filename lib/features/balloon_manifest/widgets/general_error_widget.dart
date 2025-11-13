@@ -31,12 +31,14 @@ class GeneralErrorWidget extends StatelessWidget {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(top: 50.0),
-                        child: Text(
-                          message,
-                          style: fontStyleMedium15.copyWith(
-                            color: ColorConst.textGreyColor,
+                        child: Center(
+                          child: Text(
+                            message,
+                            style: fontStyleMedium15.copyWith(
+                              color: ColorConst.textGreyColor,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                       const SizedBox(height: 16),

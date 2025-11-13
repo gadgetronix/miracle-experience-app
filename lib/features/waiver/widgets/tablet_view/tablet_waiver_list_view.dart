@@ -261,7 +261,7 @@ class TabletWaiverListView extends StatelessWidget {
   _buildSignWaiverButton(){
     return TabletWaiverListButton(
                         onTap: () {
-                          navigateToPage(SignWaiverScreen());
+                          navigateToPage(WaiverDetailsScreen());
                         },
                         text: AppString.signWaiver,
                         backgroundColor: ColorConst.primaryColor,

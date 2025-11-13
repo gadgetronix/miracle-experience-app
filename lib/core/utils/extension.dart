@@ -49,6 +49,14 @@ extension StringExtension on String {
     }
   }
   
+  String endWithColonSpace() {
+    if (endsWith(': ')) {
+      return this;
+    } else {
+      return '$this: ';
+    }
+  }
+  
   String wrapWithBrackets() {
     
       return '($this)';
