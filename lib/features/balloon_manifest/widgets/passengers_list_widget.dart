@@ -33,63 +33,92 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (widget.passengers.isEmpty) {
-      return _buildEmptyState();
-    }
+Widget build(BuildContext context) {
+  return FutureBuilder<LandscapeSide>(
+    future: Const.getLandscapeSide(),
+    builder: (context, snapshot) {
+      final side = snapshot.data ?? LandscapeSide.none;
 
-    return Column(
-      children: [
-        Expanded(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              widget.helper.loadManifestData();
-            },
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: Column(
-                      children: [
-                        _buildHeader(),
-                        const Divider(height: 1, thickness: 1),
-                        if (Const.isTablet) ...[
-                          _buildColumnHeaders(),
-                          _buildTabletPassengersList(),
-                        ] else ...[
-                          _buildMobilePassengersList(),
-                        ],
-                        Divider(
-                          height: 1,
-                          thickness: 0.5,
-                          color: Colors.grey.shade300,
-                        ),
-                        _buildFooter(),
-                        if (Const.isTablet)
-                          SizedBox(
-                            height: Dimensions.getSafeAreaBottomHeight() + 10,
-                          ),
-                      ],
-                    ),
-                  ),
-                );
+      // Dynamic padding
+      final double leftPaddingForLandscapeMobile =
+          !Const.isTablet && side == LandscapeSide.left
+              ? 44
+              : 25;
+
+      final double rightPaddingForLandscapeMobile =
+          !Const.isTablet && side == LandscapeSide.right
+              ? 44
+              : 10;
+
+      if (widget.passengers.isEmpty) {
+        return _buildEmptyState();
+      }
+
+      return Column(
+        children: [
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                widget.helper.loadManifestData();
               },
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: Column(
+                        children: [
+                          _buildHeader(),
+                          const Divider(height: 1, thickness: 1),
+
+                          if (Const.isTablet || Const.isLandscape) ...[
+                            _buildColumnHeaders(
+                              leftPadding: leftPaddingForLandscapeMobile,
+                              rightPadding: rightPaddingForLandscapeMobile,
+                            ),
+                            _buildTabletPassengersList(
+                              leftPadding: leftPaddingForLandscapeMobile,
+                              rightPadding: rightPaddingForLandscapeMobile,
+                            ),
+                          ] else ...[
+                            _buildMobilePassengersList(),
+                          ],
+
+                          Divider(
+                            height: 1,
+                            thickness: 0.5,
+                            color: Colors.grey.shade300,
+                          ),
+
+                          _buildFooter(),
+
+                          if (Const.isTablet || Const.isLandscape)
+                            SizedBox(
+                              height: Dimensions.getSafeAreaBottomHeight() + 10,
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-        ),
-        if (!Const.isTablet)
-          MobileViewSignWidget(
-            helper: widget.helper,
-            manifestId: widget.manifest.uniqueId,
-            assignmentId: widget.assignment.id,
-          ),
-      ],
-    );
-  }
+
+          if (!Const.isTablet && !Const.isLandscape)
+            MobileViewSignWidget(
+              helper: widget.helper,
+              manifestId: widget.manifest.uniqueId,
+              assignmentId: widget.assignment.id,
+            ),
+        ],
+      );
+    },
+  );
+}
 
   Widget _buildHeader() {
     return BlocListener<OfflineSyncCubit, OfflineSyncState>(
@@ -111,7 +140,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
         builder: (context, value, child) {
           return Container(
             padding: EdgeInsets.symmetric(
-              horizontal: Const.isTablet ? 25 : 16,
+              horizontal: Const.isTablet || Const.isLandscape ? 25 : 16,
               vertical: 15,
             ),
             decoration: BoxDecoration(
@@ -119,7 +148,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
                   ? ColorConst.successColor
                   : ColorConst.primaryColor,
             ),
-            child: Const.isTablet
+            child: Const.isTablet  || Const.isLandscape
                 ? TabletHeaderWidget(
                     status: value,
                     manifest: widget.manifest,
@@ -137,9 +166,9 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
   }
 
   // ========== TABLET VIEW ==========
-  Widget _buildColumnHeaders() {
+  Widget _buildColumnHeaders({required double leftPadding, required double rightPadding}) {
     return Container(
-      padding: const EdgeInsets.only(right: 10, left: 25, top: 12, bottom: 12),
+      padding: EdgeInsets.only(right: rightPadding, left: leftPadding, top: 12, bottom: 12),
       decoration: BoxDecoration(color: ColorConst.whiteColor),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,7 +200,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
     );
   }
 
-  Widget _buildTabletPassengersList() {
+  Widget _buildTabletPassengersList({required double leftPadding, required double rightPadding}) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -181,7 +210,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
           Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
       itemBuilder: (context, index) {
         final passenger = widget.passengers[index];
-        return _buildTabletPassengerRow(passenger, index + 1);
+        return _buildTabletPassengerRow(passenger, index + 1, leftPadding: leftPadding, rightPadding: rightPadding);
       },
     );
   }
@@ -189,9 +218,10 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
   Widget _buildTabletPassengerRow(
     ModelResponseBalloonManifestAssignmentsPaxes passenger,
     int number,
+    {required double leftPadding, required double rightPadding}
   ) {
     return Container(
-      padding: const EdgeInsets.only(right: 10, left: 25, top: 12, bottom: 12),
+      padding: EdgeInsets.only(right: rightPadding, left: leftPadding, top: 12, bottom: 12),
       decoration: BoxDecoration(color: ColorConst.whiteColor),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -473,7 +503,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
     return Container(
       padding: EdgeInsets.symmetric(
         vertical: 12,
-        horizontal: Const.isTablet ? 25 : 16,
+        horizontal: Const.isTablet || Const.isLandscape ? 25 : 16,
       ),
       decoration: BoxDecoration(
         color: ColorConst.whiteColor,
@@ -489,7 +519,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
             children: [
               Text(
                 '${AppString.takeOffWeight.endWithColon()} ${((widget.assignment.pilotWeight ?? 0) + (widget.assignment.defaultWeight ?? 0) + totalWeight).toStringAsFixed(0)}',
-                style: Const.isTablet
+                style: Const.isTablet || Const.isLandscape
                     ? passengerInfoTextStyle.copyWith(
                         fontWeight: FontWeight.bold,
                       )
@@ -499,7 +529,7 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
               ),
               Text(
                 '${AppString.total.endWithColon()} ${totalWeight.toStringAsFixed(0)} KG',
-                style: Const.isTablet
+                style: Const.isTablet  || Const.isLandscape
                     ? passengerInfoTextStyle.copyWith(
                         fontWeight: FontWeight.bold,
                       )

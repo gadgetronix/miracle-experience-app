@@ -55,6 +55,9 @@ enum SignatureStatus {
 enum OfflineSyncState { idle, syncing, completed }
 
 
+enum LandscapeSide { left, right, none }
+
+
 
 // enum Language {
 //   english(Locale('en', 'US'), 'English'),

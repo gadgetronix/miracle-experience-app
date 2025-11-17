@@ -3,6 +3,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:intl/intl.dart';
 import '../basic_features.dart';
@@ -30,11 +31,13 @@ class Const {
   static String packageName = "com.miracleexperience.app";
   static String platform = Platform.isAndroid ? "Android" : "iOS";
   static bool? _isTablet;
+  static bool? _isLanscape;
 
   static void init(BuildContext context) {
     final data = MediaQuery.of(context);
     final shortestSide = data.size.shortestSide;
     _isTablet = shortestSide >= 600; // common threshold
+    _isLanscape = data.orientation == Orientation.landscape;
   }
 
   static bool get isTablet {
@@ -45,6 +48,29 @@ class Const {
     }
     return _isTablet!;
   }
+
+  static bool get isLandscape {
+    if (_isLanscape == null) {
+      throw Exception(
+        'Const.init(context) must be called before using isTablet',
+      );
+    }
+    return _isLanscape!;
+  }
+
+  static Future<LandscapeSide> getLandscapeSide() async {
+  final orientation =
+      await NativeDeviceOrientationCommunicator().orientation(useSensor: true);
+
+  switch (orientation) {
+    case NativeDeviceOrientation.landscapeLeft:
+      return LandscapeSide.left;  // notch on left
+    case NativeDeviceOrientation.landscapeRight:
+      return LandscapeSide.right; // notch on right
+    default:
+      return LandscapeSide.none;
+  }
+}
 
   static Future<void> config() async {
     if (Platform.isAndroid) {
