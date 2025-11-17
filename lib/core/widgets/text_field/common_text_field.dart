@@ -78,7 +78,7 @@ class CommonTextField extends StatelessWidget {
               bottom: 6,
               // top: 14,
             ),
-            child: Text(title!, style: titleTextStyle ?? fontStyleSemiBold14),
+            child: Text(title!, style: titleTextStyle ?? fontStyleMedium14),
           ),
         TextFormField(
           key: key,
@@ -107,7 +107,7 @@ class CommonTextField extends StatelessWidget {
                   ? fontStyleMedium14.apply(
                       color: ColorConst.textColor.withOpacity(0.5),
                     )
-                  : fontStyleMedium16),
+                  : fontStyleRegular14),
           decoration: InputDecoration(
             counterText: '',
             isDense: true,
@@ -123,7 +123,7 @@ class CommonTextField extends StatelessWidget {
                 contentPadding ??
                 EdgeInsets.symmetric(
                   vertical: 15,
-                  horizontal: 16,
+                  horizontal: 10,
                 ),
             border: OutlineInputBorder(
               borderRadius: borderRadius ?? BorderRadius.circular(8),

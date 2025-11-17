@@ -13,30 +13,30 @@ class _SpecialRequestScreenState extends State<SpecialRequestScreen> {
       'name': 'Denise Burcksen',
       'dietary': 'No kiwi or goat cheese',
       'medical': '',
-      'special': 'Special Request',
+      'special': 'None',
     },
     {
       'name': 'Kathleen Whalen',
       'dietary': '',
       'medical': '',
-      'special': 'Special Request',
+      'special': 'None',
     },
     {
       'name': 'Janice Alt',
       'dietary': '',
       'medical': '',
-      'special': 'Special Request',
+      'special': 'None',
     },
     {
       'name': 'Connie Koenigkann',
       'dietary': '',
       'medical': '',
-      'special': 'Special Request',
+      'special': 'None',
     },
   ];
 
   final List<String> specialRequests = [
-    'Special Request',
+    'None',
     'Birthday',
     'Anniversary',
     'Honeymoon',
@@ -50,6 +50,13 @@ class _SpecialRequestScreenState extends State<SpecialRequestScreen> {
       appBar: CustomAppBar.backActionCenterTitleAppBar(
         title: "Kiki Fam Trip x 5 - SJKD-040725",
       ),
+      bottomNavigationBar: BottomNavButton(
+                text: AppString.save,
+                onPressed: () {
+                  navigateToPage(WaiverFormScreen());
+                },
+                bgColor: ColorConst.primaryColor,
+              ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 25),
         child: ListView.separated(
@@ -94,12 +101,12 @@ class _SpecialRequestScreenState extends State<SpecialRequestScreen> {
                             );
                           },
                           child: CommonTextField(
-                            title: '',
+                            title: AppString.specialRequest,
                             textController: TextEditingController(
                               text: passenger['special'],
                             ),
                             readOnly: true,
-                            textStyle: fontStyleMedium16,
+                            textStyle: fontStyleRegular14,
                             suffixIcon: const Icon(
                               Icons.keyboard_arrow_down,
                               color: ColorConst.arrowColor,

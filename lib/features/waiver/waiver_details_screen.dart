@@ -17,7 +17,7 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
       'weight': '185',
       'weightType': 'lbs',
       'country': 'Canada',
-      'special': 'Special Request',
+      'special': 'None',
       'dietary': 'Low-carb, no dairy',
     },
     {
@@ -67,7 +67,7 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
   ];
 
   final List<String> specialRequests = [
-    'Special Request',
+    'None',
     'Birthday',
     'Anniversary',
     'Honeymoon',
@@ -75,7 +75,7 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
     'Graduation',
   ];
 
-  final List<String> gender = ['Male', 'Female', 'Others'];
+  final List<String> gender = ['Male', 'Female', 'Other'];
 
   final List<String> weightType = ['KG', 'lbs'];
 
@@ -103,6 +103,13 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
       appBar: CustomAppBar.backActionCenterTitleAppBar(
         title: "Kiki Fam Trip x 5 - SJKD-040725",
       ),
+      bottomNavigationBar: BottomNavButton(
+                text: AppString.save,
+                onPressed: () {
+                  navigateToPage(WaiverFormScreen());
+                },
+                bgColor: ColorConst.primaryColor,
+              ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 25),
         child: SingleChildScrollView(
@@ -127,6 +134,7 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                           children: [
                             // First Name
                             Expanded(
+                              flex: 3,
                               child: CommonTextField(
                                 title: AppString.firstName.endWithColon(),
                                 textController: TextEditingController(
@@ -135,11 +143,13 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                 keyBoardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
                                 hintText: AppString.firstName,
+                                
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 10),
                             // Last Name
                             Expanded(
+                              flex: 3,
                               child: CommonTextField(
                                 title: AppString.lastName.endWithColon(),
                                 textController: TextEditingController(
@@ -148,12 +158,14 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                 keyBoardType: TextInputType.text,
                                 textInputAction: TextInputAction.done,
                                 hintText: AppString.lastName,
+                                
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 10),
 
                             //Gender
                             Expanded(
+                              flex: 2,
                               child: GestureDetector(
                                 onTap: () async {
                                   FocusManager.instance.primaryFocus?.unfocus();
@@ -171,12 +183,12 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                   );
                                 },
                                 child: CommonTextField(
-                                  title: '',
+                                  title: AppString.gender.endWithColon(),
                                   textController: TextEditingController(
                                     text: passenger['gender'],
                                   ),
                                   readOnly: true,
-                                  textStyle: fontStyleMedium16,
+                                  textStyle: fontStyleRegular14,
                                   suffixIcon: const Icon(
                                     Icons.keyboard_arrow_down,
                                     color: ColorConst.arrowColor,
@@ -185,10 +197,11 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 16),
+                            const SizedBox(width: 10),
 
                             // Age
                             Expanded(
+                              flex: 1,
                               child: CommonTextField(
                                 title: AppString.age.endWithColon(),
                                 textController: TextEditingController(
@@ -197,6 +210,7 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                 keyBoardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
                                 hintText: AppString.age,
+                                
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
@@ -215,14 +229,14 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                 title: AppString.weight.endWithColon(),
                                 hintText: AppString.weight,
                                 keyBoardType: TextInputType.number,
+                                
                                 textController: TextEditingController(
                                   text: passenger['weight'],
                                 ),
                                 inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d*\.?\d{0,2}'),
-                                  ),
+                                  FilteringTextInputFormatter.digitsOnly,
                                 ],
+                                maxLength: 3,
                                 textInputAction: TextInputAction.done,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(8),
@@ -233,7 +247,7 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
 
                             SizedBox(width: 3.0),
                             Expanded(
-                              flex: 1,
+                              flex: 2,
                               child: GestureDetector(
                                 onTap: () async {
                                   FocusManager.instance.primaryFocus?.unfocus();
@@ -256,7 +270,7 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                     text: passenger['weightType'],
                                   ),
                                   readOnly: true,
-                                  textStyle: fontStyleMedium16,
+                                  textStyle: fontStyleRegular14,
                                   suffixIcon: const Icon(
                                     Icons.keyboard_arrow_down,
                                     color: ColorConst.arrowColor,
@@ -270,11 +284,11 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                               ),
                             ),
 
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 10),
 
                             //country
                             Expanded(
-                              flex: 2,
+                              flex: 3,
                               child: GestureDetector(
                                 onTap: () async {
                                   FocusManager.instance.primaryFocus?.unfocus();
@@ -291,12 +305,12 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                   );
                                 },
                                 child: CommonTextField(
-                                  title: '',
+                                  title: AppString.country.endWithColon(),
                                   textController: TextEditingController(
                                     text: passenger['country'],
                                   ),
                                   readOnly: true,
-                                  textStyle: fontStyleMedium16,
+                                  textStyle: fontStyleRegular14,
                                   suffixIcon: const Icon(
                                     Icons.keyboard_arrow_down,
                                     color: ColorConst.arrowColor,
@@ -306,10 +320,10 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                               ),
                             ),
 
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 10),
                             // Special Request
                             Expanded(
-                              flex: 2,
+                              flex: 3,
                               child: GestureDetector(
                                 onTap: () async {
                                   FocusManager.instance.primaryFocus?.unfocus();
@@ -327,12 +341,12 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                   );
                                 },
                                 child: CommonTextField(
-                                  title: '',
+                                  title: AppString.specialRequest.endWithColon(),
                                   textController: TextEditingController(
                                     text: passenger['special'],
                                   ),
                                   readOnly: true,
-                                  textStyle: fontStyleMedium16,
+                                  textStyle: fontStyleRegular14,
                                   suffixIcon: const Icon(
                                     Icons.keyboard_arrow_down,
                                     color: ColorConst.arrowColor,
@@ -341,7 +355,7 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 10),
                             // Dietary Restriction
                             Expanded(
                               flex: 4,
@@ -364,19 +378,7 @@ class _WaiverDetailsScreenState extends State<WaiverDetailsScreen> {
                 },
               ),
 
-              Padding(
-                padding: const EdgeInsets.all(25),
-                child: RoundedRectangleButton.textButton(
-                  text: AppString.save,
-                  onPressed: () {
-                    navigateToPage(WaiverFormScreen());
-                  },
-                  btnBgColor: ColorConst.primaryColor,
-                  textStyle: fontStyleSemiBold18.apply(
-                    color: ColorConst.whiteColor,
-                  ),
-                ),
-              ),
+              
             ],
           ),
         ),

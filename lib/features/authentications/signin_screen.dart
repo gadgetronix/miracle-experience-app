@@ -6,9 +6,9 @@ import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/auth_cubit.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/request_model/model_request_signin_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_signin_entity.dart';
+import 'package:miracle_experience_mobile_app/features/waiver/wavier_list_screen.dart';
 
 import '../../core/widgets/common_progress_button.dart';
-import '../balloon_manifest/balloon_manifest_screen.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -31,7 +31,8 @@ class _SigninScreenState extends State<SigninScreen> {
         MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
       resizeToAvoidBottomInset: isLandscape && !Const.isTablet,
-      appBar: CustomAppBar.blankAppbar(),
+      backgroundColor: ColorConst.whiteColor,
+      appBar: CustomAppBar.blankAppbar(backgroundColor: ColorConst.whiteColor,),
       body: (isLandscape && !Const.isTablet)
           ? SingleChildScrollView(child: _buildContent())
           : _buildContent(),
@@ -110,6 +111,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   onError: (message) => showErrorSnackBar(message ?? ''),
                   isEnabled: true,
                   onNoInternet: () {
+                    showErrorSnackBar(AppString.noInternetFound);
                     // navigateToPage(NoInternet(onPressed: validate));
                   },
                 ),
@@ -166,7 +168,8 @@ class _SigninScreenState extends State<SigninScreen> {
   ) async {
     await SharedPrefUtils.setIsUserLoggedIn(true);
     await SharedPrefUtils.setToken(result?.accessToken?.token ?? "");
-    navigateToPageAndRemoveAllPage(const BalloonManifestScreen());
+    // navigateToPageAndRemoveAllPage(const BalloonManifestScreen());
+    navigateToPageAndRemoveAllPage(const WaiverListScreen());
     // await SharedPrefUtils.setUser(result);
   }
 }

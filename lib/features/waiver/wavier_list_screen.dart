@@ -48,8 +48,9 @@ class _WaiverListScreenState extends State<WaiverListScreen> {
   ),
       body: RefreshIndicator(
         onRefresh: helper.loadWaiverList,
-        child: TabletWaiverListView(waivers: helper.waiverList.value, helper: helper)
-        // child: MobileWaiverListView(waivers: helper.waiverList.value, helper: helper)
+        child: 
+        Const.isTablet ?  TabletWaiverListView(waivers: helper.waiverList.value, helper: helper)
+        : MobileWaiverListView(waivers: helper.waiverList.value, helper: helper)
                
       ),
     );

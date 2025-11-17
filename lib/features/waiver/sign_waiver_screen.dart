@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_experience_mobile_app/core/widgets/custom_rich_text_widget.dart';
+import 'package:miracle_experience_mobile_app/core/widgets/bullet_text.dart';
 import 'package:signature/signature.dart';
 
 import '../../core/basic_features.dart';
@@ -22,10 +22,9 @@ class _WaiverFormScreenState extends State<WaiverFormScreen> {
     penColor: Colors.black,
     exportBackgroundColor: Colors.white,
   );
-  final String flightTitle = "Balloon Flight SERONERA";
   final Map<String, String> bookingDetails = {
-    "Booking ID": "TPRL-090725",
-    "Booking Name": "Ali test",
+    "Booking Id": "TPRL-090725",
+    "Booking Name": "Ali test (TPRL-090725)",
     "Pickup Location": "AFRICAN KONGONI SERENGETI SAFARI CAMP",
     "Flight Date": "01 Dec 2025",
   };
@@ -42,7 +41,7 @@ class _WaiverFormScreenState extends State<WaiverFormScreen> {
       'selected': true,
     },
   ];
-  final List<int> _flexFactors = const [1, 3, 2, 1, 1, 3];
+  final List<int> _flexFactors = const [1, 3, 2, 1, 2, 3];
 
   @override
   void dispose() {
@@ -51,15 +50,10 @@ class _WaiverFormScreenState extends State<WaiverFormScreen> {
     super.dispose();
   }
 
-
   Widget _buildBookingDetailsTable() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Bold Header
-        Text(flightTitle, style: fontStyleBold18),
-        const SizedBox(height: 10),
-
         // Table using Column and Row for structure
         Container(
           decoration: BoxDecoration(
@@ -74,32 +68,35 @@ class _WaiverFormScreenState extends State<WaiverFormScreen> {
                   children: [
                     // Label Column (Brown/Orange Background)
                     Container(
-                      color: ColorConst.primaryColor,
-                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                      width: 150, // Fixed width for the label column to match the image style
+                      color: ColorConst.dividerColor,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 12.0,
+                      ),
+                      width:
+                          150, // Fixed width for the label column to match the image style
                       alignment: Alignment.centerLeft,
                       child: Text(
                         entry.key.endWithColon(),
-                        style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
+                        style: fontStyleBold16.copyWith(
+                          color: ColorConst.textColor,
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     // Vertical Separator
-                    Container(
-                      width: 1.0,
-                      color: ColorConst.dividerColor,
-                    ),
+                    Container(width: 1.0, color: ColorConst.dividerColor),
                     // Value Column (White Background)
                     Expanded(
                       child: Container(
                         color: ColorConst.whiteColor,
-                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          entry.value,
-                          style: fontStyleRegular16,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 12.0,
                         ),
+                        alignment: Alignment.centerLeft,
+                        child: Text(entry.value, style: fontStyleRegular16),
                       ),
                     ),
                   ],
@@ -178,7 +175,9 @@ class _WaiverFormScreenState extends State<WaiverFormScreen> {
         ...passengers.map((passenger) {
           return Container(
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
+              border: Border(
+                bottom: BorderSide(color: ColorConst.dividerColor),
+              ),
             ),
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
             child: Row(
@@ -226,7 +225,7 @@ class _WaiverFormScreenState extends State<WaiverFormScreen> {
                   ),
                 ),
                 Expanded(
-                  flex: 1,
+                  flex: 2,
                   child: Text(
                     passenger['Weight'].toString(),
                     style: fontStyleRegular16,
@@ -251,319 +250,274 @@ class _WaiverFormScreenState extends State<WaiverFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar.backActionCenterTitleAppBar(
-        title: 'Agreement',
+        title: 'Balloon Safari Waiver',
         showLeading: true,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // --- 1. HEADER (Logo and Booking Details) ---
-              Row(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Logo/Contact Info
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          ImageAsset.icLogoLandscape,
-                          height: Dimensions.screenHeight() * 0.2,
+                  // --- 1. HEADER (Logo and Booking Details) ---
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Logo/Contact Info
+                      Expanded(
+                        flex: 1,
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Image.asset(
+                            ImageAsset.icSplash,
+                            height: Dimensions.screenHeight() * 0.17,
+                          ),
                         ),
-                        const SizedBox(height: 10),
-                        Text(
-                          "Tel: +255 789 300 009 / +255 788 300 005",
-                          style: fontStyleRegular12,
+                      ),
+                      const SizedBox(width: 20),
+                      // Booking Details
+                      // Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     _buildDetailRow("Booking ID", "TPRL-090725"),
+                      //     _buildDetailRow("Booking Name", "ALI TEST"),
+                      //     _buildDetailRow("Flight Date", "01 Dec 2025"),
+                      //     _buildDetailRow(
+                      //       "Pickup Location",
+                      //       "AFRICAN SERENGETI SAFARI CAMP",
+                      //     ),
+                      //   ],
+                      // ),
+                      Expanded(flex: 3, child: _buildBookingDetailsTable()),
+                    ],
+                  ),
+            
+                  SizedBox(height: 30),
+                  // _buildBookingDetailsTable(),
+                  // SizedBox(height: 30,),
+                  // --- 2. LEGAL DISCLOSURE (Waiver Text) ---
+                  Text(AppString.mainTitle, style: fontStyleBold18),
+                  const SizedBox(height: 15),
+                  // Placeholder for the extensive waiver text
+                  Text(AppString.part1, style: fontStyleRegular16),
+                  const SizedBox(height: 20),
+                  Text(AppString.indemnityClause, style: fontStyleBold18),
+                  const SizedBox(height: 15),
+                  Text(AppString.indemnityClauseDesc, style: fontStyleRegular16),
+                  const SizedBox(height: 20),
+                  Text(
+                    AppString.mediaConductSafetyPolicies,
+                    style: fontStyleBold18,
+                  ),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.complianceWithSafetyProtocols),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.digitalContentSocialMediaUse),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.defamationMisuse),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.privacyOfOthers),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.incidentDocumentationConfidentiality),
+                  const SizedBox(height: 20),
+                  Text(AppString.insurance, style: fontStyleBold18),
+                  const SizedBox(height: 15),
+                  Text(AppString.insuranceDesc, style: fontStyleRegular16),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.insurancePoint1),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.insurancePoint2),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.insurancePoint3),
+                  const SizedBox(height: 15),
+                  Text(AppString.bySigningInsurance, style: fontStyleRegular16),
+                  const SizedBox(height: 20),
+                  Text(AppString.cancellationPolicy, style: fontStyleBold18),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.noRefund),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.fullRefundOrReschedule),
+                  const SizedBox(height: 20),
+                  Text(AppString.additionalLegalClauses, style: fontStyleBold18),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.governingLawAndJurisdiction),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.severability),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.provisionForMinors),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.inherentRisksAndAcknowledgement),
+                  const SizedBox(height: 20),
+            
+                  Text(
+                    AppString.securityScreeningAndProhibitedItemsAcknowledgment,
+                    style: fontStyleBold18,
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    AppString.securityScreeningAndProhibitedItemsAcknowledgmentDesc,
+                    style: fontStyleRegular16,
+                  ),
+                  const SizedBox(height: 20),
+            
+                  Text(AppString.prohibitedItems, style: fontStyleBold18),
+                  const SizedBox(height: 15),
+                  Text(AppString.prohibitedItemsDesc, style: fontStyleRegular16),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.weapons),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.explosivesFlammables),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.impairingSubstances),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.obstructiveItems),
+                  const SizedBox(height: 15),
+                  Text(AppString.prohibitedItemsDesc2, style: fontStyleRegular16),
+                  const SizedBox(height: 20),
+                  Text(
+                    AppString.passengerConductAndDiscipline,
+                    style: fontStyleBold18,
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    AppString.passengerConductAndDisciplineDesc,
+                    style: fontStyleRegular16,
+                  ),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.passengerConductAndDiscipline1),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.passengerConductAndDiscipline2),
+                  const SizedBox(height: 15),
+                  BulletText(text: AppString.passengerConductAndDiscipline3),
+                  const SizedBox(height: 20),
+            
+                  Text(AppString.unrulyConduct, style: fontStyleBold18),
+                  const SizedBox(height: 15),
+                  Text(AppString.unrulyConductDesc, style: fontStyleRegular16),
+                  const SizedBox(height: 20),
+            
+                  // --- 3. GUEST SELECTION TABLE ---
+                  Text(AppString.selectGuest, style: fontStyleBold18),
+                  const SizedBox(height: 15),
+            
+                  _buildGuestListTable(),
+            
+                  const SizedBox(height: 15),
+                  Text(AppString.bySigningOnBehalfDesc, style: fontStyleRegular16),
+                  const SizedBox(height: 20),
+            
+                  // --- 4. ELECTRONIC SIGNATURE CONSENT ---
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Checkbox(
+                        value: electronicConsent,
+                        onChanged: (val) {
+                          setState(() {
+                            electronicConsent = val ?? false;
+                          });
+                        },
+                        activeColor: ColorConst.primaryColor,
+                      ),
+                      Text(
+                        AppString.electronicSignatureConsent,
+                        style: fontStyleBold16,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    AppString.electronicSignatureConsentDesc,
+                    style: fontStyleRegular16,
+                  ),
+                  const SizedBox(height: 15),
+                  Text(AppString.ensureEmailAddress, style: fontStyleRegular16),
+            
+                  const SizedBox(height: 30),
+            
+                  // --- 5. SOCIAL MEDIA CONSENT (Radio Buttons) ---
+                  Text(AppString.allowPhotosOnSocialMedia, style: fontStyleBold16),
+                  Row(
+                    children: [
+                      _buildRadioOption(AppString.yesIAgree, true),
+                      SizedBox(width: 10,),
+                      _buildRadioOption(AppString.noIdontAgree, false),
+                    ],
+                  ),
+            
+                  const SizedBox(height: 20),
+            
+                  // --- 6. SIGNATURE BLOCK ---
+                  CommonTextField(
+                    textController: nameController,
+                    hintText: AppString.enterFullName,
+                    title: AppString.name.endWithColon(),
+                    textInputAction: TextInputAction.next,
+                  ),
+                  const SizedBox(height: 16),
+            
+                  CommonTextField(
+                    textController: emailController,
+                    hintText: AppString.enterEmail,
+                    keyBoardType: TextInputType.emailAddress,
+                    title: AppString.emailAddressToRecieveWaiver.endWithColon(),
+                  ),
+                  const SizedBox(height: 16),
+            
+                  Text(
+                    AppString.pleaseSignBelow.endWithColon(),
+                    style: fontStyleSemiBold14,
+                  ),
+                  SizedBox(height: 6),
+                  // Signature Pad Placeholder
+                  Signature(
+                    controller: controller,
+                    height: 300,
+                    backgroundColor: ColorConst.dividerColor,
+                  ),
+                  SizedBox(height: 16),
+                  // Clear button alignment
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () => controller.clear(),
+                      child: Text(
+                        AppString.clear,
+                        style: fontStyleSemiBold18.apply(
+                          color: ColorConst.primaryColor,
                         ),
-                        Text(
-                          "Email: balloon@miracleexperience.co.tz",
-                          style: fontStyleRegular12,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  // Booking Details
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     _buildDetailRow("Booking ID", "TPRL-090725"),
-                  //     _buildDetailRow("Booking Name", "ALI TEST"),
-                  //     _buildDetailRow("Flight Date", "01 Dec 2025"),
-                  //     _buildDetailRow(
-                  //       "Pickup Location",
-                  //       "AFRICAN SERENGETI SAFARI CAMP",
-                  //     ),
-                  //   ],
-                  // ),
-                  Expanded(
-                    child: _buildBookingDetailsTable(),
-                  ),
-                ],
-              ),
-
-              Divider(height: 30, thickness: 1, color: Colors.grey.shade300),
-
-              // --- 2. LEGAL DISCLOSURE (Waiver Text) ---
-              Text(AppString.mainTitle, style: fontStyleBold18),
-              const SizedBox(height: 10),
-              // Placeholder for the extensive waiver text
-              Text(AppString.part1, style: fontStyleRegular16),
-              const SizedBox(height: 10),
-              Text(AppString.indemnityClause, style: fontStyleBold18),
-              const SizedBox(height: 5),
-              Text(AppString.indemnityClauseDesc, style: fontStyleRegular16),
-              const SizedBox(height: 10),
-              Text(
-                AppString.mediaConductSafetyPolicies,
-                style: fontStyleBold18,
-              ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.complianceWithSafetyProtocols
-                    .endWithColonSpace(),
-                secondText: AppString.complianceWithSafetyProtocolsDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.digitalContentSocialMediaUse
-                    .endWithColonSpace(),
-                secondText: AppString.digitalContentSocialMediaUseDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.defamationMisuse.endWithColonSpace(),
-                secondText: AppString.defamationMisuseDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.privacyOfOthers.endWithColonSpace(),
-                secondText: AppString.privacyOfOthersDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.incidentDocumentationConfidentiality
-                    .endWithColonSpace(),
-                secondText: AppString.incidentDocumentationConfidentialityDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 10),
-              Text(AppString.insurance, style: fontStyleBold18),
-              const SizedBox(height: 5),
-              Text(AppString.insuranceDesc, style: fontStyleRegular16),
-              const SizedBox(height: 10),
-              Text(AppString.cancellationPolicy, style: fontStyleBold18),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.noRefund.endWithColonSpace(),
-                secondText: AppString.noRefundDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.fullRefundOrReschedule.endWithColonSpace(),
-                secondText: AppString.fullRefundOrRescheduleDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 10),
-
-              Text(AppString.additionalLegalClauses, style: fontStyleBold18),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.governingLawAndJurisdiction
-                    .endWithColonSpace(),
-                secondText: AppString.governingLawAndJurisdictionDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.severability.endWithColonSpace(),
-                secondText: AppString.severabilityDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.provisionForMinors.endWithColonSpace(),
-                secondText: AppString.provisionForMinorsDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.inherentRisksAndAcknowledgement
-                    .endWithColonSpace(),
-                secondText: AppString.inherentRisksAndAcknowledgementDesc,
-                firstTextStyle: fontStyleBold16,
-                secondTextStyle: fontStyleRegular16,
-              ),
-              const SizedBox(height: 10),
-
-              Text(
-                AppString.securityScreeningAndProhibitedItemsAcknowledgment,
-                style: fontStyleBold18,
-              ),
-              const SizedBox(height: 5),
-              Text(
-                AppString.securityScreeningAndProhibitedItemsAcknowledgmentDesc,
-                style: fontStyleRegular16,
-              ),
-              const SizedBox(height: 10),
-
-              Text(AppString.prohibitedItems, style: fontStyleBold18),
-              const SizedBox(height: 5),
-              Text(AppString.prohibitedItemsDesc, style: fontStyleRegular16),
-              const SizedBox(height: 10),
-
-              Text(
-                AppString.passengerConductAndDiscipline,
-                style: fontStyleBold18,
-              ),
-              const SizedBox(height: 5),
-              Text(
-                AppString.passengerConductAndDisciplineDesc,
-                style: fontStyleRegular16,
-              ),
-              const SizedBox(height: 10),
-
-              Text(AppString.unrulyConduct, style: fontStyleBold18),
-              const SizedBox(height: 5),
-              Text(AppString.unrulyConductDesc, style: fontStyleRegular16),
-              const SizedBox(height: 20),
-
-              // --- 3. GUEST SELECTION TABLE ---
-              Text(AppString.selectGuest, style: fontStyleBold18),
-              const SizedBox(height: 10),
-
-              _buildGuestListTable(),
-
-              const SizedBox(height: 10),
-              Text(AppString.bySigningOnBehalfDesc, style: fontStyleRegular16),
-
-              const SizedBox(height: 20),
-
-              // --- 4. ELECTRONIC SIGNATURE CONSENT ---
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Checkbox(
-                    value: electronicConsent,
-                    onChanged: (val) {
-                      setState(() {
-                        electronicConsent = val ?? false;
-                      });
-                    },
-                    activeColor: ColorConst.primaryColor,
-                  ),
+            
+                  const SizedBox(height: 30),
+            
+                  // --- 7. FOOTER AND SUBMIT BUTTON ---
                   Text(
-                    AppString.electronicSignatureConsent,
+                    AppString.thankYouForChoosingMiracleExperience,
                     style: fontStyleBold16,
                   ),
+                  const SizedBox(height: 15),
+                  Text(
+                    AppString.thankYouForChoosingMiracleExperienceDesc,
+                    style: fontStyleRegular16,
+                  ),
+                  const SizedBox(height: 20),
+                  
                 ],
               ),
-              const SizedBox(height: 5),
-              CustomRichTextWidget.getDualText(
-                firstText: AppString.electronicSignatureConsentDesc,
-                secondText: AppString.beforeTheFlight,
-                firstTextStyle: fontStyleRegular16,
-                secondTextStyle: fontStyleBold16,
-              ),
-              const SizedBox(height: 10),
-              Text(AppString.ensureEmailAddress, style: fontStyleRegular16),
-
-              const SizedBox(height: 30),
-
-              // --- 5. SOCIAL MEDIA CONSENT (Radio Buttons) ---
-              Text(AppString.allowPhotosOnSocialMedia, style: fontStyleBold16),
-              _buildRadioOption(AppString.yesIAgree, true),
-              _buildRadioOption(AppString.noIdontAgree, false),
-
-              const SizedBox(height: 20),
-
-              // --- 6. SIGNATURE BLOCK ---
-              CommonTextField(
-                textController: nameController,
-                hintText: AppString.enterFullName,
-                title: AppString.name.endWithColon(),
-                textInputAction: TextInputAction.next,
-              ),
-              const SizedBox(height: 16),
-
-              CommonTextField(
-                textController: emailController,
-                hintText: AppString.enterEmail,
-                keyBoardType: TextInputType.emailAddress,
-                title: AppString.emailAddressToRecieveWaiver.endWithColon(),
-              ),
-              const SizedBox(height: 16),
-
-              Text(
-                AppString.pleaseSignBelow.endWithColon(),
-                style: fontStyleSemiBold14,
-              ),
-              SizedBox(height: 6),
-              // Signature Pad Placeholder
-              Signature(
-                controller: controller,
-                height: 300,
-                backgroundColor: ColorConst.dividerColor,
-              ),
-              SizedBox(height: 16),
-              // Clear button alignment
-              Align(
-                alignment: Alignment.centerLeft,
-                child: RoundedRectangleButton.textButton(
-                  text: AppString.clear,
-                  onPressed: () {
-                    controller.clear();
-                  },
-                  miniWidth: 0,
-                  btnBgColor: ColorConst.primaryColor,
-                  textStyle: fontStyleSemiBold18.apply(
-                    color: ColorConst.whiteColor,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // --- 7. FOOTER AND SUBMIT BUTTON ---
-              Text(
-                AppString.thankYouForChoosingMiracleExperience,
-                style: fontStyleBold16,
-              ),
-              const SizedBox(height: 5),
-              Text(
-                AppString.thankYouForChoosingMiracleExperienceDesc,
-                style: fontStyleRegular16,
-              ),
-              const SizedBox(height: 20),
-              RoundedRectangleButton.textButton(
+            ),
+            BottomNavButton(
                 text: AppString.submit,
                 onPressed: () {},
-                btnBgColor: ColorConst.primaryColor,
-                textStyle: fontStyleSemiBold18.apply(
+                bgColor: ColorConst.primaryColor,
+                textStyle: fontStyleBold14.apply(
                   color: ColorConst.whiteColor,
                 ),
               ),
-              const SizedBox(height: 30),
-            ],
-          ),
+          ],
         ),
       ),
     );

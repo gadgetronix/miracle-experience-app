@@ -10,6 +10,7 @@ class BottomNavButton extends StatelessWidget {
   final Color? buttonTextColor;
   final double? elevation;
   final Function onPressed;
+  final TextStyle? textStyle;
 
   const BottomNavButton({
     super.key,
@@ -20,7 +21,7 @@ class BottomNavButton extends StatelessWidget {
     this.icon,
     this.buttonTextColor,
     this.elevation,
-    required this.onPressed,
+    required this.onPressed, this.textStyle,
   });
 
   @override
@@ -36,13 +37,14 @@ class BottomNavButton extends StatelessWidget {
                   ? 0
                   : Platform.isAndroid
                       ? Dimensions.getSafeAreaBottomHeight()
-                      : 12),
+                      : 12
+                      ),
           color: bgColor ?? ColorConst.primaryColor,
           height: Dimensions.bottomPadding(),
           width: double.infinity,
           child: Center(
               child: Text(text,
-                  style: fontStyleBold14.apply(
+                  style: textStyle ?? fontStyleBold14.apply(
                       color: textColor ?? ColorConst.whiteColor)))),
     );
   }
