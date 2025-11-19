@@ -16,16 +16,24 @@ class TabletWaiverListView extends StatelessWidget {
       children: [
         WaiverFilterWidget(helper: helper),
         SizedBox(height: 10),
-        _buildHeaderRow(),
         Expanded(
-          child: ListView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            itemCount: waivers.length,
-            itemBuilder: (context, index) {
-              final waiver = waivers[index];
-              return _buildRow(waiver, index: index);
-            },
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                _buildHeaderRow(),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: waivers.length,
+              itemBuilder: (context, index) {
+                final waiver = waivers[index];
+                return _buildRow(waiver, index: index);
+              },
+            ),
+              ],
+            ),
           ),
         ),
       ],
@@ -216,7 +224,7 @@ class TabletWaiverListView extends StatelessWidget {
                         SizedBox(height: 8),
                         TabletWaiverListButton(
                           onTap: () {
-                            navigateToPage(SpecialRequestScreen());
+                            navigateToPage(SpecialRequestScreen(waiverListHelper: helper,));
                           },
                           text: AppString.specialReq,
                           backgroundColor: ColorConst.dividerColor,

@@ -95,8 +95,8 @@ class AppString {
 
   //Agreement Screen
 
-  static const mainTitle = '''Participation Waiver, Release, and Indemnity Agreement
-Miracle Experience Balloon Safaris''';
+  static const balloonSafariWaiver = 'Balloon Safari Waiver';
+  static const mainTitle = '''Participation Waiver, Release, and Indemnity Agreement''';
   static const part1 = '''
 In consideration of Miracle Experience Balloon Safaris (“Miracle Experience”), and its affiliated partners, advertisers, and sponsors offering me the opportunity to participate in a hot-air balloon flight, I, the undersigned, for myself, and on behalf of any minors or individuals included under my booking or care, as well as my heirs, executors, administrators, and assigns, hereby release and discharge Miracle Experience and its respective directors, officers, employees, agents, and representatives from all claims, demands, actions, damages, or losses arising from any injury, loss of life, or damage to property sustained during or in connection with our participation.
 

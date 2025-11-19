@@ -113,6 +113,17 @@ class WaiverListHelper {
         checkIn: null,
         isWaiverSigned: false
       ),
+      ModelResponseWaiverListEntity(
+        bookingCode: "ME-1248",
+        flightDate: "2025-11-03",
+        customerName: "Maria Ali",
+        pickupLocation: "Downtown Hotel",
+        area: "Dubai",
+        bookingBy: "Rehan Khan",
+        pax: 1,
+        checkIn: null,
+        isWaiverSigned: true,
+      ),
     ];
   }
 
@@ -135,4 +146,41 @@ class WaiverListHelper {
       return matchBooking && matchArea && matchDate;
     }).toList();
   }
+
+
+  final List<Map<String, dynamic>> passengers = [
+    {
+      'name': 'Denise Burcksen',
+      'dietary': 'No kiwi or goat cheese',
+      'medical': '',
+      'special': 'None',
+    },
+    {
+      'name': 'Kathleen Whalen',
+      'dietary': '',
+      'medical': '',
+      'special': 'None',
+    },
+    {
+      'name': 'Janice Alt',
+      'dietary': '',
+      'medical': '',
+      'special': 'None',
+    },
+    {
+      'name': 'Connie Koenigkann',
+      'dietary': '',
+      'medical': '',
+      'special': 'None',
+    },
+  ];
+
+  final List<String> specialRequests = [
+    'None',
+    'Birthday',
+    'Anniversary',
+    'Honeymoon',
+    'Engagement',
+    'Graduation',
+  ];
 }

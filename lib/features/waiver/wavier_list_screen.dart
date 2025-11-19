@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:miracle_experience_mobile_app/features/waiver/waiver_details_screen.dart';
+import 'package:signature/signature.dart';
 
 import '../../core/basic_features.dart';
+import '../../core/widgets/bullet_text.dart';
 import '../../core/widgets/common_date_picker.dart';
 import '../network_helper/models/response_model/model_response_waiver_list_entity.dart';
-import 'sign_waiver_screen.dart';
 
 part 'waiver_list_helper.dart';
 part 'widgets/mobile_view/mobile_waiver_list_view.dart';
+part 'widgets/mobile_view/mobile_special_request_item.dart';
+part 'widgets/tablet_view/tablet_special_request_item.dart';
 part 'widgets/tablet_view/tablet_waiver_list_view.dart';
 part 'widgets/waiver_list_app_bar.dart';
+part 'widgets/waiver_filter_widget.dart';
+part 'widgets/sign_waiver_form_content.dart';
 part 'widgets/list_bottom_sheet.dart';
-part 'waiver_details_screen.dart';
 part 'special_request_screen.dart';
+part 'sign_waiver_screen.dart';
 
 class WaiverListScreen extends StatefulWidget {
   const WaiverListScreen({super.key});
