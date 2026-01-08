@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:miracle_experience_mobile_app/core/network/base_response_model_entity.dart';
+import 'package:miracle_experience_mobile_app/core/utils/enum.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 
 import '../../../core/basic_features_network.dart';
@@ -16,6 +17,14 @@ class BalloonManifestRepository {
         false,
       ),
     );
+
+    if(networkResult.networkResultType == NetworkResultType.error){
+      return FailureState(
+        message: 'Something went wrong',
+        result: null,
+        resultType: APIResultType.failure,
+      );
+    }
 
     var apiResultFromNetwork =
         getAPIResultFromNetwork<ModelResponseBalloonManifestEntity>(
@@ -46,6 +55,14 @@ class BalloonManifestRepository {
         false,
       ),
     );
+
+    if(networkResult.networkResultType == NetworkResultType.error){
+      return FailureState(
+        message: 'Something went wrong',
+        result: null,
+        resultType: APIResultType.failure,
+      );
+    }
 
     var apiResultFromNetwork = getAPIResultFromNetwork<BaseResponseModelEntity>(
       networkResult,
