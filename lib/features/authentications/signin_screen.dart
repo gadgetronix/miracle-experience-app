@@ -9,6 +9,7 @@ import 'package:miracle_experience_mobile_app/features/network_helper/models/res
 import 'package:miracle_experience_mobile_app/features/waiver/wavier_list_screen.dart';
 
 import '../../core/widgets/common_progress_button.dart';
+import '../balloon_manifest/balloon_manifest_screen.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -168,8 +169,8 @@ class _SigninScreenState extends State<SigninScreen> {
   ) async {
     await SharedPrefUtils.setIsUserLoggedIn(true);
     await SharedPrefUtils.setToken(result?.accessToken?.token ?? "");
-    // navigateToPageAndRemoveAllPage(const BalloonManifestScreen());
-    navigateToPageAndRemoveAllPage(const WaiverListScreen());
+    navigateToPageAndRemoveAllPage(const BalloonManifestScreen());
+    // navigateToPageAndRemoveAllPage(const WaiverListScreen());
     // await SharedPrefUtils.setUser(result);
   }
 }

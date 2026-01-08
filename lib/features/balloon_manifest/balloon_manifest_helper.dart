@@ -13,11 +13,13 @@ class BalloonManifestHelper {
   final ValueNotifier<String> cacheStatus = ValueNotifier('');
   late ValueNotifier<SignatureStatus> signatureStatus;
   late ValueNotifier<String> signatureTime;
+  late NoScreenshot noScreenshot;
 
   Future<void> initialize() async {
     _initializeDependencies();
     _initializeTimezone();
     _initializeTimeSync();
+    initializeScreenPrivacy();
     loadManifestData();
   }
 
@@ -26,6 +28,13 @@ class BalloonManifestHelper {
     signOutCubit = SignOutCubit();
     signatureStatus = ValueNotifier(SignatureStatus.pending);
     signatureTime = ValueNotifier('');
+    noScreenshot = NoScreenshot.instance;
+  }
+
+  void initializeScreenPrivacy() {
+    noScreenshot.screenshotOff();
+    noScreenshot.startScreenshotListening();
+    timber('No Screenshot ${noScreenshot.screenshotStream}');
   }
 
   void _initializeTimezone() {
@@ -36,13 +45,15 @@ class BalloonManifestHelper {
     balloonManifestCubit.callBalloonManifestAPI();
   }
 
-  void dispose() {
+  Future<void> dispose() async {
     balloonManifestCubit.close();
     signOutCubit.close();
     hasCachedTime.dispose();
     cacheStatus.dispose();
     signatureStatus.dispose();
     signatureTime.dispose();
+    noScreenshot.startScreenshotListening();
+    await noScreenshot.screenshotOn();
   }
 
   // ========== Signout ==========
@@ -197,12 +208,12 @@ class BalloonManifestHelper {
       ModelResponseBalloonManifestAssignments()
         ..id = 1
         ..pilotId = "P001"
-        ..pilotName = "John Smith"
-        ..signature = (ModelResponseBalloonManifestSignature()
-          ..imageName = "pilot_signature.png"
-          ..imageUrl = "https://example.com/signatures/pilot_signature.png"
-          ..date = "2025-10-25T13:49:02.443Z")
-        // ..signature = null
+        ..pilotName = "Rosa Parrera"
+        // ..signature = (ModelResponseBalloonManifestSignature()
+        //   ..imageName = "pilot_signature.png"
+        //   ..imageUrl = "https://example.com/signatures/pilot_signature.png"
+        //   ..date = "2025-10-25T13:49:02.443Z")
+        ..signature = null
         ..tableNumber = 5
         ..maxWeightWithPax = 1200
         ..defaultWeight = 200

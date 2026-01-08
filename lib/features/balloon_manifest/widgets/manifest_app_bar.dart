@@ -20,6 +20,7 @@ class ManifestAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       elevation: 2,
       backgroundColor: ColorConst.whiteColor,
+      surfaceTintColor: Colors.transparent,
       actions: [
         BlocProvider.value(
           value: helper.signOutCubit,

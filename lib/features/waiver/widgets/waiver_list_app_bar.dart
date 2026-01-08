@@ -26,6 +26,7 @@ class _WaiverListAppBarState extends State<WaiverListAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: ColorConst.whiteColor,
+      surfaceTintColor: Colors.transparent,
       elevation: 0.5,
       automaticallyImplyLeading: false,
       titleSpacing: 0,
@@ -35,13 +36,16 @@ class _WaiverListAppBarState extends State<WaiverListAppBar> {
             FadeTransition(opacity: anim, child: child),
         child: _isSearching
             ? Padding(
-              padding: EdgeInsets.only(bottom: 10, right: 15),
-              child: Row(
+                padding: EdgeInsets.only(bottom: 10, right: 15),
+                child: Row(
                   key: const ValueKey("searchMode"),
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new,
-                          color: ColorConst.textColor, size: 20),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: ColorConst.textColor,
+                        size: 20,
+                      ),
                       onPressed: () {
                         setState(() {
                           _isSearching = false;
@@ -58,12 +62,15 @@ class _WaiverListAppBarState extends State<WaiverListAppBar> {
                         decoration: InputDecoration(
                           hintText: AppString.search,
                           border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide.none,
-                    ),
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide.none,
+                          ),
                           filled: true,
                           fillColor: ColorConst.dividerColor,
-                          contentPadding: EdgeInsets.symmetric(vertical: 9, horizontal: 15),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 9,
+                            horizontal: 15,
+                          ),
                         ),
                         style: fontStyleMedium16,
                         onChanged: widget.onSearchChanged,
@@ -71,18 +78,19 @@ class _WaiverListAppBarState extends State<WaiverListAppBar> {
                     ),
                   ],
                 ),
-            )
+              )
             : Row(
                 key: const ValueKey("normalMode"),
                 children: [
                   const SizedBox(width: 16),
-                  Text(
-                    AppString.balloonSafariWaivers,
-                    style: fontStyleBold18
-                  ),
+                  Text(AppString.balloonSafariWaivers, style: fontStyleBold18),
                   const Spacer(),
                   IconButton(
-                    icon: Image.asset(ImageAsset.icSearch, height: 20, width: 20,),
+                    icon: Image.asset(
+                      ImageAsset.icSearch,
+                      height: 20,
+                      width: 20,
+                    ),
                     onPressed: () {
                       setState(() => _isSearching = true);
                     },

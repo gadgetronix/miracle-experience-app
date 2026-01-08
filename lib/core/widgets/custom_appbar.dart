@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 
 import '../basic_features.dart';
 
-
-
 class CustomAppBar extends AppBar {
   CustomAppBar.backActionCenterTitleAppBar({
     super.key,
@@ -22,31 +20,30 @@ class CustomAppBar extends AppBar {
   }) : super(
          automaticallyImplyLeading: false,
          centerTitle: centerTile,
-          backgroundColor: ColorConst.whiteColor,
-         leading:
-             showLeading
-                 ? Padding(
-                   padding: EdgeInsets.only(left: Dimensions.w3),
-                   child: InkWell(
-                     child: const Icon(
-                       Icons.arrow_back_ios_new,
-                       size: 20,
-                       color: ColorConst.textColor,
-                     ),
-                     onTap: () {
-                       if (backPress != null) {
-                         backPress();
-                         return;
-                       } else {
-                         Navigator.pop(GlobalVariable.appContext);
-                       }
-                     },
+         backgroundColor: ColorConst.whiteColor,
+         surfaceTintColor: Colors.transparent,
+
+         leading: showLeading
+             ? Padding(
+                 padding: EdgeInsets.only(left: Dimensions.w3),
+                 child: InkWell(
+                   child: const Icon(
+                     Icons.arrow_back_ios_new,
+                     size: 20,
+                     color: ColorConst.textColor,
                    ),
-                 )
-                 : null,
-         title:
-             titleWidget ??
-             Text(title, style: textStyle ?? fontStyleBold18),
+                   onTap: () {
+                     if (backPress != null) {
+                       backPress();
+                       return;
+                     } else {
+                       Navigator.pop(GlobalVariable.appContext);
+                     }
+                   },
+                 ),
+               )
+             : null,
+         title: titleWidget ?? Text(title, style: textStyle ?? fontStyleBold18),
        );
 
   CustomAppBar.rowAppBar({super.key, double elevation = 1, required Widget row})
@@ -63,5 +60,6 @@ class CustomAppBar extends AppBar {
         automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: true,
+        surfaceTintColor: Colors.transparent,
       );
 }

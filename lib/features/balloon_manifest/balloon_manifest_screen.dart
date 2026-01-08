@@ -10,6 +10,7 @@ import 'package:miracle_experience_mobile_app/features/network_helper/models/res
 import 'package:miracle_experience_mobile_app/core/network/api_result.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/time_sync_required_widget.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:signature/signature.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -45,6 +46,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    helper.dispose();
     super.dispose();
   }
 
