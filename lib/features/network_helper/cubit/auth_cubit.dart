@@ -20,6 +20,21 @@ class SigninCubit extends Cubit<APIResultState<ModelResponseSigninEntity>?> {
   }
 }
 
+class ZohoSigninCubit extends Cubit<APIResultState<ModelResponseSigninEntity>?> {
+  ZohoSigninCubit() : super(null);
+
+  Future<void> callZohoSigninAPI(
+    String code,
+  ) async {
+    emit(const LoadingState());
+
+    final APIResultState<ModelResponseSigninEntity> apiResultFromNetwork =
+        await AuthRepository.callZohoSigninAPI(code);
+
+    emit(apiResultFromNetwork);
+  }
+}
+
 class SignOutCubit extends Cubit<APIResultState<BaseResponseModelEntity>?> {
   SignOutCubit() : super(null);
 

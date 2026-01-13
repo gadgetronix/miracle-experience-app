@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
@@ -19,8 +20,8 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController(text: kDebugMode ? 'development@gadgetronix.net': '');
+  TextEditingController passwordController = TextEditingController(text: kDebugMode ? 'Miracle@123!': '');
 
   ValueNotifier<bool> isPasswordVisible = ValueNotifier<bool>(false);
 

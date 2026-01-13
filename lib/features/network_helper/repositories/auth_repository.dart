@@ -26,6 +26,26 @@ class AuthRepository {
     return apiResultFromNetwork;
   }
 
+   static Future<APIResultState<ModelResponseSigninEntity>> callZohoSigninAPI(
+    String code,
+  ) async {
+    var networkResult = await APIHelper.instance.callPostApi(
+      NetworkConstant.zohoSignin,
+      {"code": code},
+      false,
+    ); 
+    if(networkResult.networkResultType == NetworkResultType.error){
+      return FailureState(
+        message: 'Something went wrong',
+        result: null,
+        resultType: APIResultType.failure,
+      );
+    }
+    var apiResultFromNetwork =
+        getAPIResultFromNetwork<ModelResponseSigninEntity>(networkResult);
+    return apiResultFromNetwork;
+  }
+
   static Future<APIResultState<BaseResponseModelEntity>> callSignoutAPI(
     ModelRequestSigninEntity modelRequestSigninEntity,
   ) async {
