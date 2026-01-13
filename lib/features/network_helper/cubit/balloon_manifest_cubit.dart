@@ -59,15 +59,48 @@ class UploadSignatureCubit
   }
 }
 
+class UpdatePaxNameCubit
+    extends Cubit<APIResultState<BaseResponseModelEntity>?> {
+  UpdatePaxNameCubit() : super(null);
+
+  Future<void> callPaxNameUpdateAPI({
+    required int id,
+    required String name,
+  }) async {
+    emit(const LoadingState());
+
+    final APIResultState<BaseResponseModelEntity> apiResultFromNetwork =
+        await BalloonManifestRepository.callPaxNameUpdateAPI(
+          id: id,
+          name: name,
+        );
+
+    final result = apiResultFromNetwork;
+
+    if (result.resultType == APIResultType.noInternet) {
+      // 🔥 Store this request locally for retry
+      await SharedPrefUtils.setPendingManifestPaxNames (
+        data: {
+          "id": id,
+          "name": name,
+        },
+        isList: false,
+      );
+    }
+    emit(apiResultFromNetwork);
+  }
+}
+
 class OfflineSyncCubit extends Cubit<OfflineSyncState> {
   OfflineSyncCubit() : super(OfflineSyncState.idle) {
     _startSyncProcess(); // run at app start
   }
 
   /// Initialize both: immediate retry + listen for internet restoration
-  void _startSyncProcess() {
+  Future<void> _startSyncProcess() async {
     //Try immediately on app start (in case pending uploads exist)
-    _retryPendingSignatures();
+    await _retryPendingSignatures();
+    await _retryPendingNameUpdates();
 
     //Listen for internet restoration
     Connectivity().onConnectivityChanged.listen((results) async {
@@ -79,6 +112,7 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
       if (hasConnection) {
         timber("Internet restored, retrying pending signatures...");
         await _retryPendingSignatures();
+        await _retryPendingNameUpdates();
       }
     });
   }
@@ -130,6 +164,42 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
     // Save back remaining failed ones
     await SharedPrefUtils.setPendingSignatures(
       pendingSignatureList: pendingList,
+      isList: true,
+    );
+  }
+  
+  Future<void> _retryPendingNameUpdates() async {
+    emit(OfflineSyncState.syncing);
+
+    final pendingNameList = SharedPrefUtils.getPendingManifestPaxNames() ?? [];
+
+    if (pendingNameList.isEmpty) return;
+
+    for (final item in List<String>.from(pendingNameList)) {
+      try {
+        final data = jsonDecode(item);
+
+        final id = data['id'];
+        final name = data['name'];
+
+        final apiResultFromNetwork =
+            await BalloonManifestRepository.callPaxNameUpdateAPI(
+              id: id,
+              name: name,
+            );
+
+        if (apiResultFromNetwork.resultType == APIResultType.success) {
+          // Remove successfully uploaded entry
+          pendingNameList.remove(item);
+        }
+      } catch (e) {
+        // ignore individual failures, continue
+      }
+    }
+
+    // Save back remaining failed ones
+    await SharedPrefUtils.setPendingManifestPaxNames(
+      pendingPaxNameUpdate: pendingNameList,
       isList: true,
     );
   }

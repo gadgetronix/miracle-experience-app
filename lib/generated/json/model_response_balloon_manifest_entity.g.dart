@@ -224,6 +224,10 @@ ModelResponseBalloonManifestAssignmentsPaxes $ModelResponseBalloonManifestAssign
   if (name != null) {
     modelResponseBalloonManifestAssignmentsPaxes.name = name;
   }
+  final String? updatedName = jsonConvert.convert<String>(json['updatedName']);
+  if (updatedName != null) {
+    modelResponseBalloonManifestAssignmentsPaxes.updatedName = updatedName;
+  }
   final int? quadrantPosition = jsonConvert.convert<int>(
       json['quadrantPosition']);
   if (quadrantPosition != null) {
@@ -290,6 +294,7 @@ Map<String, dynamic> $ModelResponseBalloonManifestAssignmentsPaxesToJson(
   data['id'] = entity.id;
   data['isFOC'] = entity.isFOC;
   data['name'] = entity.name;
+  data['updatedName'] = entity.updatedName;
   data['quadrantPosition'] = entity.quadrantPosition;
   data['gender'] = entity.gender;
   data['age'] = entity.age;
@@ -310,6 +315,7 @@ extension ModelResponseBalloonManifestAssignmentsPaxesExtension on ModelResponse
     int? id,
     bool? isFOC,
     String? name,
+    String? updatedName,
     int? quadrantPosition,
     String? gender,
     int? age,
@@ -327,6 +333,7 @@ extension ModelResponseBalloonManifestAssignmentsPaxesExtension on ModelResponse
       ..id = id ?? this.id
       ..isFOC = isFOC ?? this.isFOC
       ..name = name ?? this.name
+      ..updatedName = updatedName ?? this.updatedName
       ..quadrantPosition = quadrantPosition ?? this.quadrantPosition
       ..gender = gender ?? this.gender
       ..age = age ?? this.age

@@ -69,4 +69,36 @@ class BalloonManifestRepository {
     );
     return apiResultFromNetwork;
   }
+
+
+  static Future<APIResultState<BaseResponseModelEntity>>
+  callPaxNameUpdateAPI({
+    required int id,
+    required String name,
+  }) async {
+
+    var networkResult = await APIHelper.instance.performRequestWithRetry(
+      apiMethod: () => APIHelper.instance.callPostApi(
+        NetworkConstant.updateName,
+        {
+          "id": id,
+          "name": name,
+        },
+        false,
+      ),
+    );
+
+    if(networkResult.networkResultType == NetworkResultType.error){
+      return FailureState(
+        message: 'Something went wrong',
+        result: null,
+        resultType: APIResultType.failure,
+      );
+    }
+
+    var apiResultFromNetwork = getAPIResultFromNetwork<BaseResponseModelEntity>(
+      networkResult,
+    );
+    return apiResultFromNetwork;
+  }
 }

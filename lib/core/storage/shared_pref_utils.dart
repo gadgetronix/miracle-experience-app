@@ -120,6 +120,28 @@ class SharedPrefUtils {
     var prefs = await _instance;
     return prefs.setStringList("pending_signatures", pendingList);
   }
+  
+  static List<String>? getPendingManifestPaxNames() {
+    List<String>? stringList = _prefsInstance?.getStringList(
+      "pending_manifest_pax_names",
+    );
+    return stringList;
+  }
+
+  static Future<bool> setPendingManifestPaxNames({
+    Map<String, dynamic>? data,
+    List<String>? pendingPaxNameUpdate,
+    bool? isList,
+  }) async {
+    if (isList == true && pendingPaxNameUpdate != null) {
+      var prefs = await _instance;
+      return prefs.setStringList("pending_manifest_pax_names", pendingPaxNameUpdate);
+    }
+    final pendingList = SharedPrefUtils.getPendingManifestPaxNames() ?? [];
+    pendingList.add(jsonEncode(data));
+    var prefs = await _instance;
+    return prefs.setStringList("pending_manifest_pax_names", pendingList);
+  }
 
   static Future<void> remove() async {
     SharedPreferences.getInstance().then((SharedPreferences pref) {

@@ -73,6 +73,7 @@ class ModelResponseBalloonManifestAssignmentsPaxes {
 	int? id;
 	bool? isFOC;
 	String? name;
+	String? updatedName;
 	int? quadrantPosition;
 	String? gender;
 	int? age;

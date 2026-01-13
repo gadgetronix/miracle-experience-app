@@ -7,6 +7,7 @@ import 'package:miracle_experience_mobile_app/features/network_helper/models/res
 part 'mobile_view/mobile_header_widget.dart';
 part 'tablet_view/tablet_header_widget.dart';
 part 'header_info_widget.dart';
+part 'passenger_detail_bottom_sheet.dart';
 
 class PassengersListWidget extends StatefulWidget {
   final List<ModelResponseBalloonManifestAssignmentsPaxes> passengers;
@@ -33,92 +34,89 @@ class _PassengersListWidgetState extends State<PassengersListWidget> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return FutureBuilder<LandscapeSide>(
-    future: Const.getLandscapeSide(),
-    builder: (context, snapshot) {
-      final side = snapshot.data ?? LandscapeSide.none;
+  Widget build(BuildContext context) {
+    return FutureBuilder<LandscapeSide>(
+      future: Const.getLandscapeSide(),
+      builder: (context, snapshot) {
+        final side = snapshot.data ?? LandscapeSide.none;
 
-      // Dynamic padding
-      final double leftPaddingForLandscapeMobile =
-          !Const.isTablet && side == LandscapeSide.left
-              ? 44
-              : 25;
+        // Dynamic padding
+        final double leftPaddingForLandscapeMobile =
+            !Const.isTablet && side == LandscapeSide.left ? 44 : 25;
 
-      final double rightPaddingForLandscapeMobile =
-          !Const.isTablet && side == LandscapeSide.right
-              ? 44
-              : 10;
+        final double rightPaddingForLandscapeMobile =
+            !Const.isTablet && side == LandscapeSide.right ? 44 : 10;
 
-      if (widget.passengers.isEmpty) {
-        return _buildEmptyState();
-      }
+        if (widget.passengers.isEmpty) {
+          return _buildEmptyState();
+        }
 
-      return Column(
-        children: [
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                widget.helper.loadManifestData();
-              },
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
-                      child: Column(
-                        children: [
-                          _buildHeader(),
-                          const Divider(height: 1, thickness: 1),
-
-                          if (Const.isTablet || Const.isLandscape) ...[
-                            _buildColumnHeaders(
-                              leftPadding: leftPaddingForLandscapeMobile,
-                              rightPadding: rightPaddingForLandscapeMobile,
-                            ),
-                            _buildTabletPassengersList(
-                              leftPadding: leftPaddingForLandscapeMobile,
-                              rightPadding: rightPaddingForLandscapeMobile,
-                            ),
-                          ] else ...[
-                            _buildMobilePassengersList(),
-                          ],
-
-                          Divider(
-                            height: 1,
-                            thickness: 0.5,
-                            color: Colors.grey.shade300,
-                          ),
-
-                          _buildFooter(),
-
-                          if (Const.isTablet || Const.isLandscape)
-                            SizedBox(
-                              height: Dimensions.getSafeAreaBottomHeight() + 10,
-                            ),
-                        ],
-                      ),
-                    ),
-                  );
+        return Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  widget.helper.loadManifestData();
                 },
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: Column(
+                          children: [
+                            _buildHeader(),
+                            const Divider(height: 1, thickness: 1),
+
+                            if (Const.isTablet || Const.isLandscape) ...[
+                              _buildColumnHeaders(
+                                leftPadding: leftPaddingForLandscapeMobile,
+                                rightPadding: rightPaddingForLandscapeMobile,
+                              ),
+                              _buildTabletPassengersList(
+                                leftPadding: leftPaddingForLandscapeMobile,
+                                rightPadding: rightPaddingForLandscapeMobile,
+                              ),
+                            ] else ...[
+                              _buildMobilePassengersList(),
+                            ],
+
+                            Divider(
+                              height: 1,
+                              thickness: 0.5,
+                              color: Colors.grey.shade300,
+                            ),
+
+                            _buildFooter(),
+
+                            if (Const.isTablet || Const.isLandscape)
+                              SizedBox(
+                                height:
+                                    Dimensions.getSafeAreaBottomHeight() + 10,
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
 
-          if (!Const.isTablet && !Const.isLandscape)
-            MobileViewSignWidget(
-              helper: widget.helper,
-              manifestId: widget.manifest.uniqueId,
-              assignmentId: widget.assignment.id,
-            ),
-        ],
-      );
-    },
-  );
-}
+            if (!Const.isTablet && !Const.isLandscape)
+              MobileViewSignWidget(
+                helper: widget.helper,
+                manifestId: widget.manifest.uniqueId,
+                assignmentId: widget.assignment.id,
+              ),
+          ],
+        );
+      },
+    );
+  }
 
   Widget _buildHeader() {
     return BlocListener<OfflineSyncCubit, OfflineSyncState>(
@@ -148,7 +146,7 @@ Widget build(BuildContext context) {
                   ? ColorConst.successColor
                   : ColorConst.primaryColor,
             ),
-            child: Const.isTablet  || Const.isLandscape
+            child: Const.isTablet || Const.isLandscape
                 ? TabletHeaderWidget(
                     status: value,
                     manifest: widget.manifest,
@@ -166,9 +164,17 @@ Widget build(BuildContext context) {
   }
 
   // ========== TABLET VIEW ==========
-  Widget _buildColumnHeaders({required double leftPadding, required double rightPadding}) {
+  Widget _buildColumnHeaders({
+    required double leftPadding,
+    required double rightPadding,
+  }) {
     return Container(
-      padding: EdgeInsets.only(right: rightPadding, left: leftPadding, top: 12, bottom: 12),
+      padding: EdgeInsets.only(
+        right: rightPadding,
+        left: leftPadding,
+        top: 12,
+        bottom: 12,
+      ),
       decoration: BoxDecoration(color: ColorConst.whiteColor),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -200,7 +206,10 @@ Widget build(BuildContext context) {
     );
   }
 
-  Widget _buildTabletPassengersList({required double leftPadding, required double rightPadding}) {
+  Widget _buildTabletPassengersList({
+    required double leftPadding,
+    required double rightPadding,
+  }) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -210,139 +219,162 @@ Widget build(BuildContext context) {
           Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
       itemBuilder: (context, index) {
         final passenger = widget.passengers[index];
-        return _buildTabletPassengerRow(passenger, index + 1, leftPadding: leftPadding, rightPadding: rightPadding);
+        return _buildTabletPassengerRow(
+          passenger,
+          index + 1,
+          leftPadding: leftPadding,
+          rightPadding: rightPadding,
+        );
       },
     );
   }
 
   Widget _buildTabletPassengerRow(
     ModelResponseBalloonManifestAssignmentsPaxes passenger,
-    int number,
-    {required double leftPadding, required double rightPadding}
-  ) {
-    return Container(
-      padding: EdgeInsets.only(right: rightPadding, left: leftPadding, top: 12, bottom: 12),
-      decoration: BoxDecoration(color: ColorConst.whiteColor),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Number
-          Expanded(
-            flex: 1,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(number.toString(), style: passengerInfoTextStyle),
-                if (passenger.quadrantPosition != null) ...[
-                  const SizedBox(width: 5),
+    int number, {
+    required double leftPadding,
+    required double rightPadding,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        CustomBottomSheet.instance.modalBottomSheet(
+          child: PassengerDetailBottomSheet(passenger: passenger, assignmentId: widget.assignment.id ?? 0,onNameUpdated: (updatedName) {
+          setState(() {
+            passenger.updatedName = updatedName;
+          });
+        },),
+          context: context,
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.only(
+          right: rightPadding,
+          left: leftPadding,
+          top: 12,
+          bottom: 12,
+        ),
+        decoration: BoxDecoration(color: ColorConst.whiteColor),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Number
+            Expanded(
+              flex: 1,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(number.toString(), style: passengerInfoTextStyle),
+                  if (passenger.quadrantPosition != null) ...[
+                    const SizedBox(width: 5),
+                    Text(
+                      passenger.specialRequest.isNotNullAndEmpty()
+                          ? passenger.specialRequest![0]
+                          : '',
+                      style: passengerInfoTextStyle,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 5),
+      
+            // Driver Name
+            Expanded(
+              flex: 4,
+              child: Text(
+                passenger.driverName ?? 'Unknown',
+                style: passengerInfoTextStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 5),
+            // Full Name
+            Expanded(
+              flex: 4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    passenger.specialRequest.isNotNullAndEmpty()
-                        ? passenger.specialRequest![0]
-                        : '',
+                    passenger.updatedName ?? passenger.name ?? 'Unknown',
                     style: passengerInfoTextStyle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
-              ],
+              ),
             ),
-          ),
-          const SizedBox(width: 5),
-
-          // Driver Name
-          Expanded(
-            flex: 4,
-            child: Text(
-              passenger.driverName ?? 'Unknown',
-              style: passengerInfoTextStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            const SizedBox(width: 5),
+            // Nationality
+            Expanded(
+              flex: 3,
+              child: Text(
+                passenger.country ?? '-',
+                style: passengerInfoTextStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-          const SizedBox(width: 5),
-          // Full Name
-          Expanded(
-            flex: 4,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  passenger.name ?? 'Unknown',
-                  style: passengerInfoTextStyle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+      
+            // Gender
+            Expanded(
+              flex: 1,
+              child: Text(
+                passenger.gender.isNotNullOrEmpty()
+                    ? passenger.gender!.toUpperCase()
+                    : '-',
+                style: passengerInfoTextStyle,
+              ),
             ),
-          ),
-          const SizedBox(width: 5),
-          // Nationality
-          Expanded(
-            flex: 3,
-            child: Text(
-              passenger.country ?? '-',
-              style: passengerInfoTextStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+      
+            // Tour Operator
+            Expanded(
+              flex: 4,
+              child: Text(
+                passenger.bookingBy?.capitalizeByWord() ?? '-',
+                style: passengerInfoTextStyle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-
-          // Gender
-          Expanded(
-            flex: 1,
-            child: Text(
-              passenger.gender.isNotNullOrEmpty()
-                  ? passenger.gender!.toUpperCase()
-                  : '-',
-              style: passengerInfoTextStyle,
+            const SizedBox(width: 3),
+      
+            // Permit Code
+            Expanded(
+              flex: 2,
+              child: Text(
+                passenger.permitNumber ?? '-',
+                style: passengerInfoTextStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-
-          // Tour Operator
-          Expanded(
-            flex: 4,
-            child: Text(
-              passenger.bookingBy?.capitalizeByWord() ?? '-',
-              style: passengerInfoTextStyle,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            const SizedBox(width: 3),
+      
+            // Pickup Location
+            Expanded(
+              flex: 4,
+              child: Text(
+                passenger.location?.capitalizeByWord() ?? '-',
+                style: passengerInfoTextStyle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-          const SizedBox(width: 3),
-
-          // Permit Code
-          Expanded(
-            flex: 2,
-            child: Text(
-              passenger.permitNumber ?? '-',
-              style: passengerInfoTextStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            const SizedBox(width: 5),
+      
+            // Weight
+            Expanded(
+              flex: 1,
+              child: Text(
+                passenger.weight != null
+                    ? passenger.weight!.toStringAsFixed(0)
+                    : '-',
+                style: passengerInfoTextStyle,
+              ),
             ),
-          ),
-          const SizedBox(width: 3),
-
-          // Pickup Location
-          Expanded(
-            flex: 4,
-            child: Text(
-              passenger.location?.capitalizeByWord() ?? '-',
-              style: passengerInfoTextStyle,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 5),
-
-          // Weight
-          Expanded(
-            flex: 1,
-            child: Text(
-              passenger.weight != null
-                  ? passenger.weight!.toStringAsFixed(0)
-                  : '-',
-              style: passengerInfoTextStyle,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -364,12 +396,17 @@ Widget build(BuildContext context) {
 
   Widget _buildMobilePassengerRow(
     ModelResponseBalloonManifestAssignmentsPaxes passenger,
+
     int number,
   ) {
     return GestureDetector(
       onTap: () {
         CustomBottomSheet.instance.modalBottomSheet(
-          child: _buildPassengerDetailBottomSheet(passenger),
+          child: PassengerDetailBottomSheet(passenger: passenger, assignmentId: widget.assignment.id ?? 0,onNameUpdated: (updatedName) {
+          setState(() {
+            passenger.updatedName = updatedName;
+          });
+        },),
           context: context,
         );
       },
@@ -383,7 +420,7 @@ Widget build(BuildContext context) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    passenger.name ?? '',
+                    passenger.updatedName ?? passenger.name ?? '',
                     style: passengerInfoMobileTextStyle.copyWith(fontSize: 15),
                   ),
                   Text(
@@ -420,74 +457,6 @@ Widget build(BuildContext context) {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildPassengerDetailBottomSheet(
-    ModelResponseBalloonManifestAssignmentsPaxes passenger,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            Center(
-              child: Text(
-                passenger.name ?? 'Unknown Passenger',
-                style: fontStyleBold18,
-              ),
-            ),
-            Divider(thickness: 1, height: 20, color: Colors.grey.shade300),
-
-            // Details List
-            _buildDetailRow(AppString.driver, passenger.driverName ?? '-'),
-            _buildDetailRow(AppString.nationality, passenger.country ?? '-'),
-            _buildDetailRow(AppString.mf, passenger.gender ?? '-'),
-            _buildDetailRow(
-              AppString.tourOperator,
-              passenger.bookingBy?.capitalizeByWord() ?? '-',
-            ),
-            _buildDetailRow(AppString.permit, passenger.permitNumber ?? '-'),
-            _buildDetailRow(
-              AppString.pickupLocation,
-              passenger.location?.capitalizeByWord() ?? '-',
-            ),
-            _buildDetailRow(
-              AppString.kg,
-              passenger.weight != null
-                  ? '${passenger.weight!.toStringAsFixed(0)} KG'
-                  : '-',
-            ),
-            if (passenger.specialRequest.isNotNullAndEmpty()) ...[
-              _buildDetailRow(
-                AppString.specialRequest,
-                passenger.specialRequest ?? '-',
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Text("$label:", style: passengerInfoMobileTextStyle),
-          ),
-          Expanded(
-            flex: 5,
-            child: Text(value, style: passengerInfoMobileTextStyle),
-          ),
-        ],
       ),
     );
   }
@@ -529,7 +498,7 @@ Widget build(BuildContext context) {
               ),
               Text(
                 '${AppString.total.endWithColon()} ${totalWeight.toStringAsFixed(0)} KG',
-                style: Const.isTablet  || Const.isLandscape
+                style: Const.isTablet || Const.isLandscape
                     ? passengerInfoTextStyle.copyWith(
                         fontWeight: FontWeight.bold,
                       )

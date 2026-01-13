@@ -21,8 +21,8 @@ class CustomBottomSheet {
         constraints: BoxConstraints.tightFor(width: Dimensions.screenWidth()),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(Dimensions.r10),
-                topRight: Radius.circular(Dimensions.r10))),
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10))),
         isScrollControlled: true,
 
         // clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -43,7 +43,7 @@ class CustomBottomSheet {
                     },
                     child: CircleAvatar(
                       backgroundColor: ColorConst.whiteColor,
-                      radius: Dimensions.r16,
+                      radius: 16,
                       child: const Icon(
                         Icons.close_rounded,
                         color: ColorConst.blackColor,
@@ -58,8 +58,8 @@ class CustomBottomSheet {
                     decoration: BoxDecoration(
                         color: ColorConst.whiteColor,
                         borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(Dimensions.r10),
-                            topRight: Radius.circular(Dimensions.r10))),
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10))),
                     constraints: BoxConstraints(
                         maxHeight: Dimensions.screenHeight() * 0.875),
                     child: Column(
