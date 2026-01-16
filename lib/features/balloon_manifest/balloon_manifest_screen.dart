@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/network/base_response_model_entity.dart';
 import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
+import 'package:miracle_experience_mobile_app/drawer_menu_screen.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/auth_cubit.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/request_model/model_request_signin_entity.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
@@ -16,7 +17,6 @@ import 'package:signature/signature.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import '../../core/utils/secure_time_helper.dart';
-import '../authentications/signin_screen.dart';
 import 'balloon_manifest_body.dart';
 
 part 'widgets/common_view/manifest_app_bar.dart';
@@ -60,6 +60,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: DrawerMenuScreen(selectedMenu: DrawerMenu.balloonManifest),
       appBar: ManifestAppBar(helper: helper),
       body: _buildBody(),
     );

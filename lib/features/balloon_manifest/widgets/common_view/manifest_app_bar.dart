@@ -19,47 +19,16 @@ class ManifestAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       elevation: 2,
+      centerTitle: true,
       backgroundColor: ColorConst.whiteColor,
       surfaceTintColor: Colors.transparent,
-      actions: [
-        BlocProvider.value(
-          value: helper.signOutCubit,
-          child:
-              BlocListener<
-                SignOutCubit,
-                APIResultState<BaseResponseModelEntity>?
-              >(
-                listener: (context, state) {
-                  EasyLoading.dismiss();
-                  if (state?.resultType == APIResultType.loading) {
-                    EasyLoading.show();
-                  } else if (state?.resultType == APIResultType.success) {
-                    SharedPrefUtils.onLogout();
-                    navigateToPageAndRemoveAllPage(const SigninScreen());
-                  } else {
-                    showErrorSnackBar(state?.message ?? 'Logout failed');
-                  }
-                },
-                child: GestureDetector(
-                  onTap: () => showLogoutDialog(
-                    title: AppString.logout,
-                    content: AppString.logoutDesc,
-                    cancelText: AppString.cancel,
-                    yesText: AppString.logout,
-                    noFunction: () => Navigator.pop(context),
-                    yesFunction: () {
-                      Navigator.pop(context);
-                      helper.callSignOutAPI();
-                    },
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 25),
-                    child: Text(AppString.logout, style: fontStyleMedium16),
-                  ),
-                ),
-              ),
+      leading: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        child: GestureDetector(
+          onTap: () => Scaffold.of(context).openDrawer(),
+          child: Icon(Icons.menu_rounded),
         ),
-      ],
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:miracle_experience_mobile_app/drawer_menu_screen.dart';
 import 'package:miracle_experience_mobile_app/features/waiver/waiver_details_screen.dart';
 import 'package:signature/signature.dart';
 
@@ -46,18 +46,24 @@ class _WaiverListScreenState extends State<WaiverListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: DrawerMenuScreen(selectedMenu: DrawerMenu.waivers),
       appBar: WaiverListAppBar(
-    onSearchChanged: (query) {
-      // Filter your waiver list or trigger helper method
-      print("Searching for $query");
-    },
-  ),
+        onSearchChanged: (query) {
+          // Filter your waiver list or trigger helper method
+          print("Searching for $query");
+        },
+      ),
       body: RefreshIndicator(
         onRefresh: helper.loadWaiverList,
-        child: 
-        Const.isTablet ?  TabletWaiverListView(waivers: helper.waiverList.value, helper: helper)
-        : MobileWaiverListView(waivers: helper.waiverList.value, helper: helper)
-               
+        child: Const.isTablet
+            ? TabletWaiverListView(
+                waivers: helper.waiverList.value,
+                helper: helper,
+              )
+            : MobileWaiverListView(
+                waivers: helper.waiverList.value,
+                helper: helper,
+              ),
       ),
     );
   }

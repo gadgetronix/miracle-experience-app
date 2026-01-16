@@ -104,8 +104,8 @@ class _MainAppState extends State<MainApp> {
             child: ShorebirdManager().shouldShowRestartDialog ? RestartScreen(): SharedPrefUtils.getIsUserLoggedIn()
                 ? BalloonManifestScreen()
                 // ? WaiverListScreen()
-                : ZohoSigninScreen(),
-                // : SigninScreen(),
+                // : ZohoSigninScreen(),
+                : SigninScreen(),
           ),
         ),
       ),

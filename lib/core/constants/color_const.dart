@@ -63,4 +63,6 @@ class ColorConst {
   static const Color errorSnackbarColor = Color(0xFFCE5A52);
   static const Color successColor = Color(0xFF13AF13);
   static const Color arrowColor = Color(0xFF696969);
+  static const Color menuBgColor = Color(0xFF1F1E2E);
+  static const Color selectedMenuColor = Color(0xFF2A293B);
 }

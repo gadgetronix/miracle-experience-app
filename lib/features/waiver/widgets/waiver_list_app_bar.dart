@@ -29,7 +29,17 @@ class _WaiverListAppBarState extends State<WaiverListAppBar> {
       surfaceTintColor: Colors.transparent,
       elevation: 0.5,
       automaticallyImplyLeading: false,
+      centerTitle: true,
       titleSpacing: 0,
+      leading: _isSearching
+          ? null
+          : Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: GestureDetector(
+                onTap: () => Scaffold.of(context).openDrawer(),
+                child: Icon(Icons.menu_rounded),
+              ),
+            ),
       title: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
         transitionBuilder: (child, anim) =>
