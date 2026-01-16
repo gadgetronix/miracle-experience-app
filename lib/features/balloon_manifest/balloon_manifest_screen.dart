@@ -9,7 +9,7 @@ import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 import 'package:miracle_experience_mobile_app/core/network/api_result.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
-import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/time_sync_required_widget.dart';
+import 'package:miracle_experience_mobile_app/features/balloon_manifest/widgets/common_view/time_sync_required_widget.dart';
 import 'package:no_screenshot/no_screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:signature/signature.dart';
@@ -17,12 +17,12 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import '../../core/utils/secure_time_helper.dart';
 import '../authentications/signin_screen.dart';
-import 'widgets/passengers_list_widget.dart';
+import 'balloon_manifest_body.dart';
 
-part 'widgets/manifest_app_bar.dart';
-part 'widgets/general_error_widget.dart';
+part 'widgets/common_view/manifest_app_bar.dart';
+part 'widgets/common_view/manifest_error_widget.dart';
 part 'widgets/mobile_view/mobile_view_sign_widget.dart';
-part 'widgets/signature_bottom_sheet.dart';
+part 'widgets/common_view/signature_bottom_sheet.dart';
 part 'balloon_manifest_helper.dart';
 
 class BalloonManifestScreen extends StatefulWidget {
@@ -92,7 +92,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
       return _handleSuccessState(state?.result, message: state?.message);
     }
 
-    return GeneralErrorWidget(
+    return ManifestErrorWidget(
       message: state?.message ?? 'Something went wrong',
       helper: helper,
     );
@@ -115,13 +115,13 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
     helper.updateSignatureNotifiers(assignment: assignment, result: result);
 
     return assignment != null
-        ? PassengersListWidget(
+        ? BalloonManifestBody(
             passengers: assignment.paxes ?? [],
             manifest: result!,
             assignment: assignment,
             helper: helper,
           )
-        : GeneralErrorWidget(
+        : ManifestErrorWidget(
             message: message ?? AppString.noAssignmentsAvailable,
             helper: helper,
           );
@@ -131,7 +131,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
     final cachedData = SharedPrefUtils.getBalloonManifest();
 
     if (cachedData == null || cachedData.manifestDate == null) {
-      return GeneralErrorWidget(
+      return ManifestErrorWidget(
         message: AppString.noAssignmentsAvailable,
         helper: helper,
       );
@@ -152,7 +152,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
             result: cachedData,
           );
 
-          return PassengersListWidget(
+          return BalloonManifestBody(
             passengers: assignment.paxes ?? [],
             manifest: cachedData,
             assignment: assignment,

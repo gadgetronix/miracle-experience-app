@@ -26,9 +26,7 @@ class TimeSyncRequiredWidget extends StatelessWidget {
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: IntrinsicHeight(
                 child: Center(
                   child: Padding(
@@ -66,7 +64,7 @@ class TimeSyncRequiredWidget extends StatelessWidget {
 
   Widget _buildTitle() {
     return Text(
-      'Time Sync Required',
+      AppString.timeSyncRequired,
       style: fontStyleSemiBold18,
       textAlign: TextAlign.center,
     );
@@ -76,12 +74,11 @@ class TimeSyncRequiredWidget extends StatelessWidget {
     String message;
 
     if (!hasCachedTime) {
-      message = 'Please connect to internet once to enable offline access.';
+      message = AppString.pleaseConnectToInternetOnceToEnableOfflineAccess;
     } else if (cacheStatus.contains('restarted')) {
-      message =
-          'Your device was restarted. Please connect to internet to re-sync time.';
+      message = AppString.yourDeviceWasRestarted;
     } else {
-      message = 'Manifest data has expired.';
+      message = AppString.manifestDataHasExpired;
     }
 
     return Text(

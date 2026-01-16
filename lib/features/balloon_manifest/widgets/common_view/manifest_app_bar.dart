@@ -1,4 +1,4 @@
-part of '../balloon_manifest_screen.dart';
+part of '../../balloon_manifest_screen.dart';
 
 class ManifestAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ManifestAppBar({super.key, required this.helper});

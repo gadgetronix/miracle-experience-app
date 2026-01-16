@@ -1,7 +1,7 @@
-part of '../balloon_manifest_screen.dart';
+part of '../../balloon_manifest_screen.dart';
 
-class GeneralErrorWidget extends StatelessWidget {
-  const GeneralErrorWidget({
+class ManifestErrorWidget extends StatelessWidget {
+  const ManifestErrorWidget({
     super.key,
     required this.message,
     required this.helper,

@@ -1,6 +1,6 @@
 part of 'zoho_signin_screen.dart';
 
-class SigninHelper {
+class ZohoSigninHelper {
   late ZohoSigninCubit zohoSigninCubit;
 
   initialize() {

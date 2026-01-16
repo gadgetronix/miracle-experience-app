@@ -9,7 +9,7 @@ import 'package:miracle_experience_mobile_app/features/network_helper/models/res
 import '../../core/widgets/common_progress_button.dart';
 import '../balloon_manifest/balloon_manifest_screen.dart';
 
-part 'signin_helper.dart';
+part 'zoho_signin_helper.dart';
 
 class ZohoSigninScreen extends StatefulWidget {
   const ZohoSigninScreen({super.key});
@@ -20,18 +20,18 @@ class ZohoSigninScreen extends StatefulWidget {
 
 class _ZohoSigninScreenState extends State<ZohoSigninScreen> {
 
-  final SigninHelper signinHelper = SigninHelper();
+  final ZohoSigninHelper zohoSigninHelper = ZohoSigninHelper();
 
   @override
   void initState() {
-   signinHelper.initialize();
+   zohoSigninHelper.initialize();
     super.initState();
   }
   
 
   @override
   void dispose() {
-    signinHelper.dispose();
+    zohoSigninHelper.dispose();
     super.dispose();
   }
 
@@ -74,14 +74,14 @@ class _ZohoSigninScreenState extends State<ZohoSigninScreen> {
           SizedBox(height: 20),
 
           BlocProvider.value(
-            value: signinHelper.zohoSigninCubit,
+            value: zohoSigninHelper.zohoSigninCubit,
             child:
                 BlocConsumerRoundedButtonWithProgress<
                   ZohoSigninCubit,
                   ModelResponseSigninEntity
                 >(
                   buttonLabel: AppString.signIn,
-                  onTap: signinHelper.zohoSignIn,
+                  onTap: zohoSigninHelper.zohoSignIn,
                   onSuccess: (modelResponse, msg) =>
                       onSuccess(modelResponse, msg),
                   onError: (message) => showErrorSnackBar(message ?? ''),

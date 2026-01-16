@@ -7,7 +7,6 @@ import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/auth_cubit.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/request_model/model_request_signin_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_signin_entity.dart';
-import 'package:miracle_experience_mobile_app/features/waiver/wavier_list_screen.dart';
 
 import '../../core/widgets/common_progress_button.dart';
 import '../balloon_manifest/balloon_manifest_screen.dart';

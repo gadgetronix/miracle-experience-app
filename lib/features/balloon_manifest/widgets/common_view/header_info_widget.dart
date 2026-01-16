@@ -1,4 +1,4 @@
-part of 'passengers_list_widget.dart';
+part of '../../balloon_manifest_body.dart';
 
 class HeaderInfoWidget extends StatelessWidget {
   const HeaderInfoWidget({super.key, required this.label, required this.value});

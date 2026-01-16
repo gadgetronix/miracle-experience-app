@@ -34,7 +34,6 @@ class BalloonManifestHelper {
   void initializeScreenPrivacy() {
     noScreenshot.screenshotOff();
     noScreenshot.startScreenshotListening();
-    timber('No Screenshot ${noScreenshot.screenshotStream}');
   }
 
   void _initializeTimezone() {

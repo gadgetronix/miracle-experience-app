@@ -1,4 +1,4 @@
-part of '../balloon_manifest_screen.dart';
+part of '../../balloon_manifest_screen.dart';
 
 class SignatureBottomSheet {
   static Future<void> show({
@@ -44,7 +44,7 @@ class SignatureBottomSheet {
                   EasyLoading.dismiss();
                   Navigator.pop(context);
                   showErrorSnackBar(
-                    state?.message ?? 'Something went wrong. Please try again.',
+                    state?.message ?? AppString.somethingWentWrong,
                   );
                 }
               },

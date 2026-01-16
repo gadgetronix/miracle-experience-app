@@ -48,6 +48,12 @@ class AppString {
   static const submit = "Submit";
   static const signed = "Signed";
   static const edit = "Edit";
+  static const noPassengersAssigned = "No Passengers Assigned";
+  static const somethingWentWrong = "Something went wrong. Please try again.";
+  static const timeSyncRequired = "Time Sync Required";
+  static const pleaseConnectToInternetOnceToEnableOfflineAccess = 'Please connect to internet once to enable offline access.';
+  static const yourDeviceWasRestarted = 'Your device was restarted. Please connect to internet to re-sync time.';
+  static const manifestDataHasExpired = 'Manifest data has expired.';
   static const noAssignmentsAvailable =
       "There’s no manifest assigned to you right now. Please check again later - your manifest will appear here once it’s ready.";
 
