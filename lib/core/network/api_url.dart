@@ -6,7 +6,7 @@ class NetworkConstant {
   static const String authorization = "Authorization";
   static const String bearer = "Bearer ";
   static const String signin = "Account/SignIn";
-  static const String zohoSignin = "zoho-signin";
+  static const String zohoSignin = "Account/zoho-signin";
   static const String signOut = "Account/SignOut";
   static const String balloonManifest = "BalloonManifest/signed";
   static const String uploadSignature = "BalloonManifest/upload-signature";

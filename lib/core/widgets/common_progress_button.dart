@@ -20,12 +20,13 @@ class BlocConsumerRoundedButtonWithProgress<
   final Color backGroundColor;
   final TextStyle? textStyle;
   final Color borderColor;
-  final Color textColor;
-  final Color progressColor;
+  final Color? textColor;
+  final Color? progressColor;
   final double? textSize;
   final double? height;
   final double? width;
   final double? borderWidth;
+  final String? trailingImage;
 
   BlocConsumerRoundedButtonWithProgress({
     super.key,
@@ -43,9 +44,9 @@ class BlocConsumerRoundedButtonWithProgress<
     this.borderWidth = 1.0,
     this.backGroundColor = ColorConst.primaryColor,
     this.borderColor = Colors.transparent,
-    this.progressColor = Colors.white,
-    this.textColor = Colors.white,
-    this.textSize,
+    this.progressColor,
+    this.textColor,
+    this.textSize, this.trailingImage,
   }) : assert(T != dynamic);
 
   @override
@@ -99,15 +100,25 @@ class BlocConsumerRoundedButtonWithProgress<
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
-                    valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                    valueColor: AlwaysStoppedAnimation<Color>(progressColor ?? ColorConst.whiteColor),
                   ),
                 )
-              : Text(
-                  buttonLabel,
-                  style:
-                      textStyle ??
-                      fontStyleSemiBold16.apply(color: Colors.white),
-                ),
+              : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if(trailingImage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Image.asset(trailingImage ?? '', height: 20, width: 20,),
+                  ),
+                  Text(
+                      buttonLabel,
+                      style:
+                          textStyle ??
+                          fontStyleSemiBold16.apply(color: textColor ?? Colors.white),
+                    ),
+                ],
+              ),
         );
       },
     );

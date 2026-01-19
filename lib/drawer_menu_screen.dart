@@ -10,11 +10,30 @@ import 'core/widgets/show_snakbar.dart';
 import 'features/balloon_manifest/balloon_manifest_screen.dart';
 import 'features/network_helper/cubit/auth_cubit.dart';
 
-class DrawerMenuScreen extends StatelessWidget {
-  DrawerMenuScreen({super.key, required this.selectedMenu});
+part 'drawer_menu_helper.dart';
+
+class DrawerMenuScreen extends StatefulWidget {
+  const DrawerMenuScreen({super.key, required this.selectedMenu});
   final DrawerMenu selectedMenu;
 
-  final BalloonManifestHelper helper = BalloonManifestHelper();
+  @override
+  State<DrawerMenuScreen> createState() => _DrawerMenuScreenState();
+}
+
+class _DrawerMenuScreenState extends State<DrawerMenuScreen> {
+  final DrawerMenuHelper drawerMenuHelper = DrawerMenuHelper();
+
+  @override
+  void initState() {
+    drawerMenuHelper.initializeDrawerMenu();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    drawerMenuHelper.disposeDrawerMenu();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +60,9 @@ class DrawerMenuScreen extends StatelessWidget {
                       _menuItem(
                         image: ImageAsset.icBalloonManifest,
                         title: AppString.balloonManifest,
-                        selected: selectedMenu == DrawerMenu.balloonManifest,
+                        selected: widget.selectedMenu == DrawerMenu.balloonManifest,
                         onTap: () {
-                          if (selectedMenu == DrawerMenu.balloonManifest) {
+                          if (widget.selectedMenu == DrawerMenu.balloonManifest) {
                             Navigator.pop(context);
                             return;
                           }
@@ -55,9 +74,9 @@ class DrawerMenuScreen extends StatelessWidget {
                       _menuItem(
                         image: ImageAsset.icBalloonManifest,
                         title: AppString.waiver,
-                        selected: selectedMenu == DrawerMenu.waivers,
+                        selected: widget.selectedMenu == DrawerMenu.waivers,
                         onTap: () {
-                          if (selectedMenu == DrawerMenu.waivers) {
+                          if (widget.selectedMenu == DrawerMenu.waivers) {
                             Navigator.pop(context);
                             return;
                           }
@@ -126,7 +145,7 @@ class DrawerMenuScreen extends StatelessWidget {
 
   Widget _signOutButton(BuildContext context) {
     return BlocProvider.value(
-      value: helper.signOutCubit,
+      value: drawerMenuHelper.signOutCubit,
       child:
           BlocListener<SignOutCubit, APIResultState<BaseResponseModelEntity>?>(
             listener: (context, state) {
@@ -149,7 +168,7 @@ class DrawerMenuScreen extends StatelessWidget {
                 noFunction: () => Navigator.pop(context),
                 yesFunction: () {
                   Navigator.pop(context);
-                  helper.callSignOutAPI();
+                  drawerMenuHelper.callSignOutAPI();
                 },
               ),
               child: Padding(

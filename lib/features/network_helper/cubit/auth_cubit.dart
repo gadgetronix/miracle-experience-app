@@ -5,8 +5,8 @@ import '../../../core/basic_features_network.dart';
 import '../../../core/network/base_response_model_entity.dart';
 import '../repositories/auth_repository.dart';
 
-class SigninCubit extends Cubit<APIResultState<ModelResponseSigninEntity>?> {
-  SigninCubit() : super(null);
+class EmailSigninCubit extends Cubit<APIResultState<ModelResponseSigninEntity>?> {
+  EmailSigninCubit() : super(null);
 
   Future<void> callSigninAPI(
     ModelRequestSigninEntity modelRequestSigninEntity,

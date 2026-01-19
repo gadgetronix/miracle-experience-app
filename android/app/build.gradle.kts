@@ -39,6 +39,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["appAuthRedirectScheme"] =
+            "com.miracleexperience.app"
     }
 
     signingConfigs {
@@ -68,12 +70,16 @@ flavorDimensions += "track"
 productFlavors {
     create("beta") {
         dimension = "track"
-        applicationIdSuffix = ".internal"
+        applicationIdSuffix = ".beta"
         manifestPlaceholders.put("applicationLabel", "[Beta] Miracle Experience")
+        manifestPlaceholders["appAuthRedirectScheme"] =
+                "com.miracleexperience.app"
     }
     create("stable") {
         dimension = "track"
         manifestPlaceholders.put("applicationLabel", "Miracle Experience")
+        manifestPlaceholders["appAuthRedirectScheme"] =
+                "com.miracleexperience.app"
     }
 }
 

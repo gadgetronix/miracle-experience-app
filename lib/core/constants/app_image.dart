@@ -8,4 +8,5 @@ class ImageAsset {
   static const String icTickmark = "assets/images/ic_tickmark.png";
   static const String icSplash = "assets/images/splash.png";
   static const String icBalloonManifest = "assets/images/ic_balloon_manifest.png";
+  static const String icZoho = "assets/images/ic_zoho.png";
 }

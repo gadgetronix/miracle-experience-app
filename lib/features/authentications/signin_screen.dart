@@ -1,15 +1,21 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+import 'package:http/http.dart' as http;
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/core/widgets/show_snakbar.dart';
+import 'package:miracle_experience_mobile_app/features/envied/env.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/auth_cubit.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/request_model/model_request_signin_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_signin_entity.dart';
 
 import '../../core/widgets/common_progress_button.dart';
 import '../balloon_manifest/balloon_manifest_screen.dart';
+
+part 'auth_helper.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -19,24 +25,33 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  TextEditingController emailController = TextEditingController(text: kDebugMode ? 'development@gadgetronix.net': '');
-  TextEditingController passwordController = TextEditingController(text: kDebugMode ? 'Miracle@123!': '');
+  final AuthHelper signinHelper = AuthHelper();
 
-  ValueNotifier<bool> isPasswordVisible = ValueNotifier<bool>(false);
+  @override
+  void initState() {
+    signinHelper.initializeSigninScreen();
+    super.initState();
+  }
 
-  final SigninCubit signinCubit = SigninCubit();
+  @override
+  void dispose() {
+    signinHelper.disposeSigninScreen();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
-      resizeToAvoidBottomInset: isLandscape && !Const.isTablet,
+      // resizeToAvoidBottomInset: isLandscape && !Const.isTablet,
       backgroundColor: ColorConst.whiteColor,
-      appBar: CustomAppBar.blankAppbar(backgroundColor: ColorConst.whiteColor,),
-      body: (isLandscape && !Const.isTablet)
-          ? SingleChildScrollView(child: _buildContent())
-          : _buildContent(),
+      appBar: CustomAppBar.blankAppbar(backgroundColor: ColorConst.whiteColor),
+      body: 
+      // (isLandscape && !Const.isTablet)
+      //     ?
+           SingleChildScrollView(child: _buildContent())
+          // : _buildContent(),
     );
   }
 
@@ -63,27 +78,59 @@ class _SigninScreenState extends State<SigninScreen> {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 20),
-
+      
+          BlocProvider.value(
+            value: signinHelper.zohoSigninCubit,
+            child:
+                BlocConsumerRoundedButtonWithProgress<
+                  ZohoSigninCubit,
+                  ModelResponseSigninEntity
+                >(
+                  buttonLabel: AppString.signInWithZoho,
+                  trailingImage: ImageAsset.icZoho,
+                  textColor: ColorConst.textColor,
+                  onTap: signinHelper.zohoSignIn,
+                  onSuccess: (modelResponse, msg) =>
+                      signinHelper.onZohoSigninSuccess(modelResponse, msg),
+                  onError: (message) => showErrorSnackBar(message ?? ''),
+                  isEnabled: true,
+                  backGroundColor: ColorConst.whiteColor,
+                  borderColor: ColorConst.primaryColor,
+                  progressColor: ColorConst.primaryColor,
+                  onNoInternet: () {
+                    showErrorSnackBar(AppString.noInternetFound);
+                    // navigateToPage(NoInternet(onPressed: validate));
+                  },
+                ),
+          ),
+          SizedBox(height: 20),
+          Text(
+            AppString.orSignInWithEmail,
+            style: fontStyleMedium14.copyWith(color: ColorConst.textGreyColor),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 20),
+      
           CommonTextField(
             hintText: AppString.enterYourEmail,
             keyBoardType: TextInputType.emailAddress,
-            textController: emailController,
+            textController: signinHelper.emailController,
             textInputAction: TextInputAction.next,
             textCapitalization: TextCapitalization.none,
           ),
           SizedBox(height: 5),
           ValueListenableBuilder<bool>(
-            valueListenable: isPasswordVisible,
+            valueListenable: signinHelper.isPasswordVisible,
             builder: (context, visible, child) {
               return CommonTextField(
                 hintText: AppString.enterYourPassword,
                 keyBoardType: TextInputType.visiblePassword,
-                textController: passwordController,
+                textController: signinHelper.passwordController,
                 obscureText: !visible,
                 textInputAction: TextInputAction.done,
                 suffixIcon: InkWell(
                   onTap: () {
-                    isPasswordVisible.value = !isPasswordVisible.value;
+                    signinHelper.isPasswordVisible.value = !signinHelper.isPasswordVisible.value;
                   },
                   child: Icon(
                     Icons.visibility_rounded,
@@ -96,81 +143,29 @@ class _SigninScreenState extends State<SigninScreen> {
               );
             },
           ),
+      
           SizedBox(height: 15),
-
+      
           BlocProvider.value(
-            value: signinCubit,
+            value: signinHelper.emailSigninCubit,
             child:
                 BlocConsumerRoundedButtonWithProgress<
-                  SigninCubit,
+                  EmailSigninCubit,
                   ModelResponseSigninEntity
                 >(
                   buttonLabel: AppString.signIn,
-                  onTap: validate,
+                  onTap: () => signinHelper.validateEmailPasswordAndSignin(),
                   onSuccess: (modelResponse, msg) =>
-                      onSuccess(modelResponse, msg),
+                      signinHelper.onEmailSigninSuccess(modelResponse, msg),
                   onError: (message) => showErrorSnackBar(message ?? ''),
                   isEnabled: true,
                   onNoInternet: () {
                     showErrorSnackBar(AppString.noInternetFound);
-                    // navigateToPage(NoInternet(onPressed: validate));
                   },
                 ),
           ),
         ],
       ),
     );
-  }
-
-  void validate() {
-    if (emailController.text.trim().isEmpty ||
-        emailController.text.trim().isValidEmail() == false) {
-      showErrorSnackBar(AppString.pleaseEnterValidEmail);
-    } else if (passwordController.text.trim().isEmpty) {
-      showErrorSnackBar(AppString.pleaseEnterPassword);
-    } else {
-      callSigninAPI();
-    }
-  }
-
-  void callSigninAPI() {
-    FocusManager.instance.primaryFocus?.unfocus();
-    ModelRequestSigninEntity modelRequestSigninEntity =
-        ModelRequestSigninEntity()
-          ..deviceToken = Platform.isAndroid
-              ? Const.androidInfo?.id
-              : Const.iosInfo?.identifierForVendor
-          ..isSignout = false
-          ..appVersion = AppInfo.instance.packageInfo?.version ?? ''
-          ..osVersion = Platform.isAndroid
-              ? Const.androidInfo?.version.release
-              : Const.iosInfo?.systemVersion
-          ..deviceMf = Platform.isAndroid
-              ? Const.androidInfo?.manufacturer
-              : Const.iosInfo?.name
-          ..deviceModel = Platform.isAndroid
-              ? Const.androidInfo?.model
-              : Const.iosInfo?.model
-          ..uId = Platform.isAndroid
-              ? Const.androidInfo?.id
-              : Const.iosInfo?.identifierForVendor
-          ..userRole = 1
-          ..platform = Platform.isAndroid
-              ? PlatformType.android.value
-              : PlatformType.ios.value
-          ..email = emailController.text.trim()
-          ..password = passwordController.text.trim();
-    signinCubit.callSigninAPI(modelRequestSigninEntity);
-  }
-
-  Future<void> onSuccess(
-    ModelResponseSigninEntity? result,
-    String message,
-  ) async {
-    await SharedPrefUtils.setIsUserLoggedIn(true);
-    await SharedPrefUtils.setToken(result?.accessToken?.token ?? "");
-    navigateToPageAndRemoveAllPage(const BalloonManifestScreen());
-    // navigateToPageAndRemoveAllPage(const WaiverListScreen());
-    // await SharedPrefUtils.setUser(result);
   }
 }

@@ -7,7 +7,6 @@ class BalloonManifestHelper {
   BalloonManifestHelper._internal();
 
   late BalloonManifestCubit balloonManifestCubit;
-  late SignOutCubit signOutCubit;
 
   final ValueNotifier<bool> hasCachedTime = ValueNotifier(false);
   final ValueNotifier<String> cacheStatus = ValueNotifier('');
@@ -25,7 +24,6 @@ class BalloonManifestHelper {
 
   void _initializeDependencies() {
     balloonManifestCubit = BalloonManifestCubit();
-    signOutCubit = SignOutCubit();
     signatureStatus = ValueNotifier(SignatureStatus.pending);
     signatureTime = ValueNotifier('');
     noScreenshot = NoScreenshot.instance;
@@ -46,41 +44,12 @@ class BalloonManifestHelper {
 
   Future<void> dispose() async {
     balloonManifestCubit.close();
-    signOutCubit.close();
     hasCachedTime.dispose();
     cacheStatus.dispose();
     signatureStatus.dispose();
     signatureTime.dispose();
     noScreenshot.startScreenshotListening();
     await noScreenshot.screenshotOn();
-  }
-
-  // ========== Signout ==========
-
-  void callSignOutAPI() {
-    final modelRequestSigninEntity = ModelRequestSigninEntity()
-      ..deviceToken = Platform.isAndroid
-          ? Const.androidInfo?.id
-          : Const.iosInfo?.identifierForVendor
-      ..isSignout = true
-      ..appVersion = AppInfo.instance.packageInfo?.version ?? ''
-      ..osVersion = Platform.isAndroid
-          ? Const.androidInfo?.version.release
-          : Const.iosInfo?.systemVersion
-      ..deviceMf = Platform.isAndroid
-          ? Const.androidInfo?.manufacturer
-          : Const.iosInfo?.name
-      ..deviceModel = Platform.isAndroid
-          ? Const.androidInfo?.model
-          : Const.iosInfo?.model
-      ..uId = Platform.isAndroid
-          ? Const.androidInfo?.id
-          : Const.iosInfo?.identifierForVendor
-      ..userRole = 1
-      ..platform = Platform.isAndroid
-          ? PlatformType.android.value
-          : PlatformType.ios.value;
-    signOutCubit.callSignOutAPI(modelRequestSigninEntity);
   }
 
   updateSignedDateInPrefs({required String signedDateTime, String? imageName}) {

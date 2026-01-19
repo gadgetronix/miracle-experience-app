@@ -16,10 +16,12 @@ class AppString {
   static const enterYourEmail = "Enter your email";
   static const enterYourPassword = "Enter your password";
   static const signIn = "Sign In";
+  static const signInWithZoho = "Sign In with Zoho";
   static const logout = "Logout";
   static const logoutDesc = "Are you sure you want to logout?";
   static const pleaseEnterValidEmail = "Please enter a valid email address.";
   static const pleaseEnterPassword = "Please enter your password";
+  static const orSignInWithEmail = "Or sign in with email";
 
   //Balloon Manifest Screen Strings
   static const balloonManifest = "Balloon Manifest";

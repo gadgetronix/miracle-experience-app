@@ -1,7 +1,7 @@
 name: miracle_experience_mobile_app
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.0+9  
+version: 0.1.0+11  
 
 environment:
   sdk: ^3.9.2
@@ -12,6 +12,7 @@ dependencies:
   connectivity_plus: ^7.0.0
   device_info_plus: ^12.1.0
   dio: ^5.9.0
+  envied: ^1.3.2
   equatable: ^2.0.7
   firebase_core: ^4.2.0
   firebase_messaging: ^16.0.3
@@ -26,7 +27,7 @@ dependencies:
   flutter_local_notifications: ^19.5.0
   flutter_native_splash: ^2.4.7
   flutter_screenutil: ^5.9.3
-  flutter_web_auth_2: ^4.1.0
+  flutter_web_auth_2: ^5.0.0
   http: ^1.5.0
   intl: ^0.20.2
   logger: ^2.6.2
@@ -47,6 +48,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  build_runner: ^2.10.5
+  envied_generator: ^1.3.2
 
 flutter:
   uses-material-design: true
