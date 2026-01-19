@@ -16,7 +16,7 @@ class MobileHeaderWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${AppString.pilot.toUpperCase().endWithColon()} ${assignment.pilotName?.toUpperCase()}',
+          '${AppString.pilot.capitalizeByWord().endWithColon()} ${assignment.pilotName?.capitalizeByWord()}',
           style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
         ),
         const SizedBox(height: 8),

@@ -95,7 +95,7 @@ class _PassengerDetailBottomSheetState
                     child: Text(
                       editingEnabled ? AppString.save : AppString.edit,
                       style: passengerInfoMobileTextStyle.copyWith(
-                        color: ColorConst.textGreyColor,
+                        color: editingEnabled ? ColorConst.primaryColor : ColorConst.textGreyColor,
                       ),
                     ),
                   ),
