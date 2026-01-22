@@ -25,6 +25,10 @@ class AppString {
 
   //Balloon Manifest Screen Strings
   static const balloonManifest = "Balloon Manifest";
+  static const basketView = "Basket View";
+  static const connectToInternetMessage = "⚠️ Please connect to the internet to update the changes.";
+  static const viewBasket = "View Basket";
+  static const reset = "Reset";
   static const pilot = "Pilot";
   static const date = "Date";
   static const location = "Location";

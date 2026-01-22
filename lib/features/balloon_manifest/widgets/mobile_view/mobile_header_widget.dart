@@ -15,9 +15,26 @@ class MobileHeaderWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '${AppString.pilot.capitalizeByWord().endWithColon()} ${assignment.pilotName?.capitalizeByWord()}',
-          style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
+        Row(
+          children: [
+            Text(
+              '${AppString.pilot.capitalizeByWord().endWithColon()} ${assignment.pilotName?.capitalizeByWord()}',
+              style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
+            ),
+            Spacer(),
+            GestureDetector(
+              onTap: () => navigateToPage(
+                BalloonArrangeScreen(
+                  assignments: assignment,
+                  manifest: manifest,
+                ),
+              ),
+              child: Text(
+                AppString.viewBasket,
+                style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
 

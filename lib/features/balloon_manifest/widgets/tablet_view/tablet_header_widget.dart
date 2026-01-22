@@ -22,9 +22,30 @@ class TabletHeaderWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '${AppString.pilot.toUpperCase().endWithColon()} ${assignment.pilotName?.toUpperCase()}',
-                style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),
+              Row(
+                children: [
+                  Text(
+                    '${AppString.pilot.toUpperCase().endWithColon()} ${assignment.pilotName?.toUpperCase()}',
+                    style: fontStyleBold16.copyWith(
+                      color: ColorConst.whiteColor,
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  GestureDetector(
+                    onTap: () => navigateToPage(
+                      BalloonArrangeScreen(
+                        assignments: assignment,
+                        manifest: manifest,
+                      ),
+                    ),
+                    child: Text(
+                      AppString.viewBasket,
+                      style: fontStyleBold16.copyWith(
+                        color: ColorConst.whiteColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               Row(
