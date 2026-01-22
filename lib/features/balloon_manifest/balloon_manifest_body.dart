@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/balloon_manifest_screen.dart';
+import 'package:miracle_experience_mobile_app/features/balloon_manifest/pax_arrangement_screen.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 
@@ -138,27 +139,34 @@ class _BalloonManifestBodyState extends State<BalloonManifestBody> {
       child: ValueListenableBuilder<SignatureStatus>(
         valueListenable: widget.helper.signatureStatus,
         builder: (context, value, child) {
-          return Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: Const.isTablet || Const.isLandscape ? 25 : 16,
-              vertical: 15,
-            ),
-            decoration: BoxDecoration(
-              color: value == SignatureStatus.success
-                  ? ColorConst.successColor
-                  : ColorConst.primaryColor,
-            ),
-            child: Const.isTablet || Const.isLandscape
-                ? TabletHeaderWidget(
-                    status: value,
-                    manifest: widget.manifest,
-                    assignment: widget.assignment,
-                    helper: widget.helper,
-                  )
-                : MobileHeaderWidget(
-                    manifest: widget.manifest,
-                    assignment: widget.assignment,
-                  ),
+          return Column(
+            children: [
+              if(value == SignatureStatus.offlinePending) ///todo
+              Text(AppString.connectToInternetMessage, style: fontStyleRegular14.apply(color: ColorConst.primaryColor), textAlign: TextAlign.center,),
+              SizedBox(height: 8,),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Const.isTablet || Const.isLandscape ? 25 : 16,
+                  vertical: 15,
+                ),
+                decoration: BoxDecoration(
+                  color: value == SignatureStatus.success
+                      ? ColorConst.successColor
+                      : ColorConst.primaryColor,
+                ),
+                child: Const.isTablet || Const.isLandscape
+                    ? TabletHeaderWidget(
+                        status: value,
+                        manifest: widget.manifest,
+                        assignment: widget.assignment,
+                        helper: widget.helper,
+                      )
+                    : MobileHeaderWidget(
+                        manifest: widget.manifest,
+                        assignment: widget.assignment,
+                      ),
+              ),
+            ],
           );
         },
       ),

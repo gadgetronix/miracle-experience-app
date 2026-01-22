@@ -15,7 +15,7 @@ class ManifestAppBar extends StatelessWidget implements PreferredSizeWidget {
         AppString.balloonManifest,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontFamily: FontAsset.helvetica,
+          fontFamily: FontAsset.halvetica,
         ),
       ),
       elevation: 2,
