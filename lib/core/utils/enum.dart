@@ -63,6 +63,14 @@ enum DrawerMenu {
   waivers
 }
 
+enum CompartmentType {
+  topLeft,
+  topRight,
+  bottomLeft,
+  bottomRight,
+}
+
+
 
 // enum Language {
 //   english(Locale('en', 'US'), 'English'),

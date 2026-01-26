@@ -10,15 +10,13 @@ import '../../../core/basic_features_network.dart';
 class BalloonManifestRepository {
   static Future<APIResultState<ModelResponseBalloonManifestEntity>>
   callBalloonManifestAPI() async {
-    var networkResult = await APIHelper.instance.performRequestWithRetry(
-      apiMethod: () => APIHelper.instance.callGetApi(
-        NetworkConstant.balloonManifest,
-        null,
-        false,
-      ),
+    var networkResult = await APIHelper.instance.callGetApi(
+      NetworkConstant.balloonManifest,
+      null,
+      false,
     );
 
-    if(networkResult.networkResultType == NetworkResultType.error){
+    if (networkResult.networkResultType == NetworkResultType.error) {
       return FailureState(
         message: 'Something went wrong',
         result: null,
@@ -56,7 +54,7 @@ class BalloonManifestRepository {
       ),
     );
 
-    if(networkResult.networkResultType == NetworkResultType.error){
+    if (networkResult.networkResultType == NetworkResultType.error) {
       return FailureState(
         message: 'Something went wrong',
         result: null,
@@ -70,25 +68,19 @@ class BalloonManifestRepository {
     return apiResultFromNetwork;
   }
 
-
-  static Future<APIResultState<BaseResponseModelEntity>>
-  callPaxNameUpdateAPI({
+  static Future<APIResultState<BaseResponseModelEntity>> callPaxNameUpdateAPI({
     required int id,
     required String name,
   }) async {
-
     var networkResult = await APIHelper.instance.performRequestWithRetry(
       apiMethod: () => APIHelper.instance.callPostApi(
         NetworkConstant.updateName,
-        {
-          "id": id,
-          "name": name,
-        },
+        {"id": id, "name": name},
         false,
       ),
     );
 
-    if(networkResult.networkResultType == NetworkResultType.error){
+    if (networkResult.networkResultType == NetworkResultType.error) {
       return FailureState(
         message: 'Something went wrong',
         result: null,

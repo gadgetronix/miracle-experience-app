@@ -271,6 +271,10 @@ ModelResponseBalloonManifestAssignmentsPaxes $ModelResponseBalloonManifestAssign
   if (bookingBy != null) {
     modelResponseBalloonManifestAssignmentsPaxes.bookingBy = bookingBy;
   }
+  final String? bookingCode = jsonConvert.convert<String>(json['bookingCode']);
+  if (bookingCode != null) {
+    modelResponseBalloonManifestAssignmentsPaxes.bookingCode = bookingCode;
+  }
   final String? location = jsonConvert.convert<String>(json['location']);
   if (location != null) {
     modelResponseBalloonManifestAssignmentsPaxes.location = location;
@@ -304,6 +308,7 @@ Map<String, dynamic> $ModelResponseBalloonManifestAssignmentsPaxesToJson(
   data['specialRequest'] = entity.specialRequest;
   data['permitNumber'] = entity.permitNumber;
   data['bookingBy'] = entity.bookingBy;
+  data['bookingCode'] = entity.bookingCode;
   data['location'] = entity.location;
   data['driverName'] = entity.driverName;
   data['medicalCondition'] = entity.medicalCondition;
@@ -325,6 +330,7 @@ extension ModelResponseBalloonManifestAssignmentsPaxesExtension on ModelResponse
     String? specialRequest,
     String? permitNumber,
     String? bookingBy,
+    String? bookingCode,
     String? location,
     String? driverName,
     String? medicalCondition,
@@ -343,6 +349,7 @@ extension ModelResponseBalloonManifestAssignmentsPaxesExtension on ModelResponse
       ..specialRequest = specialRequest ?? this.specialRequest
       ..permitNumber = permitNumber ?? this.permitNumber
       ..bookingBy = bookingBy ?? this.bookingBy
+      ..bookingCode = bookingCode ?? this.bookingCode
       ..location = location ?? this.location
       ..driverName = driverName ?? this.driverName
       ..medicalCondition = medicalCondition ?? this.medicalCondition;

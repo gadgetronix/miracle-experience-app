@@ -23,12 +23,8 @@ class MobileHeaderWidget extends StatelessWidget {
             ),
             Spacer(),
             GestureDetector(
-              onTap: () => navigateToPage(
-                BalloonArrangeScreen(
-                  assignments: assignment,
-                  manifest: manifest,
-                ),
-              ),
+              onTap: () =>
+                  navigateToPage(PaxArrangementScreen(assignments: assignment)),
               child: Text(
                 AppString.viewBasket,
                 style: fontStyleBold16.copyWith(color: ColorConst.whiteColor),

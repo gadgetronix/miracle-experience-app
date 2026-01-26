@@ -33,10 +33,7 @@ class TabletHeaderWidget extends StatelessWidget {
                   SizedBox(width: 20),
                   GestureDetector(
                     onTap: () => navigateToPage(
-                      BalloonArrangeScreen(
-                        assignments: assignment,
-                        manifest: manifest,
-                      ),
+                      PaxArrangementScreen(assignments: assignment),
                     ),
                     child: Text(
                       AppString.viewBasket,

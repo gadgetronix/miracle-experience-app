@@ -83,6 +83,7 @@ class ModelResponseBalloonManifestAssignmentsPaxes {
 	String? specialRequest;
 	String? permitNumber;
 	String? bookingBy;
+	String? bookingCode;
 	String? location;
 	String? driverName;
 	String? medicalCondition;

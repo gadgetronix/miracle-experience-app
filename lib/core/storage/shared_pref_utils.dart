@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:miracle_experience_mobile_app/features/network_helper/models/helper_models/offline_pax_arrangement_model.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 import '../basic_features.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -98,6 +99,29 @@ class SharedPrefUtils {
     var prefs = await _instance;
     return prefs.setString("BalloonManifest", value);
   }
+
+  static Future<bool> setBalloonPassengerArrangement({required String key, required String value}) async {
+    var prefs = await _instance;
+    return prefs.setString(key, value);
+  }
+  
+  static OfflinePaxArrangementModel? getBalloonPassengerArrangement({required String key}) {
+    String? stringModel = _prefsInstance?.getString(key);
+    if (stringModel == null || stringModel.isEmpty) return null;
+    try{
+    OfflinePaxArrangementModel? offlinePaxArrangementModel =
+         OfflinePaxArrangementModel.fromJson(jsonDecode(stringModel));
+    return offlinePaxArrangementModel;}
+    catch(e) {
+      timber("exception${e.toString()}");
+      return null;
+    }
+  }
+  
+  static void removeBalloonPassengerArrangement({required String key}) {
+    _prefsInstance?.remove(key);
+  }
+
 
   static List<String>? getPendingSignatures() {
     List<String>? stringList = _prefsInstance?.getStringList(

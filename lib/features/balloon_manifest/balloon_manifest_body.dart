@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/balloon_manifest_screen.dart';
-import 'package:miracle_experience_mobile_app/features/balloon_manifest/pax_arrangement_screen.dart';
+import 'package:miracle_experience_mobile_app/features/balloon_manifest/pax_arrangement/pax_arrangement_screen.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 

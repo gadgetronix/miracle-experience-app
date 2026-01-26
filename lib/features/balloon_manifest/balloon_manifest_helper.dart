@@ -203,6 +203,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Window side view"
             ..permitNumber = "12345688"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "AAAA-1111"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "None",
@@ -219,6 +220,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "AAAA-1111"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -235,6 +237,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "ZNMX-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -251,6 +254,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "ZNMX-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -267,6 +271,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "ZNMX-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -283,6 +288,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "ZNMX-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -299,6 +305,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "ABCD-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -315,6 +322,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Window side view"
             ..permitNumber = "12345688"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "ABCD-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "None",
@@ -331,6 +339,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "ABCD-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -347,6 +356,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "ABCD-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -363,6 +373,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "WXYZ-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -379,6 +390,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "WXYZ-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -395,6 +407,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "WXYZ-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",
@@ -411,6 +424,7 @@ class BalloonManifestHelper {
             ..specialRequest = "Birthday surprise"
             ..permitNumber = "98887654"
             ..bookingBy = "SafariWorld Tours"
+            ..bookingCode = "WXYZ-220126"
             ..location = "Serengeti North"
             ..driverName = "James Peter"
             ..medicalCondition = "Asthma",

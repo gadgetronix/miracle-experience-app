@@ -83,7 +83,7 @@ class _BalloonManifestScreenState extends State<BalloonManifestScreen>
       return _buildLoadingState();
     }
 
-    if (state?.resultType == APIResultType.noInternet) {
+    if (state?.resultType == APIResultType.noInternet || state?.resultType == APIResultType.timeOut) {
       return _handleOfflineState();
     }
 
