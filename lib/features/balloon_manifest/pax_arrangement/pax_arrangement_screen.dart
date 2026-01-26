@@ -40,7 +40,7 @@ class _PaxArrangementScreenState extends State<PaxArrangementScreen> {
   }
 
   double _compartmentHeight(int passengerCount) {
-    const tileHeight = 48.0;
+    const tileHeight = 45.0;
     const spacing = 4.0;
     const padding = 14.0;
     return padding + (passengerCount * (tileHeight + spacing));

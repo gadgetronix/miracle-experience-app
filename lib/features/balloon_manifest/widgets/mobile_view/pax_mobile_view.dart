@@ -1,7 +1,11 @@
 part of '../../balloon_manifest_body.dart';
 
 class PaxMobileView extends StatefulWidget {
-  const PaxMobileView({super.key, required this.passengers, required this.assignment});
+  const PaxMobileView({
+    super.key,
+    required this.passengers,
+    required this.assignment,
+  });
 
   final List<ModelResponseBalloonManifestAssignmentsPaxes> passengers;
   final ModelResponseBalloonManifestAssignments assignment;
@@ -66,29 +70,13 @@ class _PaxMobileViewState extends State<PaxMobileView> {
                 ],
               ),
               SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      "${AppString.driver.endWithColon()} ${passenger.driverName ?? ''}",
-                      style: passengerInfoMobileTextStyle.copyWith(
-                        color: ColorConst.textGreyColor,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Flexible(
-                    child: Text(
-                      "${AppString.pickup.endWithColon()} ${passenger.location?.capitalizeByWord() ?? ''}",
-                      style: passengerInfoMobileTextStyle.copyWith(
-                        color: ColorConst.textGreyColor,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+              Text(
+                '${passenger.bookingCode}, ${passenger.gender}, ${passenger.age}, ${AppString.driver.endWithColon()} ${passenger.driverName?.capitalizeByWord()}, ${passenger.location?.capitalizeByWord()}',
+                style: passengerInfoMobileTextStyle.copyWith(
+                  color: ColorConst.textGreyColor,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

@@ -58,7 +58,7 @@ class PassengerTile extends StatelessWidget {
                   isAssigned
                       ? "${passenger.bookingCode ?? ''}, ${passenger.gender ?? ''} ${passenger.age ?? ''}, ${passenger.weight ?? ''} kg"
                       : "${passenger.bookingCode ?? ''}, ${passenger.gender ?? ''} ${passenger.age ?? ''}, ${passenger.weight ?? ''} kg, ${passenger.permitNumber ?? ''}",
-                  style: fontStyleRegular12,
+                  style: fontStyleRegular10,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

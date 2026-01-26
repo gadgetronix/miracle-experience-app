@@ -71,18 +71,18 @@ class _DrawerMenuScreenState extends State<DrawerMenuScreen> {
                           );
                         },
                       ),
-                      _menuItem(
-                        image: ImageAsset.icBalloonManifest,
-                        title: AppString.waiver,
-                        selected: widget.selectedMenu == DrawerMenu.waivers,
-                        onTap: () {
-                          if (widget.selectedMenu == DrawerMenu.waivers) {
-                            Navigator.pop(context);
-                            return;
-                          }
-                          navigateToPageAndRemoveAllPage(WaiverListScreen());
-                        },
-                      ),
+                      // _menuItem(
+                      //   image: ImageAsset.icBalloonManifest,
+                      //   title: AppString.waiver,
+                      //   selected: widget.selectedMenu == DrawerMenu.waivers,
+                      //   onTap: () {
+                      //     if (widget.selectedMenu == DrawerMenu.waivers) {
+                      //       Navigator.pop(context);
+                      //       return;
+                      //     }
+                      //     navigateToPageAndRemoveAllPage(WaiverListScreen());
+                      //   },
+                      // ),
                     ],
                   ),
                 ),
