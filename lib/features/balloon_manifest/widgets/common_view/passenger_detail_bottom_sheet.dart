@@ -5,7 +5,7 @@ class PassengerDetailBottomSheet extends StatefulWidget {
   final Function(String editedName) onNameUpdated;
   final int assignmentId;
 
-  const  PassengerDetailBottomSheet({
+  const PassengerDetailBottomSheet({
     super.key,
     required this.passenger,
     required this.onNameUpdated,
@@ -52,10 +52,11 @@ class _PassengerDetailBottomSheetState
             .firstWhere((pax) => pax.id == widget.passenger.id)
             .editedName =
         editedName;
-          SharedPrefUtils.setBalloonManifest(cacheData.toString());
+    SharedPrefUtils.setBalloonManifest(cacheData.toString());
     updatePaxNameCubit.callPaxNameUpdateAPI(
       id: widget.passenger.id!,
-      name: editedName, 
+      name: editedName,
+      context: context,
     );
     widget.onNameUpdated(editedName);
     Navigator.pop(context);
@@ -95,7 +96,9 @@ class _PassengerDetailBottomSheetState
                     child: Text(
                       editingEnabled ? AppString.save : AppString.edit,
                       style: passengerInfoMobileTextStyle.copyWith(
-                        color: editingEnabled ? ColorConst.primaryColor : ColorConst.textGreyColor,
+                        color: editingEnabled
+                            ? ColorConst.primaryColor
+                            : ColorConst.textGreyColor,
                       ),
                     ),
                   ),
@@ -109,42 +112,47 @@ class _PassengerDetailBottomSheetState
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-            Divider(height: 20, color: Colors.grey.shade300),
-                _buildDetailRow(AppString.driver, widget.passenger.driverName ?? '-'),
-              _buildDetailRow(
-                AppString.nationality,
-                widget.passenger.country ?? '-',
-              ),
-              _buildDetailRow(AppString.mf, widget.passenger.gender ?? '-'),
-              _buildDetailRow(
-                AppString.tourOperator,
-                widget.passenger.bookingBy?.capitalizeByWord() ?? '-',
-              ),
-              _buildDetailRow(
-                AppString.permit,
-                widget.passenger.permitNumber ?? '-',
-              ),
-              _buildDetailRow(
-                AppString.pickupLocation,
-                widget.passenger.location?.capitalizeByWord() ?? '-',
-              ),
-              _buildDetailRow(
-                AppString.kg,
-                widget.passenger.weight != null
-                    ? '${widget.passenger.weight!.toStringAsFixed(0)} KG'
-                    : '-',
-              ),
-              if (widget.passenger.specialRequest.isNotNullAndEmpty()) ...[
-                _buildDetailRow(
-                  AppString.specialRequest,
-                  widget.passenger.specialRequest ?? '-',
-                ),  
-              ],
-                      ],
+                  Divider(height: 20, color: Colors.grey.shade300),
+                  _buildDetailRow(
+                    AppString.driver,
+                    widget.passenger.driverName ?? '-',
+                  ),
+                  _buildDetailRow(
+                    AppString.nationality,
+                    widget.passenger.country ?? '-',
+                  ),
+                  _buildDetailRow(AppString.mf, widget.passenger.gender ?? '-'),
+                  _buildDetailRow(
+                    AppString.tourOperator,
+                    widget.passenger.bookingBy?.capitalizeByWord() ?? '-',
+                  ),
+                  _buildDetailRow(
+                    AppString.permit,
+                    widget.passenger.permitNumber ?? '-',
+                  ),
+                  _buildDetailRow(
+                    AppString.pickupLocation,
+                    widget.passenger.location?.capitalizeByWord() ?? '-',
+                  ),
+                  _buildDetailRow(
+                    AppString.kg,
+                    widget.passenger.weight != null
+                        ? '${widget.passenger.weight!.toStringAsFixed(0)} KG'
+                        : '-',
+                  ),
+                  if (widget.passenger.specialRequest.isNotNullAndEmpty()) ...[
+                    _buildDetailRow(
+                      AppString.specialRequest,
+                      widget.passenger.specialRequest ?? '-',
                     ),
+                  ],
+                ],
+              ),
             ),
-          ),]
-    ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildDetailRow(String label, String value) {

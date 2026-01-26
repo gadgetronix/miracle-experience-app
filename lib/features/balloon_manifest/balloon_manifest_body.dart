@@ -122,7 +122,7 @@ class _BalloonManifestBodyState extends State<BalloonManifestBody> {
   }
 
   Widget _buildHeader() {
-    return BlocListener<OfflineSyncCubit, OfflineSyncState>(
+    return BlocConsumer<OfflineSyncCubit, OfflineSyncState>(
       listener: (context, state) {
         if (state == OfflineSyncState.completed) {
           widget.helper.signatureStatus.value = SignatureStatus.success;
@@ -136,40 +136,46 @@ class _BalloonManifestBodyState extends State<BalloonManifestBody> {
           }
         }
       },
-      child: ValueListenableBuilder<SignatureStatus>(
-        valueListenable: widget.helper.signatureStatus,
-        builder: (context, value, child) {
-          return Column(
-            children: [
-              if(value == SignatureStatus.offlinePending) ///todo
-              Text(AppString.connectToInternetMessage, style: fontStyleRegular14.apply(color: ColorConst.primaryColor), textAlign: TextAlign.center,),
-              SizedBox(height: 8,),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Const.isTablet || Const.isLandscape ? 25 : 16,
-                  vertical: 15,
-                ),
-                decoration: BoxDecoration(
-                  color: value == SignatureStatus.success
-                      ? ColorConst.successColor
-                      : ColorConst.primaryColor,
-                ),
-                child: Const.isTablet || Const.isLandscape
-                    ? TabletHeaderWidget(
-                        status: value,
-                        manifest: widget.manifest,
-                        assignment: widget.assignment,
-                        helper: widget.helper,
-                      )
-                    : MobileHeaderWidget(
-                        manifest: widget.manifest,
-                        assignment: widget.assignment,
-                      ),
-              ),
-            ],
+        builder: (context, syncState) {
+        final showOfflineMessage =
+            syncState == OfflineSyncState.pending ||
+            syncState == OfflineSyncState.syncing;
+
+          return ValueListenableBuilder<SignatureStatus>(
+            valueListenable: widget.helper.signatureStatus,
+            builder: (context, value, child) {
+              return Column(
+                children: [
+                  if(showOfflineMessage) ///todo
+                  Text(AppString.connectToInternetMessage, style: fontStyleRegular14.apply(color: ColorConst.primaryColor), textAlign: TextAlign.center,),
+                  SizedBox(height: 8,),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Const.isTablet || Const.isLandscape ? 25 : 16,
+                      vertical: 15,
+                    ),
+                    decoration: BoxDecoration(
+                      color: value == SignatureStatus.success
+                          ? ColorConst.successColor
+                          : ColorConst.primaryColor,
+                    ),
+                    child: Const.isTablet || Const.isLandscape
+                        ? TabletHeaderWidget(
+                            status: value,
+                            manifest: widget.manifest,
+                            assignment: widget.assignment,
+                            helper: widget.helper,
+                          )
+                        : MobileHeaderWidget(
+                            manifest: widget.manifest,
+                            assignment: widget.assignment,
+                          ),
+                  ),
+                ],
+              );
+            },
           );
-        },
-      ),
-    );
+        }
+      );
   }
 }

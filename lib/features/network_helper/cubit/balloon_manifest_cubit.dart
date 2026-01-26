@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/core/network/base_response_model_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
@@ -66,6 +68,7 @@ class UpdatePaxNameCubit
   Future<void> callPaxNameUpdateAPI({
     required int id,
     required String name,
+    required BuildContext context,
   }) async {
     emit(const LoadingState());
 
@@ -79,48 +82,50 @@ class UpdatePaxNameCubit
 
     if (result.resultType == APIResultType.noInternet) {
       // 🔥 Store this request locally for retry
-      await SharedPrefUtils.setPendingManifestPaxNames (
-        data: {
-          "id": id,
-          "name": name,
-        },
+      await SharedPrefUtils.setPendingManifestPaxNames(
+        data: {"id": id, "name": name},
         isList: false,
       );
+      context.read<OfflineSyncCubit>().notifyPendingWorkAdded();
     }
     emit(apiResultFromNetwork);
   }
 }
 
 class OfflineSyncCubit extends Cubit<OfflineSyncState> {
+  StreamSubscription? _connectivitySub;
+
   OfflineSyncCubit() : super(OfflineSyncState.idle) {
-    _startSyncProcess(); // run at app start
+    _startSyncProcess();
   }
 
-  /// Initialize both: immediate retry + listen for internet restoration
   Future<void> _startSyncProcess() async {
-    //Try immediately on app start (in case pending uploads exist)
-    await _retryPendingSignatures();
-    await _retryPendingNameUpdates();
+    // Try immediately on app start
+    await _syncAllPending();
 
-    //Listen for internet restoration
-    Connectivity().onConnectivityChanged.listen((results) async {
-      timber("Connectivity changed: $results");
-
+    // Listen for internet restoration
+    _connectivitySub = Connectivity().onConnectivityChanged.listen((
+      results,
+    ) async {
       final hasConnection =
           results.isNotEmpty && !results.contains(ConnectivityResult.none);
 
       if (hasConnection) {
-        timber("Internet restored, retrying pending signatures...");
-        await _retryPendingSignatures();
-        await _retryPendingNameUpdates();
+        await _syncAllPending();
       }
     });
   }
 
-  /// Reads pending signatures from local storage and uploads them
-  Future<void> _retryPendingSignatures() async {
+  Future<void> _syncAllPending() async {
     emit(OfflineSyncState.syncing);
 
+    await _retryPendingSignatures();
+    await _retryPendingNameUpdates();
+
+    _emitPendingOrIdle();
+  }
+
+  Future<void> _retryPendingSignatures() async {
     final pendingList = SharedPrefUtils.getPendingSignatures() ?? [];
 
     if (pendingList.isEmpty) return;
@@ -134,43 +139,38 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
 
         final signedDate = data['SignedDate'];
 
-        final apiResultFromNetwork =
+        final apiResult =
             await BalloonManifestRepository.callUploadSignatureAPI(
               assignmentId: data['assignmentId'],
-              signedDate: data['SignedDate'],
+              signedDate: signedDate,
               signatureFile: file,
             );
 
-        if (apiResultFromNetwork.resultType == APIResultType.success) {
-          final ModelResponseBalloonManifestEntity? cacheData =
-              SharedPrefUtils.getBalloonManifest();
+        if (apiResult.resultType == APIResultType.success) {
+          final cacheData = SharedPrefUtils.getBalloonManifest();
           if (cacheData != null && cacheData.assignments.isNotNullAndEmpty) {
             cacheData.assignments!.first.signature =
                 ModelResponseBalloonManifestSignature()
                   ..date = signedDate
                   ..imageName = 'success.png';
-          }
-          SharedPrefUtils.setBalloonManifest(cacheData.toString());
 
-          // Remove successfully uploaded entry
-          emit(OfflineSyncState.completed);
+            SharedPrefUtils.setBalloonManifest(cacheData.toString());
+          }
+
           pendingList.remove(item);
         }
-      } catch (e) {
-        // ignore individual failures, continue
+      } catch (_) {
+        // ignore and continue
       }
     }
 
-    // Save back remaining failed ones
     await SharedPrefUtils.setPendingSignatures(
       pendingSignatureList: pendingList,
       isList: true,
     );
   }
-  
-  Future<void> _retryPendingNameUpdates() async {
-    emit(OfflineSyncState.syncing);
 
+  Future<void> _retryPendingNameUpdates() async {
     final pendingNameList = SharedPrefUtils.getPendingManifestPaxNames() ?? [];
 
     if (pendingNameList.isEmpty) return;
@@ -179,28 +179,47 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
       try {
         final data = jsonDecode(item);
 
-        final id = data['id'];
-        final name = data['name'];
+        final apiResult = await BalloonManifestRepository.callPaxNameUpdateAPI(
+          id: data['id'],
+          name: data['name'],
+        );
 
-        final apiResultFromNetwork =
-            await BalloonManifestRepository.callPaxNameUpdateAPI(
-              id: id,
-              name: name,
-            );
-
-        if (apiResultFromNetwork.resultType == APIResultType.success) {
-          // Remove successfully uploaded entry
+        if (apiResult.resultType == APIResultType.success) {
           pendingNameList.remove(item);
         }
-      } catch (e) {
-        // ignore individual failures, continue
+      } catch (_) {
+        // ignore and continue
       }
     }
 
-    // Save back remaining failed ones
     await SharedPrefUtils.setPendingManifestPaxNames(
       pendingPaxNameUpdate: pendingNameList,
       isList: true,
     );
+  }
+
+  void notifyPendingWorkAdded() {
+    emit(OfflineSyncState.pending);
+  }
+
+  void _emitPendingOrIdle() {
+    final hasPendingSignatures =
+        (SharedPrefUtils.getPendingSignatures() ?? []).isNotEmpty;
+
+    final hasPendingNames =
+        (SharedPrefUtils.getPendingManifestPaxNames() ?? []).isNotEmpty;
+
+    if (hasPendingSignatures || hasPendingNames) {
+      emit(OfflineSyncState.pending);
+    } else {
+      emit(OfflineSyncState.completed);
+      emit(OfflineSyncState.idle); // settles UI
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _connectivitySub?.cancel();
+    return super.close();
   }
 }

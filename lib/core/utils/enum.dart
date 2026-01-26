@@ -52,7 +52,7 @@ enum SignatureStatus {
   offlinePending, // Failed (no internet)
 }
 
-enum OfflineSyncState { idle, syncing, completed }
+enum OfflineSyncState { idle, pending, syncing, completed }
 
 
 enum LandscapeSide { left, right, none }
