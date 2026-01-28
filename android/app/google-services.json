@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "826667355240",
+    "project_id": "miracleexperience-481107",
+    "storage_bucket": "miracleexperience-481107.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826667355240:android:538b226e41c34bf022bfdd",
+        "android_client_info": {
+          "package_name": "com.miracleexperience.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826667355240-r9p7utf9a9ads67obpg3ug37347qqmcp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTYWP01U7buypFIChSMN523QKNAjM2694"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826667355240-r9p7utf9a9ads67obpg3ug37347qqmcp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

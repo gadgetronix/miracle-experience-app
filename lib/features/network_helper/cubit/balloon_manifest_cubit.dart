@@ -5,11 +5,13 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:miracle_experience_mobile_app/core/basic_features.dart';
+import 'package:miracle_experience_mobile_app/core/firebase/notification_manager.dart';
 import 'package:miracle_experience_mobile_app/core/network/base_response_model_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/repositories/balloon_manifest_repository.dart';
 
 import '../../../core/basic_features_network.dart';
+import '../models/helper_models/offline_sync_response_model.dart';
 
 class BalloonManifestCubit
     extends Cubit<APIResultState<ModelResponseBalloonManifestEntity>?> {
@@ -92,10 +94,10 @@ class UpdatePaxNameCubit
   }
 }
 
-class OfflineSyncCubit extends Cubit<OfflineSyncState> {
+class OfflineSyncCubit extends Cubit<OfflineSyncResponseModel> {
   StreamSubscription? _connectivitySub;
 
-  OfflineSyncCubit() : super(OfflineSyncState.idle) {
+  OfflineSyncCubit() : super(OfflineSyncResponseModel(offlineSyncState: OfflineSyncState.idle)) {
     _startSyncProcess();
   }
 
@@ -111,24 +113,25 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
           results.isNotEmpty && !results.contains(ConnectivityResult.none);
 
       if (hasConnection) {
+        await NotificationManager.instance.fetchFcmTokenIfNeeded();
         await _syncAllPending();
       }
     });
   }
 
   Future<void> _syncAllPending() async {
-    emit(OfflineSyncState.syncing);
+    emit(OfflineSyncResponseModel(offlineSyncState: OfflineSyncState.syncing));
 
-    await _retryPendingSignatures();
+    final calledSignAPI = await _retryPendingSignatures(); //returns wether there was sign in offline data and wether it is uploaded or not
     await _retryPendingNameUpdates();
 
-    _emitPendingOrIdle();
+    _emitPendingOrIdle(isSignAPICalled: calledSignAPI);
   }
 
-  Future<void> _retryPendingSignatures() async {
+  Future<bool> _retryPendingSignatures() async {
     final pendingList = SharedPrefUtils.getPendingSignatures() ?? [];
 
-    if (pendingList.isEmpty) return;
+    if (pendingList.isEmpty) return false;
 
     for (final item in List<String>.from(pendingList)) {
       try {
@@ -160,7 +163,7 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
           pendingList.remove(item);
         }
       } catch (_) {
-        // ignore and continue
+        return false;
       }
     }
 
@@ -168,6 +171,8 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
       pendingSignatureList: pendingList,
       isList: true,
     );
+
+    return pendingList.isNotNullAndEmpty ? false : true;
   }
 
   Future<void> _retryPendingNameUpdates() async {
@@ -199,23 +204,37 @@ class OfflineSyncCubit extends Cubit<OfflineSyncState> {
   }
 
   void notifyPendingWorkAdded() {
-    emit(OfflineSyncState.pending);
+    _startIdleReminderIfNeeded();
+    emit(OfflineSyncResponseModel(offlineSyncState: OfflineSyncState.pending));
   }
 
-  void _emitPendingOrIdle() {
+  void _emitPendingOrIdle({required bool isSignAPICalled}) {
     final hasPendingSignatures =
         (SharedPrefUtils.getPendingSignatures() ?? []).isNotEmpty;
 
     final hasPendingNames =
         (SharedPrefUtils.getPendingManifestPaxNames() ?? []).isNotEmpty;
 
-    if (hasPendingSignatures || hasPendingNames) {
-      emit(OfflineSyncState.pending);
+    final hasPending = hasPendingSignatures || hasPendingNames;
+
+    if (hasPending) {
+      emit(OfflineSyncResponseModel(offlineSyncState: OfflineSyncState.pending, signatureStatus: hasPendingSignatures ? SignatureStatus.pending : null,));
+      _startIdleReminderIfNeeded();
     } else {
-      emit(OfflineSyncState.completed);
-      emit(OfflineSyncState.idle); // settles UI
+      _stopIdleReminder();
+      emit(OfflineSyncResponseModel(offlineSyncState: OfflineSyncState.completed, signatureStatus: isSignAPICalled ? SignatureStatus.success : null,));
+      emit(OfflineSyncResponseModel(offlineSyncState: OfflineSyncState.idle, signatureStatus: isSignAPICalled ? SignatureStatus.success : null,));
     }
   }
+
+  void _startIdleReminderIfNeeded() {
+  // NotificationManager.instance.scheduleOfflineReminder();
+}
+
+void _stopIdleReminder() {
+  // NotificationManager.instance.cancelOfflineReminder();
+}
+
 
   @override
   Future<void> close() {

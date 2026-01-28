@@ -43,6 +43,8 @@ PODS:
     - Flutter
   - flutter_native_splash (2.4.3):
     - Flutter
+  - flutter_web_auth_2 (5.0.0):
+    - Flutter
   - GoogleDataTransport (10.1.0):
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
@@ -108,6 +110,7 @@ DEPENDENCIES:
   - flutter_kronos_plus (from `.symlinks/plugins/flutter_kronos_plus/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
+  - flutter_web_auth_2 (from `.symlinks/plugins/flutter_web_auth_2/ios`)
   - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
   - no_screenshot (from `.symlinks/plugins/no_screenshot/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -148,6 +151,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_native_splash:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
+  flutter_web_auth_2:
+    :path: ".symlinks/plugins/flutter_web_auth_2/ios"
   native_device_orientation:
     :path: ".symlinks/plugins/native_device_orientation/ios"
   no_screenshot:
@@ -179,6 +184,7 @@ SPEC CHECKSUMS:
   flutter_kronos_plus: e147a938842feae5252df6ee5e3976c711913fbe
   flutter_local_notifications: a5a732f069baa862e728d839dd2ebb904737effb
   flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
+  flutter_web_auth_2: 646fc9df97a01c59e5eea99b237da2c6360f8439
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   Kronos: dfa27819541f9f1bf6834d5bfefa792f499001bb

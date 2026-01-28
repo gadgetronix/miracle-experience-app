@@ -3,6 +3,7 @@ import 'package:miracle_experience_mobile_app/core/basic_features.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/balloon_manifest_screen.dart';
 import 'package:miracle_experience_mobile_app/features/balloon_manifest/pax_arrangement/pax_arrangement_screen.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/cubit/balloon_manifest_cubit.dart';
+import 'package:miracle_experience_mobile_app/features/network_helper/models/helper_models/offline_sync_response_model.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 
 part 'widgets/mobile_view/mobile_header_widget.dart';
@@ -122,9 +123,9 @@ class _BalloonManifestBodyState extends State<BalloonManifestBody> {
   }
 
   Widget _buildHeader() {
-    return BlocConsumer<OfflineSyncCubit, OfflineSyncState>(
+    return BlocConsumer<OfflineSyncCubit, OfflineSyncResponseModel>(
       listener: (context, state) {
-        if (state == OfflineSyncState.completed) {
+        if (state.signatureStatus == SignatureStatus.success) {
           widget.helper.signatureStatus.value = SignatureStatus.success;
           final cacheData = SharedPrefUtils.getBalloonManifest();
           if (cacheData != null &&
@@ -138,8 +139,8 @@ class _BalloonManifestBodyState extends State<BalloonManifestBody> {
       },
         builder: (context, syncState) {
         final showOfflineMessage =
-            syncState == OfflineSyncState.pending ||
-            syncState == OfflineSyncState.syncing;
+            syncState.offlineSyncState == OfflineSyncState.pending ||
+            syncState.offlineSyncState == OfflineSyncState.syncing;
 
           return ValueListenableBuilder<SignatureStatus>(
             valueListenable: widget.helper.signatureStatus,

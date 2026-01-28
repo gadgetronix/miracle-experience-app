@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/helper_models/offline_pax_arrangement_model.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
 import '../basic_features.dart';
@@ -15,13 +14,6 @@ class SharedPrefUtils {
   static Future<SharedPreferences> init() async {
     _prefsInstance = await _instance;
     return _prefsInstance!;
-  }
-
-  static generateFcmTokens() async {
-    await FirebaseMessaging.instance.getToken().then((token) async {
-      await SharedPrefUtils.setFcmToken(token!);
-      logger.w("Firebase token ~~~~~~~> $token");
-    });
   }
 
   static String getVersionCode() {
@@ -42,8 +34,8 @@ class SharedPrefUtils {
     return prefs.setBool("IsUserLoggedIn", value);
   }
 
-  static String getFcmToken() {
-    return _prefsInstance?.getString("FcmToken") ?? "";
+  static String? getFcmToken() {
+    return _prefsInstance?.getString("FcmToken");
   }
 
   static Future<bool> setFcmToken(String value) async {

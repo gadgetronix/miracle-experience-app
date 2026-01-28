@@ -1,5 +1,7 @@
 import Flutter
 import UIKit
+import Firebase
+
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -7,6 +9,10 @@ import UIKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+
+    FirebaseApp.configure()
+
+    UNUserNotificationCenter.current().delegate = self
 
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
     let uptimeChannel = FlutterMethodChannel(name: "com.miracleexperience.app/system_uptime",
