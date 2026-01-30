@@ -105,7 +105,10 @@ class _DrawerMenuScreenState extends State<DrawerMenuScreen> {
             ImageAsset.icMenuWhiteLogo,
             width: Dimensions.screenWidth() * 0.5,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
+          Text(SharedPrefUtils.getUser()?.name ?? '', style: fontStyleMedium18.apply(color: ColorConst.whiteColor),),
+          const SizedBox(height: 16),
+
         ],
       ),
     );

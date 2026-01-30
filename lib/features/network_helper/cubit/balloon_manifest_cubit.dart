@@ -36,6 +36,7 @@ class UploadSignatureCubit
     required int assignmentId,
     required String signedDate,
     required File signatureFile,
+    required BuildContext context,
   }) async {
     emit(const LoadingState());
 
@@ -58,6 +59,7 @@ class UploadSignatureCubit
         },
         isList: false,
       );
+      context.read<OfflineSyncCubit>().notifyPendingWorkAdded();
     }
     emit(apiResultFromNetwork);
   }

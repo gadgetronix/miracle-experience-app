@@ -35,7 +35,7 @@ class AppString {
   static const balloon = "Balloon";
   static const table = "Table";
   static const passengers = "Passengers";
-  static const sign = "Sign";
+  static const sign = "Sign the Manifest";
   static const driverName = "Driver Name";
   static const driver = "Driver";
   static const fullName = "Full Name";

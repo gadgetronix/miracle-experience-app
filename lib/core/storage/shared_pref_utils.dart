@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:miracle_experience_mobile_app/features/network_helper/models/helper_models/offline_pax_arrangement_model.dart';
 import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_balloon_manifest_entity.dart';
+import 'package:miracle_experience_mobile_app/features/network_helper/models/response_model/model_response_signin_entity.dart';
 import '../basic_features.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,22 +62,22 @@ class SharedPrefUtils {
     return prefs.setInt("last_patch", value);
   }
 
-  // static ModelResponseAuthEntity? getUser() {
-  //   String? stringModel = _prefsInstance?.getString("User");
-  //   ModelResponseAuthEntity? userModel =
-  //       stringModel != null
-  //           ? ModelResponseAuthEntity.fromJson(jsonDecode(stringModel))
-  //           : null;
-  //   return userModel;
-  // }
+  static ModelResponseSigninEntity? getUser() {
+    String? stringModel = _prefsInstance?.getString("User");
+    ModelResponseSigninEntity? userModel =
+        stringModel != null
+            ? ModelResponseSigninEntity.fromJson(jsonDecode(stringModel))
+            : null;
+    return userModel;
+  }
 
-  // static Future<bool> setUser(var value) async {
-  //   var prefs = await _instance;
-  //   if (value == null) {
-  //     return prefs.setString("User", value);
-  //   }
-  //   return prefs.setString("User", value.toString());
-  // }
+  static Future<bool> setUser(var value) async {
+    var prefs = await _instance;
+    if (value == null) {
+      return prefs.setString("User", value);
+    }
+    return prefs.setString("User", value.toString());
+  }
 
   static ModelResponseBalloonManifestEntity? getBalloonManifest() {
     String? stringModel = _prefsInstance?.getString("BalloonManifest");
@@ -169,6 +170,7 @@ class SharedPrefUtils {
     var prefs = await _instance;
     prefs.remove("IsUserLoggedIn");
     prefs.remove("token");
+    prefs.remove("User");
     prefs.remove("BalloonManifest");
     prefs.remove("pending_signatures");
     SharedPrefUtils.setIsUserLoggedIn(false);

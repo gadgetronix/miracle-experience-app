@@ -101,6 +101,7 @@ class AuthHelper {
   ) async {
     await SharedPrefUtils.setIsUserLoggedIn(true);
     await SharedPrefUtils.setToken(result?.accessToken?.token ?? "");
+    await SharedPrefUtils.setUser(result);
     navigateToPageAndRemoveAllPage(const BalloonManifestScreen());
   }
 
@@ -110,6 +111,7 @@ class AuthHelper {
   ) async {
     await SharedPrefUtils.setIsUserLoggedIn(true);
     await SharedPrefUtils.setToken(result?.accessToken?.token ?? "");
+    await SharedPrefUtils.setUser(result);
     navigateToPageAndRemoveAllPage(const BalloonManifestScreen());
   }
 

@@ -72,6 +72,7 @@ class SignatureBottomSheet {
               assignmentId: assignmentId ?? 0,
               signedDate: DateTime.now().toIso8601String(),
               signatureFile: file,
+              context: context
             );
           }
         } else {
