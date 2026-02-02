@@ -33,6 +33,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826667355240:android:fb1c5e4447dce4e322bfdd",
+        "android_client_info": {
+          "package_name": "com.miracleexperience.app.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826667355240-r9p7utf9a9ads67obpg3ug37347qqmcp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTYWP01U7buypFIChSMN523QKNAjM2694"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826667355240-r9p7utf9a9ads67obpg3ug37347qqmcp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
